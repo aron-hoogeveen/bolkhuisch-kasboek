@@ -64,6 +64,7 @@ public class App extends Application {
     public void start(Stage stage) {
         primaryStage = stage;
         stage.setScene(splashScene);
+        stage.setTitle("Huisch Kasboek");
         stage.sizeToScene();
         // Splash screen should not be resizable.
         stage.setResizable(false);

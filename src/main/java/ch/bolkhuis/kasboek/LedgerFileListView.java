@@ -1,7 +1,9 @@
 package ch.bolkhuis.kasboek;
 
 import javafx.collections.ObservableList;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.util.Callback;
 
 public class LedgerFileListView extends ListView<RecentLedgerFile> {
     /**
@@ -16,6 +18,7 @@ public class LedgerFileListView extends ListView<RecentLedgerFile> {
      * default state of other properties.
      */
     public LedgerFileListView() {
+        initCellFactory();
     }
 
     /**
@@ -32,5 +35,23 @@ public class LedgerFileListView extends ListView<RecentLedgerFile> {
      */
     public LedgerFileListView(ObservableList<RecentLedgerFile> items) {
         super(items);
+
+        initCellFactory();
+    }
+
+    /**
+     * Sets the cell factory for this ListView.
+     */
+    private void initCellFactory() {
+        setCellFactory(createCellFactory());
+    }
+
+    private Callback<ListView<RecentLedgerFile>, ListCell<RecentLedgerFile>> createCellFactory() {
+        return new Callback<ListView<RecentLedgerFile>, ListCell<RecentLedgerFile>>() {
+            @Override
+            public ListCell<RecentLedgerFile> call(ListView<RecentLedgerFile> param) {
+                return new LedgerFileCell();
+            }
+        };
     }
 }

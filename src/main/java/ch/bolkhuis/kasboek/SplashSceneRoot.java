@@ -12,9 +12,11 @@ import javafx.scene.layout.HBox;
 import org.controlsfx.control.*;
 import java.awt.Desktop;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SplashSceneRoot extends BorderPane {
@@ -52,6 +54,10 @@ public class SplashSceneRoot extends BorderPane {
     private void createAndSetChildren() {
         // Recent opened Ledgers
         List<RecentLedgerFile> recentLedgerFiles = loadRecentLedgers();
+        // FIXME DEBUG
+        recentLedgerFiles = new ArrayList<>(List.of(
+                new RecentLedgerFile(new File("~/nonexistant"), "Placeholder for Ledger")
+        ));
 
         // create and set the main menu
         GridPane centerGrid = new GridPane();
