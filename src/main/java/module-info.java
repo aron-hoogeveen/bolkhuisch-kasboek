@@ -3,5 +3,7 @@ module ch.bolkhuis.guis {
     requires org.jetbrains.annotations;
     requires org.controlsfx.controls;
     requires java.desktop;
+    requires com.google.gson;
+    requires org.apache.commons.lang3;
     exports ch.bolkhuis.kasboek;
 }
