@@ -5,6 +5,8 @@ import ch.bolkhuis.kasboek.eventlisteners.AccountingEntityEventListener;
 import ch.bolkhuis.kasboek.eventlisteners.TransactionEvent;
 import ch.bolkhuis.kasboek.eventlisteners.TransactionEventListener;
 import ch.bolkhuis.kasboek.gson.CustomizedGson;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -25,8 +27,8 @@ import java.util.*;
  * @author Aron Hoogeveen
  */
 public class Ledger {
-    protected  @NotNull final TreeMap<Integer, Transaction> transactions;
-    protected  @NotNull final TreeMap<Integer, AccountingEntity> accountingEntities;
+    protected  @NotNull final ObservableMap<Integer, Transaction> transactions;
+    protected  @NotNull final ObservableMap<Integer, AccountingEntity> accountingEntities;
     protected int nextTransactionId;
     protected int nextAccountingEntityId;
     /**
@@ -38,8 +40,8 @@ public class Ledger {
      * Creates a new Ledger with empty collections, and sets the {@code next***Id} fields to zero.
      */
     public Ledger() {
-        this.transactions = new TreeMap<>();
-        this.accountingEntities = new TreeMap<>();
+        this.transactions = FXCollections.observableHashMap();
+        this.accountingEntities = FXCollections.observableHashMap();
         this.nextTransactionId = 0;
         this.nextAccountingEntityId = 0;
     }
@@ -80,7 +82,7 @@ public class Ledger {
      *
      * @param accountingEntities the initial AccountingEntities
      */
-    public Ledger(@NotNull TreeMap<Integer, AccountingEntity> accountingEntities) {
+    public Ledger(@NotNull ObservableMap<Integer, AccountingEntity> accountingEntities) {
         Objects.requireNonNull(accountingEntities, "Parameter accountingEntities cannot be null");
 
         for (Map.Entry<Integer, AccountingEntity> entityEntry : accountingEntities.entrySet()) {
@@ -90,9 +92,14 @@ public class Ledger {
         }
 
         this.accountingEntities = accountingEntities;
-        this.transactions = new TreeMap<>();
+        this.transactions = FXCollections.observableHashMap();
         this.nextTransactionId = 0;
-        this.nextAccountingEntityId = (accountingEntities.lastKey() > 0) ? accountingEntities.lastKey() + 1 : 0;
+        Set<Integer> keySet = accountingEntities.keySet();
+        int biggestKey = 0;
+        for (int key : keySet) {
+            biggestKey = (biggestKey > key) ? biggestKey : key;
+        }
+        this.nextAccountingEntityId = biggestKey + 1;
     }
 
     /**
@@ -102,8 +109,8 @@ public class Ledger {
      * @param accountingEntities TreeMap containing at least all the Entities for the processed- and unprocessed Transactions
      * @param transactions the transactions that already have been processed
      */
-    public Ledger(@NotNull TreeMap<Integer, AccountingEntity> accountingEntities,
-                  @NotNull TreeMap<Integer, Transaction> transactions) {
+    public Ledger(@NotNull ObservableMap<Integer, AccountingEntity> accountingEntities,
+                  @NotNull ObservableMap<Integer, Transaction> transactions) {
         Objects.requireNonNull(accountingEntities, "Parameter accountingEntities cannot be null");
         Objects.requireNonNull(transactions, "Parameter transactions cannot be null");
 
@@ -130,7 +137,12 @@ public class Ledger {
         this.accountingEntities = accountingEntities;
         this.transactions = transactions;
         this.nextTransactionId = nextTransactionId;
-        this.nextAccountingEntityId = (accountingEntities.lastKey() > 0) ? accountingEntities.lastKey() + 1 : 0;
+        Set<Integer> keySet = accountingEntities.keySet();
+        int biggestKey = 0;
+        for (int key : keySet) {
+            biggestKey = (biggestKey > key) ? biggestKey : key;
+        }
+        this.nextAccountingEntityId = biggestKey + 1;
     }
 
     /**
@@ -302,17 +314,24 @@ public class Ledger {
     /**
      * Returns a deep copy of {@code accountingEntries}. This method is linear time.
      * @return new {@link SortedMap}
+     * @deprecated
      */
-    public TreeMap<Integer, AccountingEntity> copyOfAccountingEntities() {
+    public @Deprecated TreeMap<Integer, AccountingEntity> copyOfAccountingEntities() {
         return new TreeMap<>(accountingEntities);
     }
 
+    public @NotNull ObservableMap<Integer, AccountingEntity> getAccountingEntities() { return accountingEntities; }
+
     /**
      * Returns a deep copy of {@code transactions}. This method is linear time.
+     *
+     * @deprecated
      */
-    public TreeMap<Integer, Transaction> copyOfTransactions() {
+    public @Deprecated TreeMap<Integer, Transaction> copyOfTransactions() {
         return new TreeMap<>(transactions);
     }
+
+    public @NotNull ObservableMap<Integer, Transaction> getTransactions() { return transactions; }
 
     /**
      * Returns if Object {@code o} is equal to this Ledger. This method does not take the Vector of EventListeners into

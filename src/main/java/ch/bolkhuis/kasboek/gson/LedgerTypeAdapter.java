@@ -159,7 +159,8 @@ public class LedgerTypeAdapter extends TypeAdapter<Ledger> {
         }
 
         if (fieldCheck == fields) {
-            return new Ledger(accountingEntities, transactions);
+            throw new IOException("LedgerTypeAdapter is not completely implemented");
+//            return new Ledger(accountingEntities, transactions);
         }
         throw new IOException("Not all required fields are available");
     }

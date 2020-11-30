@@ -178,7 +178,8 @@ public class HuischLedgerTypeAdapter extends TypeAdapter<HuischLedger> {
         }
 
         if (fieldCheck == fields) {
-            return new HuischLedger(accountingEntities, transactions, receipts);
+            throw new IOException("HuischLedgerTypeAdapter not completely implemented");
+            //            return new HuischLedger(accountingEntities, transactions, receipts);
         }
         throw new IOException("Not all required fields are available");
     }

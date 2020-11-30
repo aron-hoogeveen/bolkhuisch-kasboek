@@ -5,6 +5,8 @@ import ch.bolkhuis.kasboek.eventlisteners.ReceiptEventListener;
 import ch.bolkhuis.kasboek.exceptions.IllegalTemplateFormatException;
 import ch.bolkhuis.kasboek.exceptions.UnsupportedVersionException;
 import ch.bolkhuis.kasboek.gson.CustomizedGson;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,32 +35,32 @@ public final class HuischLedger extends Ledger {
 //            });
     private final static int placeholderEntityId = -1;
 
-    private final TreeMap<Integer, Receipt> receipts;
+    private final ObservableMap<Integer, Receipt> receipts;
     private int nextReceiptId = 0; // FIXME add initializers, update typeadapter,
 
     public HuischLedger() {
-        this.receipts = new TreeMap<>();
+        this.receipts = FXCollections.observableHashMap();
     }
 
     public HuischLedger(@NotNull Ledger old) {
         super(old);
-        this.receipts = new TreeMap<>();
+        this.receipts = FXCollections.observableHashMap();
     }
 
-    public HuischLedger(@NotNull TreeMap<Integer, AccountingEntity> accountingEntities) {
+    public HuischLedger(@NotNull ObservableMap<Integer, AccountingEntity> accountingEntities) {
         super(accountingEntities);
-        this.receipts = new TreeMap<>();
+        this.receipts = FXCollections.observableHashMap();
     }
 
-    public HuischLedger(@NotNull TreeMap<Integer, AccountingEntity> accountingEntities,
-                        @NotNull TreeMap<Integer, Transaction> transactions) {
+    public HuischLedger(@NotNull ObservableMap<Integer, AccountingEntity> accountingEntities,
+                        @NotNull ObservableMap<Integer, Transaction> transactions) {
         super(accountingEntities, transactions);
-        this.receipts = new TreeMap<>();
+        this.receipts = FXCollections.observableHashMap();
     }
 
-    public HuischLedger(@NotNull TreeMap<Integer, AccountingEntity> accountingEntities,
-                        @NotNull TreeMap<Integer, Transaction> transactions,
-                        @NotNull TreeMap<Integer, Receipt> receipts) {
+    public HuischLedger(@NotNull ObservableMap<Integer, AccountingEntity> accountingEntities,
+                        @NotNull ObservableMap<Integer, Transaction> transactions,
+                        @NotNull ObservableMap<Integer, Receipt> receipts) {
         super(accountingEntities, transactions);
         this.receipts = Objects.requireNonNull(receipts, "Parameter receipts cannot be null");
     }
@@ -103,11 +105,7 @@ public final class HuischLedger extends Ledger {
         InmateEntity inmateEntity = (InmateEntity) accountingEntity;
 
         // Update the string for the placeholderEntity
-        huischLedger.accountingEntities.put(placeholderEntityId, new PlaceholderEntity(
-                placeholderEntityId,
-                resourceBundle.getString("various"),
-                AccountType.NON_EXISTENT,
-                0));
+        huischLedger.accountingEntities.put(placeholderEntityId, new PlaceholderEntity(resourceBundle.getString("various")));
 
 
         // TODO change the used currency based on the provided Locale
@@ -308,9 +306,11 @@ public final class HuischLedger extends Ledger {
         generateInmateInvoice(out, template, ledger, inmateEntityId, from, to, resourceBundle);
     }
 
-    public TreeMap<Integer, Receipt> copyOfReceipts() {
+    public @Deprecated TreeMap<Integer, Receipt> copyOfReceipts() {
         return new TreeMap<>(receipts);
     }
+
+    public ObservableMap<Integer, Receipt> getReceipts() { return receipts; }
 
     public int getAndIncrementNextReceiptId() {
         return nextReceiptId++;

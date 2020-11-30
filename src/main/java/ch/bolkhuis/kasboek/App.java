@@ -2,6 +2,7 @@ package ch.bolkhuis.kasboek;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -49,8 +50,8 @@ public class App extends Application {
 
         // Create the scenes as soon as the Application Thread starts up.
         Platform.runLater(() -> {
-            splashScene = new Scene(new SplashSceneRoot(splashLogo)); // Splash screen should as small as possible
-            applicationScene = new Scene(new ApplicationSceneRoot(), INITIAL_WIDTH, INITIAL_HEIGHT);
+            splashScene = new Scene(new SplashSceneRoot(this, splashLogo)); // Splash screen should as small as possible
+            applicationScene = new Scene(new Group(), INITIAL_WIDTH, INITIAL_HEIGHT); // placeholder
 
             // Set the stylesheets
             splashScene.getStylesheets().addAll(
@@ -83,6 +84,7 @@ public class App extends Application {
         return splashScene;
     }
 
+    public void setApplicationScene(Scene scene) { applicationScene = scene; }
     public Scene getApplicationScene() {
         return applicationScene;
     }

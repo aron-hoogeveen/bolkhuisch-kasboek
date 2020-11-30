@@ -6,4 +6,5 @@ module ch.bolkhuis.guis {
     requires com.google.gson;
     requires org.apache.commons.lang3;
     exports ch.bolkhuis.kasboek;
+    exports ch.bolkhuis.kasboek.core;
 }
