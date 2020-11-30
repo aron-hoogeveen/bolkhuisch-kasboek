@@ -23,3 +23,11 @@
     -fx-max-width: Infinity;
     -fx-font-weight: normal;
 }
+
+/* The text color is set in the class itself because JavaFX does not support some selectors yet */
+.list-cell {
+    -fx-background-color: white;
+}
+.list-cell:selected {
+    -fx-background-color: lightgrey;
+}

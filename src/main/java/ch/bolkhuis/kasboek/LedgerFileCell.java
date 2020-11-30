@@ -61,9 +61,6 @@ public class LedgerFileCell extends ListCell<RecentLedgerFile> {
     protected void updateItem(RecentLedgerFile item, boolean empty) {
         super.updateItem(item, empty);
 
-        // use one color as background for all cells
-        setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-
         if (item == null || empty) {
             setGraphic(null);
             setText(null);
@@ -72,7 +69,8 @@ public class LedgerFileCell extends ListCell<RecentLedgerFile> {
             VBox root = new VBox();
             Label name = new Label(item.getName());
             Label location = new Label(item.getFile().getPath());
-            location.setTextFill(Color.GRAY);
+            name.setTextFill(Color.BLACK); // fixed colour, no need for the different isSelected() colour.
+            location.setTextFill(Color.GRAY); // fixed colour, no need for different isSelected() colour.
             // TODO set a little graphic of a cross on the top right corner. When clicked the item should be removed from the list
             root.getChildren().addAll(
                     name,
@@ -81,14 +79,5 @@ public class LedgerFileCell extends ListCell<RecentLedgerFile> {
 
             setGraphic(root);
         }
-    }
-
-    /**
-     * Updates whether this cell is in a selected state or not.
-     *
-     * @param selected whether or not to select this cell.
-     */
-    @Override
-    public void updateSelected(boolean selected) {
     }
 }

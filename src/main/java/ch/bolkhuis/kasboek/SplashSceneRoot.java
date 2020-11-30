@@ -13,9 +13,7 @@ import org.controlsfx.control.*;
 import java.awt.Desktop;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +54,8 @@ public class SplashSceneRoot extends BorderPane {
         List<RecentLedgerFile> recentLedgerFiles = loadRecentLedgers();
         // FIXME DEBUG
         recentLedgerFiles = new ArrayList<>(List.of(
-                new RecentLedgerFile(new File("~/nonexistant"), "Placeholder for Ledger")
+                new RecentLedgerFile(new File("~/nonexistant"), "Placeholder for Ledger"),
+                new RecentLedgerFile(new File("~/some/file.hlf"), "Official Ledger ofc")
         ));
 
         // create and set the main menu
