@@ -1,5 +1,6 @@
 .root {
     -fx-font-size: 14px;
+    -fx-base: aliceblue;
     -fx-background-color: aliceblue;
     -fx-vgap: 10;
     -fx-hgap: 10;
