@@ -143,6 +143,15 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
                 equitiesRoot
         );
 
+        // expand all roots
+        inmatesRoot.setExpanded(true);
+        assetsRoot.setExpanded(true);
+        expensesRoot.setExpanded(true);
+        liabilitiesRoot.setExpanded(true);
+        dividendsRoot.setExpanded(true);
+        revenuesRoot.setExpanded(true);
+        equitiesRoot.setExpanded(true);
+
         setRoot(root);
     }
 
