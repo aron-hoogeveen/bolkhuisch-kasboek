@@ -7,9 +7,8 @@ import ch.bolkhuis.kasboek.core.PlaceholderEntity;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTreeTableCell;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.NumberFormat;
@@ -54,6 +53,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
      */
     private void setCustomColumns() {
         TreeTableColumn<AccountingEntity, String> nameColumn = new TreeTableColumn<>("Naam");
+        nameColumn.setCellFactory(param -> new AccountingEntityTreeTableCell());
         TreeTableColumn<AccountingEntity, String> balanceColumn = new TreeTableColumn<>("Balans");
 
         nameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<AccountingEntity, String> param) ->
@@ -205,4 +205,56 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
             }
         }
     }
+
+    /**
+     * A TreeTableCell for AccountingEntities.
+     */
+    class AccountingEntityTreeTableCell extends TextFieldTreeTableCell<AccountingEntity, String> {
+        /**
+         * {@inheritDoc}
+         *
+         * @param item
+         * @param empty
+         */
+        @Override
+        public void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+
+            ContextMenu contextMenu = new ContextMenu();
+
+            // Add a ContextMenu if this is a TreeTableRootItem
+            TreeItem<AccountingEntity> treeItem = getTreeTableRow().getTreeItem();
+            if (treeItem instanceof TreeTableRootItem) {
+                MenuItem addMenuItem = new MenuItem();
+
+                if (treeItem == inmatesRoot) {
+                    addMenuItem.setText("Huischgenoot toevoegen");
+                } else if (treeItem == assetsRoot) {
+                    addMenuItem.setText("Asset toevoegen");
+                } else if (treeItem == expensesRoot) {
+                    addMenuItem.setText("Expense toevoegen");
+                } else if (treeItem == liabilitiesRoot) {
+                    addMenuItem.setText("Liability toevoegen");
+                } else if (treeItem == dividendsRoot) {
+                    addMenuItem.setText("Dividend toevoegen");
+                } else if (treeItem == revenuesRoot) {
+                    addMenuItem.setText("Revenue toevoegen");
+                } else if (treeItem == equitiesRoot) {
+                    addMenuItem.setText("Equity toevoegen");
+                }
+
+                // FIXME implement action
+                addMenuItem.setOnAction(event -> {
+                    System.err.println("ContextMenuAction not yet implemented");
+                });
+
+                contextMenu.getItems().clear();
+                contextMenu.getItems().add(addMenuItem);
+            }
+
+            setContextMenu(contextMenu);
+//            AccountingEntityTreeTableView.this.setContextMenu(contextMenu);
+        }
+    }
+
 }

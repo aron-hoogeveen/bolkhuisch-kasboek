@@ -46,6 +46,7 @@ public class ApplicationSceneRoot extends BorderPane {
         // The tabpane with the AccountingEntities, Receipts and Transactions
         TabPane tabPane = new TabPane();
         tabPane.setId("main-tab-pane");
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         Tab entitiesTab = new Tab("Entiteiten");
         Tab receiptsTab = new Tab("Bonnetjes");
         Tab transactionsTab = new Tab("Transacties");
