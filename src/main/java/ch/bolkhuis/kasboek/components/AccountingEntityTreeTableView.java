@@ -166,14 +166,10 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
      */
     @Override
     public void onChanged(Change<? extends Integer, ? extends AccountingEntity> change) {
-        // Get the AccountingEntity corresponding to this change
-        AccountingEntity entity = change.wasAdded() ? change.getValueAdded() : change.getValueRemoved();
-        if (entity == null) {
-            throw new IllegalArgumentException("All values of the TreeItems in the TreeTableView must not be null");
-        }
-        TreeItem<AccountingEntity> leaf = new TreeItem<>(entity);
-
         if (change.wasAdded()) {
+            AccountingEntity entity = change.getValueAdded();
+            TreeItem<AccountingEntity> leaf = new TreeItem<>(entity);
+
             if (entity instanceof InmateEntity) {
                 inmatesRoot.getChildren().add(leaf);
             } else if (entity.getAccountType().equals(AccountType.ASSET)) {
@@ -194,6 +190,8 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
             }
         }
         if (change.wasRemoved()) {
+            AccountingEntity entity = change.getValueRemoved();
+            TreeItem<AccountingEntity> leaf = new TreeItem<>(entity);
             if (entity instanceof InmateEntity) {
                 inmatesRoot.getChildren().remove(leaf);
             } else if (entity.getAccountType().equals(AccountType.ASSET)) {
