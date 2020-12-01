@@ -140,7 +140,8 @@ public class ApplicationSceneRoot extends BorderPane {
         // Transactions Tab
         TransactionTableView transactionTableView = new TransactionTableView(
                 huischLedger.getTransactions(),
-                huischLedger.getAccountingEntities()
+                huischLedger.getAccountingEntities(),
+                huischLedger.getReceipts()
         );
         transactionsTab.setContent(transactionTableView);
 

@@ -1,6 +1,7 @@
 package ch.bolkhuis.kasboek.components;
 
 import ch.bolkhuis.kasboek.core.AccountingEntity;
+import ch.bolkhuis.kasboek.core.Receipt;
 import ch.bolkhuis.kasboek.core.Transaction;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -11,6 +12,7 @@ import javafx.scene.control.TableView;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * TransactionTableView is an implementation of the TableView class for Transactions. This implementation does not support
@@ -22,6 +24,7 @@ import java.text.NumberFormat;
 public class TransactionTableView extends TableView<Transaction> implements MapChangeListener<Integer, Transaction> {
     private final ObservableMap<Integer, Transaction> m_items;
     private final ObservableMap<Integer, AccountingEntity> m_entities;
+    private final ObservableMap<Integer, Receipt> m_receipts;
 
     /**
      * Creates a default TableView control with no content.
@@ -29,11 +32,14 @@ public class TransactionTableView extends TableView<Transaction> implements MapC
      * <p>Refer to the {@link TableView} class documentation for details on the
      * default state of other properties.
      */
-    public TransactionTableView(@NotNull ObservableMap<Integer, AccountingEntity> m_entities) {
+    public TransactionTableView(@NotNull ObservableMap<Integer, AccountingEntity> m_entities,
+                                @NotNull ObservableMap<Integer, Receipt> m_receipts) {
         if (m_entities == null) { throw new NullPointerException(); }
+        if (m_receipts == null) { throw new NullPointerException(); }
 
         m_items = FXCollections.observableHashMap();
         this.m_entities = m_entities;
+        this.m_receipts = m_receipts;
 
         setEditable(false); // disable editing in this table. Transactions are edited in a specific dialog presented to the user
         m_items.addListener(this);
@@ -54,11 +60,14 @@ public class TransactionTableView extends TableView<Transaction> implements MapC
      *              for changes (to automatically show in the TableView).
      */
     public TransactionTableView(@NotNull ObservableMap<Integer, Transaction> m_items,
-                                @NotNull ObservableMap<Integer, AccountingEntity> m_entities) {
+                                @NotNull ObservableMap<Integer, AccountingEntity> m_entities,
+                                @NotNull ObservableMap<Integer, Receipt> m_receipts) {
         if (m_items == null) { throw new NullPointerException(); }
         if (m_entities == null) { throw new NullPointerException(); }
+        if (m_receipts == null) { throw new NullPointerException(); }
         this.m_items = m_items;
         this.m_entities = m_entities;
+        this.m_receipts = m_receipts;
 
         setEditable(false); // disable editing in this table. Transactions are edited in a specific dialog presented to the user
         m_items.addListener(this);
@@ -85,14 +94,15 @@ public class TransactionTableView extends TableView<Transaction> implements MapC
             if (receiptId == null) {
                 value = null;
             } else {
-                value = String.valueOf(param.getValue().getReceiptId());
+                value = "(" + param.getValue().getReceiptId() + ") ";
+                value = value + m_receipts.get(param.getValue().getReceiptId()).getName();
             }
 
             return new ReadOnlyStringWrapper(value);
         });
         debtorColumn.setCellValueFactory(param -> m_entities.get(param.getValue().getDebtorId()).nameProperty());
         creditorColumn.setCellValueFactory(param -> m_entities.get(param.getValue().getCreditorId()).nameProperty());
-        amountColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(NumberFormat.getCurrencyInstance().format(
+        amountColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(NumberFormat.getCurrencyInstance(Locale.GERMANY).format(
                 param.getValue().getAmount()
         )));
         descriptionColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getDescription()));
