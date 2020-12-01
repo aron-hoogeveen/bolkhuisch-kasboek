@@ -3,6 +3,9 @@ package ch.bolkhuis.kasboek.core;
 import ch.bolkhuis.kasboek.gson.CustomizedGson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -20,7 +23,7 @@ import java.util.Objects;
  */
 public class AccountingEntity {
     protected final int id;
-    protected  @NotNull final String name;
+    protected  @NotNull final StringProperty name;
     protected  @NotNull final AccountType accountType;
     protected final double balance;
     /**
@@ -49,7 +52,7 @@ public class AccountingEntity {
 
         // Strip the string of the whitespaces before setting
         this.id = id;
-        this.name = name.strip();
+        this.name = new SimpleStringProperty(name.strip());
         this.accountType = accountType;
         this.balance = balance;
     }
@@ -60,12 +63,8 @@ public class AccountingEntity {
         return id;
     }
 
-    @NotNull
-    public String getName() {
-        assert isCorrectName(name);
-
-        return name;
-    }
+    public final StringProperty nameProperty() { return name; }
+    public String getName() { return name.get(); }
 
     public double getBalance() {
         return balance;
@@ -86,10 +85,8 @@ public class AccountingEntity {
     @NotNull
     @Deprecated
     public AccountingEntity addBalance(double amount) {
-        assert isCorrectId(id);
-        assert isCorrectName(name);
 
-        return new AccountingEntity(id, name, accountType, balance + amount);
+        return new AccountingEntity(id, name.get(), accountType, balance + amount);
     }
 
     /**
@@ -102,7 +99,7 @@ public class AccountingEntity {
         if (amount < 0) { throw new IllegalArgumentException("You should not debit a negative amount, credit instead"); }
 
         double newEndBalance = (accountType.isDebit()) ? this.balance + amount : this.balance - amount;
-        return new AccountingEntity(id, name, accountType, newEndBalance);
+        return new AccountingEntity(id, name.get(), accountType, newEndBalance);
     }
 
     /**
@@ -115,7 +112,7 @@ public class AccountingEntity {
         if (amount < 0) { throw new IllegalArgumentException("You should not credit a negative amount, debit instead"); }
 
         double newEndBalance = (accountType.isDebit()) ? this.balance - amount : this.balance + amount;
-        return new AccountingEntity(id, name, accountType, newEndBalance);
+        return new AccountingEntity(id, name.get(), accountType, newEndBalance);
     }
 
     /**
@@ -171,7 +168,7 @@ public class AccountingEntity {
 
         if (id != that.id) return false;
         if (Double.compare(that.balance, balance) != 0) return false;
-        if (!name.equals(that.name)) return false;
+        if (!name.get().equals(that.name.get())) return false;
         return accountType == that.accountType;
     }
 
@@ -180,7 +177,7 @@ public class AccountingEntity {
         int result;
         long temp;
         result = id;
-        result = 31 * result + name.hashCode();
+        result = 31 * result + name.get().hashCode();
         result = 31 * result + accountType.hashCode();
         temp = Double.doubleToLongBits(balance);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
@@ -220,6 +217,6 @@ public class AccountingEntity {
      */
     @Override
     public String toString() {
-        return name;
+        return name.get();
     }
 }
