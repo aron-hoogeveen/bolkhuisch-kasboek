@@ -71,7 +71,17 @@ public class TransactionTableView extends TableView<Transaction> implements MapC
         TableColumn<Transaction, String> descriptionColumn = new TableColumn<>("Beschrijving");
 
         dateColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getDate().toString()));
-        receiptColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(String.valueOf(param.getValue().getReceiptId())));
+        receiptColumn.setCellValueFactory(param -> {
+            Integer receiptId = param.getValue().getReceiptId();
+            String value;
+            if (receiptId == null) {
+                value = null;
+            } else {
+                value = String.valueOf(param.getValue().getReceiptId());
+            }
+
+            return new ReadOnlyStringWrapper(value);
+        });
         debtorColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(String.valueOf(param.getValue().getDebtorId()))); // FIXME get actual name
         creditorColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(String.valueOf(param.getValue().getCreditorId()))); // FIXME get actual name
         amountColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(NumberFormat.getCurrencyInstance().format(
