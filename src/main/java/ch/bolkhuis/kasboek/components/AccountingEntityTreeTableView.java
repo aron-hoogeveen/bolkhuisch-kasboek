@@ -22,7 +22,7 @@ import java.util.Vector;
  */
 public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntity> implements MapChangeListener<Integer, AccountingEntity> {
     // Backing ObservableMap
-    private final ObservableMap<Integer, AccountingEntity> items;
+    private final ObservableMap<Integer, AccountingEntity> m_items;
     // Root TreeItems
     private final TreeItem<AccountingEntity> inmatesRoot = new TreeTableRootItem<>(new PlaceholderEntity("Huischgenoten"));
     private final TreeItem<AccountingEntity> assetsRoot = new TreeTableRootItem<>(new PlaceholderEntity("Assets"));
@@ -35,14 +35,14 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
     /**
      * Creates a TreeTableView populated with the AccountingEntities from the ObservableMap {@code items}.
      *
-     * @param items the AccountingEntities to put in this TreeTableView
+     * @param m_items the AccountingEntities to put in this TreeTableView
      */
-    public AccountingEntityTreeTableView(@NotNull ObservableMap<Integer, AccountingEntity> items) {
-        if (items == null) { throw new NullPointerException(); }
-        this.items = items;
+    public AccountingEntityTreeTableView(@NotNull ObservableMap<Integer, AccountingEntity> m_items) {
+        if (m_items == null) { throw new NullPointerException(); }
+        this.m_items = m_items;
 
         setShowRoot(false);
-        items.addListener(this); // listen for changes in the backing ObservableMap
+        m_items.addListener(this); // listen for changes in the backing ObservableMap
 
         setCustomColumns();
         initChildren();
@@ -92,7 +92,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
         Vector<TreeItem<AccountingEntity>> equityLeaves = new Vector<>();
 
         // populate the vectors with leaves
-        for (AccountingEntity item : items.values()) {
+        for (AccountingEntity item : m_items.values()) {
             if (item instanceof InmateEntity) {
                 inmateLeaves.add(new TreeItem<>(item));
             } else {
