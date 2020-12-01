@@ -20,6 +20,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class SplashSceneRoot extends BorderPane {
     private static final double WIDTH = 840;
@@ -193,9 +194,38 @@ public class SplashSceneRoot extends BorderPane {
                 LocalDate.parse("2020-01-02"),
                 "Another transaction"
         );
+        // Receipt transactions
+        Receipt r1 = new Receipt(
+                0,
+                "Makrorun",
+                Set.of(2, 3),
+                LocalDate.parse("2020-01-15"),
+                0
+        );
+        Transaction r1_t3 = new Transaction(
+                2,
+                1,
+                0,
+                25,
+                0,
+                LocalDate.parse("2020-01-15"),
+                "Trans 1 bij Receipt 1"
+        );
+        Transaction r1_t4 = new Transaction(
+                3,
+                1,
+                0,
+                25,
+                0,
+                LocalDate.parse("2020-01-15"),
+                "Trans 2 bij Receipt 1"
+        );
 
         huischLedger.addTransaction(t1);
         huischLedger.addTransaction(t2);
+        huischLedger.addTransaction(r1_t3);
+        huischLedger.addTransaction(r1_t4);
+        huischLedger.addReceipt(r1);
 
         return huischLedger;
     }

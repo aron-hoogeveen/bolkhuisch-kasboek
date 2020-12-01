@@ -1,6 +1,7 @@
 package ch.bolkhuis.kasboek;
 
 import ch.bolkhuis.kasboek.components.AccountingEntityTreeTableView;
+import ch.bolkhuis.kasboek.components.ReceiptTableView;
 import ch.bolkhuis.kasboek.components.TransactionTableView;
 import ch.bolkhuis.kasboek.core.HuischLedger;
 import javafx.collections.FXCollections;
@@ -133,10 +134,11 @@ public class ApplicationSceneRoot extends BorderPane {
         entitiesTab.setContent(new BorderPane(entityTreeTableView)); // this should make everything full sized
 
         // Receipts Tab
+        ReceiptTableView receiptTableView = new ReceiptTableView(huischLedger.getReceipts());
+        receiptsTab.setContent(receiptTableView);
 
         // Transactions Tab
         TransactionTableView transactionTableView = new TransactionTableView(huischLedger.getTransactions());
-        System.out.println("Size of transactions: " + huischLedger.getTransactions().values().size());
         transactionsTab.setContent(transactionTableView);
 
         // Add the tabs and the pane to this BorderPane
