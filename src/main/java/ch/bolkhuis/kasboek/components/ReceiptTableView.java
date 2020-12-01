@@ -1,13 +1,17 @@
 package ch.bolkhuis.kasboek.components;
 
 import ch.bolkhuis.kasboek.core.Receipt;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.HBox;
 import org.jetbrains.annotations.NotNull;
 
 public class ReceiptTableView extends TableView<Receipt> implements MapChangeListener<Integer, Receipt> {
@@ -56,15 +60,24 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
         TableColumn<Receipt, String> dateColumn = new TableColumn<>("Datum");
         TableColumn<Receipt, String> payerColumn = new TableColumn<>("Betaald Door");
         TableColumn<Receipt, String> nameColumn = new TableColumn<>("Beschrijving");
+        TableColumn<Receipt, HBox> actionColumn = new TableColumn<>("Acties");
 
         dateColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getDate().toString()));
         payerColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(String.valueOf(param.getValue().getPayer()))); // TODO show actual name
         nameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getName()));
+        actionColumn.setCellValueFactory(param -> {
+            HBox hBox = new HBox();
+            hBox.getChildren().add(
+                    new Label("Not yet implemented")
+            );
+            return new ReadOnlyObjectWrapper<>(hBox);
+        });
 
         getColumns().setAll(
                 dateColumn,
                 payerColumn,
-                nameColumn
+                nameColumn,
+                actionColumn
         );
     }
 
