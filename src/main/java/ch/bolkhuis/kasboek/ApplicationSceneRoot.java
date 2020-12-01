@@ -39,16 +39,20 @@ public class ApplicationSceneRoot extends BorderPane {
         createAndSetChildren();
     }
 
+    /**
+     * Set all settings for this BorderPane that have to do with its appearance.
+     */
     private void initAppearance() {
         setMinSize(App.MIN_WIDTH, App.MIN_HEIGHT);
         setPrefSize(App.INITIAL_WIDTH, App.INITIAL_HEIGHT);
     }
 
+    /**
+     * Creates and sets the children of this BorderPane. This method is called in all constructors.
+     */
     private void createAndSetChildren() {
-        createAndSetTopMenuBar();
-        createAndSetCenterTabPane();
-
-
+        createAndSetTopMenuBar(); // setTop()
+        createAndSetCenterTabPane(); // setCenter()
     }
 
     /**
@@ -111,7 +115,7 @@ public class ApplicationSceneRoot extends BorderPane {
     }
 
     /**
-     * Creates and sets the tab pane showing the AccountingEntities, Receipts and Transactions
+     * Creates and sets the tab pane showing the AccountingEntities, Receipts and Transactions.
      */
     private void createAndSetCenterTabPane() {
         // The tabpane with the AccountingEntities, Receipts and Transactions
