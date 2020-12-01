@@ -88,10 +88,12 @@ public class ApplicationSceneRoot extends BorderPane {
 //        addAccountingEntity.setOnAction(new AddAccountingEntityEventHandler());
         MenuItem addInmateEntity = new MenuItem("Huischgenoot toevoegen");
 //        addInmateEntity.setOnAction(new AddInmateEntityEventHandler());
+        MenuItem addReceipt = new MenuItem("Bonnetje toevoegen");
 //        addAccountingEntity.setOnAction(new AddAccountingEntityEventHandler());
         editMenu.getItems().addAll(
                 addAccountingEntity,
-                addInmateEntity
+                addInmateEntity,
+                addReceipt
         );
         // Print menu
         Menu toolsMenu = new Menu("Gereedschappen");
