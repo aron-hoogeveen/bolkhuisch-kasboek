@@ -1,5 +1,6 @@
 package ch.bolkhuis.kasboek.components;
 
+import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.Receipt;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ReceiptTableView extends TableView<Receipt> implements MapChangeListener<Integer, Receipt> {
     private final ObservableMap<Integer, Receipt> m_items;
+    private final ObservableMap<Integer, AccountingEntity> m_entities;
 
     /**
      * Creates a default TableView control with no content.
@@ -23,8 +25,10 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
      * <p>Refer to the {@link TableView} class documentation for details on the
      * default state of other properties.
      */
-    public ReceiptTableView() {
+    public ReceiptTableView(@NotNull ObservableMap<Integer, AccountingEntity> m_entities) {
+        if (m_entities == null) { throw new NullPointerException(); }
         m_items = FXCollections.observableHashMap();
+        this.m_entities = m_entities;
 
         setEditable(false); // disable editing in this table. Transactions are edited in a specific dialog presented to the user
         m_items.addListener(this);
@@ -39,15 +43,18 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
      * <p>Refer to the {@link TableView} class documentation for details on the
      * default state of other properties.
      *
-     * @param items initial ObservableMap to be used as backing map
+     * @param m_items initial ObservableMap to be used as backing map
      */
-    public ReceiptTableView(@NotNull ObservableMap<Integer, Receipt> items) {
-        if (items == null) { throw new NullPointerException(); }
+    public ReceiptTableView(@NotNull ObservableMap<Integer, Receipt> m_items,
+                            @NotNull ObservableMap<Integer, AccountingEntity> m_entities) {
+        if (m_items == null) { throw new NullPointerException(); }
+        if (m_entities == null) { throw new NullPointerException(); }
 
-        m_items = items;
+        this.m_items = m_items;
+        this.m_entities = m_entities;
 
         setEditable(false); // disable editing in this table. Transactions are edited in a specific dialog presented to the user
-        m_items.addListener(this);
+        this.m_items.addListener(this);
 
         initColumns();
         initChildren();
@@ -62,8 +69,8 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
         TableColumn<Receipt, String> nameColumn = new TableColumn<>("Beschrijving");
         TableColumn<Receipt, HBox> actionColumn = new TableColumn<>("Acties");
 
-        dateColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getDate().toString()));
-        payerColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(String.valueOf(param.getValue().getPayer()))); // TODO show actual name
+        dateColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getDate().toString())); // FIXME change to property in Receipt class
+        payerColumn.setCellValueFactory(param -> m_entities.get(param.getValue().getPayer()).nameProperty());
         nameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getName()));
         actionColumn.setCellValueFactory(param -> {
             HBox hBox = new HBox();
