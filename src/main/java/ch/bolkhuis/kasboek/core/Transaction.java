@@ -23,7 +23,7 @@ import java.util.Objects;
  * @version 0.2-pre-alpha
  * @author Aron Hoogeveen
  */
-public final class Transaction {
+public final class Transaction implements Comparable<Transaction> {
     private final int id;
     private final @NotNull LocalDate date;
     private final int debtorId;
@@ -222,5 +222,66 @@ public final class Transaction {
      */
     public String getDateString() {
         return date.format(DateTimeFormatter.ofPattern("dd-MM-uuuu"));
+    }
+
+    /**
+     * Compares in the following order: date,
+     *
+     * @param o the object to be compared.
+     * @return a negative integer, zero, or a positive integer as this object
+     * is less than, equal to, or greater than the specified object.
+     * @throws NullPointerException if the specified object is null
+     * @throws ClassCastException   if the specified object's type prevents it
+     *                              from being compared to this object.
+     */
+    @Override
+    public int compareTo(@NotNull Transaction o) {
+        if (o == null) { throw new NullPointerException(); }
+
+        // date
+        if (this.date.isBefore(o.date)) {
+            return -1;
+        } else if (this.date.isAfter(o.date)) {
+            return 1;
+        }
+
+        // Equal dates. Check receiptId
+        if (this.receiptId < o.receiptId) {
+            return -1;
+        } else if (this.receiptId > o.receiptId) {
+            return 1;
+        }
+
+        // Equal receiptIds. Check debtorId
+        if (this.debtorId < o.debtorId) {
+            return -1;
+        } else if (this.debtorId > o.debtorId) {
+            return 1;
+        }
+
+        // Equal debtorIds. Check creditorId
+        if (this.creditorId < o.creditorId) {
+            return -1;
+        } else if (this.creditorId > o.creditorId) {
+            return 1;
+        }
+
+        // Equal creditorIds. Check id
+        if (this.id < o.id) {
+            return -1;
+        } else if (this.id > o.id) {
+            return 1;
+        }
+
+        // Equal ids. Check amount
+        // TODO maybe the program should throw an exception now, because transactions with the same id 'should' be equal
+        if (this.amount < o.amount) {
+            return -1;
+        } else if (this.amount > o.amount) {
+            return 1;
+        }
+
+        // Equal amounts. Check description
+        return this.description.compareTo(o.description);
     }
 }
