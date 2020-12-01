@@ -106,9 +106,6 @@ public class TransactionTableView extends TableView<Transaction> implements MapC
      */
     @Override
     public void onChanged(Change<? extends Integer, ? extends Transaction> change) {
-        Transaction t = (change.wasAdded()) ? change.getValueAdded() : change.getValueRemoved();
-        if (t == null) { throw new NullPointerException("TransactionTableView does not support null valued Transactions"); }
-
         // update the backing ObservableList items
         if (change.wasAdded()) {
             getItems().add(change.getValueAdded());
