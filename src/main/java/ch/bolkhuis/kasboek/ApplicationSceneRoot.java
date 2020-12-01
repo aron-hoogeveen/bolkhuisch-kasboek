@@ -1,7 +1,9 @@
 package ch.bolkhuis.kasboek;
 
 import ch.bolkhuis.kasboek.components.AccountingEntityTreeTableView;
+import ch.bolkhuis.kasboek.components.TransactionTableView;
 import ch.bolkhuis.kasboek.core.HuischLedger;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
@@ -133,6 +135,9 @@ public class ApplicationSceneRoot extends BorderPane {
         // Receipts Tab
 
         // Transactions Tab
+        TransactionTableView transactionTableView = new TransactionTableView(huischLedger.getTransactions());
+        System.out.println("Size of transactions: " + huischLedger.getTransactions().values().size());
+        transactionsTab.setContent(transactionTableView);
 
         // Add the tabs and the pane to this BorderPane
         tabPane.getTabs().addAll(

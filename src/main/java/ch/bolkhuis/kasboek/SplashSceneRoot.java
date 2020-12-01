@@ -1,9 +1,6 @@
 package ch.bolkhuis.kasboek;
 
-import ch.bolkhuis.kasboek.core.AccountType;
-import ch.bolkhuis.kasboek.core.AccountingEntity;
-import ch.bolkhuis.kasboek.core.HuischLedger;
-import ch.bolkhuis.kasboek.core.InmateEntity;
+import ch.bolkhuis.kasboek.core.*;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,6 +17,7 @@ import java.awt.Desktop;
 
 import java.io.File;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,21 +87,7 @@ public class SplashSceneRoot extends BorderPane {
         Button newLedgerButton = new Button("Nieuw Kasboek", new ImageView("plus-sign-16.png"));
         newLedgerButton.setOnAction(event -> {
             // FIXME this is a temporary action until the loading is implemented
-            HuischLedger huischLedger = new HuischLedger();
-            InmateEntity inmate = new InmateEntity(
-                    huischLedger.getAndIncrementNextAccountingEntityId(),
-                    "Gerrit",
-                    0,
-                    0
-            );
-            AccountingEntity bank = new AccountingEntity(
-                    huischLedger.getAndIncrementNextAccountingEntityId(),
-                    "ING",
-                    AccountType.ASSET,
-                    0
-            );
-            huischLedger.addAccountingEntity(inmate);
-            huischLedger.addAccountingEntity(bank);
+            HuischLedger huischLedger = createTemporaryHuischLedger();
 
             Stage stage = app.getPrimaryStage();
             stage.hide();
@@ -172,5 +156,47 @@ public class SplashSceneRoot extends BorderPane {
         System.err.println("SplashSceneRoot#loadRecentLedgers() is not implemented.");
 
         return null;
+    }
+
+    private HuischLedger createTemporaryHuischLedger() {
+        HuischLedger huischLedger = new HuischLedger();
+        InmateEntity inmate = new InmateEntity(
+                0,
+                "Gerrit",
+                0,
+                0
+        );
+        AccountingEntity bank = new AccountingEntity(
+                1,
+                "ING",
+                AccountType.ASSET,
+                0
+        );
+        huischLedger.addAccountingEntity(inmate);
+        huischLedger.addAccountingEntity(bank);
+
+        Transaction t1 = new Transaction(
+                0,
+                0,
+                1,
+                25,
+                null,
+                LocalDate.parse("2020-01-01"),
+                "Some Transaction"
+        );
+        Transaction t2 = new Transaction(
+                1,
+                1,
+                0,
+                25,
+                null,
+                LocalDate.parse("2020-01-02"),
+                "Another transaction"
+        );
+
+        huischLedger.addTransaction(t1);
+        huischLedger.addTransaction(t2);
+
+        return huischLedger;
     }
 }
