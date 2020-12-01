@@ -34,7 +34,7 @@ public class InmateEntity extends AccountingEntity {
     public @NotNull InmateEntity debit(double amount) {
         if (amount < 0) { throw new IllegalArgumentException("You should not debit a negative amount, credit instead"); }
 
-        double balance = (accountType.isDebit()) ? this.balance + amount : this.balance - amount;
+        double balance = (accountType.isDebit()) ? this.balance.get() + amount : this.balance.get() - amount;
         return new InmateEntity(id, name.get(), previousBalance, balance);
     }
 
@@ -42,7 +42,7 @@ public class InmateEntity extends AccountingEntity {
     public @NotNull InmateEntity credit(double amount) {
         if (amount < 0) { throw new IllegalArgumentException("You should not credit a negative amount, debit instead"); }
 
-        double balance = (accountType.isDebit()) ? this.balance - amount : this.balance + amount;
+        double balance = (accountType.isDebit()) ? this.balance.get() - amount : this.balance.get() + amount;
         return new InmateEntity(id, name.get(), previousBalance, balance);
     }
 
