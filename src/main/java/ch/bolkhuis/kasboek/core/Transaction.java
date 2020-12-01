@@ -80,7 +80,7 @@ public final class Transaction implements Comparable<Transaction> {
      * @throws IllegalArgumentException when of its arguments does not adhere to this class' contract
      * @see Transaction#Transaction(int, int, int, double, LocalDate, String)
      */
-    public Transaction(int id, int debtorId, int creditorId, double amount, int receiptId, @NotNull LocalDate date,
+    public Transaction(int id, int debtorId, int creditorId, double amount, Integer receiptId, @NotNull LocalDate date,
                        @NotNull String description) {
         if (!isCorrectId(id)) { throw new IllegalArgumentException("Illegal id."); }
         if (!isCorrectDebtorId(debtorId)) { throw new IllegalArgumentException("Illegal debtorId."); }
@@ -225,7 +225,9 @@ public final class Transaction implements Comparable<Transaction> {
     }
 
     /**
-     * Compares in the following order: date,
+     * TODO add specific JavaDoc for this function.
+     * A {@code receiptId} of {@code null} is considered smaller than a non-null {@code receiptId} so that Transactions
+     * with no corresponding Receipt are sorted lower.
      *
      * @param o the object to be compared.
      * @return a negative integer, zero, or a positive integer as this object
@@ -245,8 +247,14 @@ public final class Transaction implements Comparable<Transaction> {
             return 1;
         }
 
-        // Equal dates. Check receiptId
-        if (this.receiptId < o.receiptId) {
+        // Equal dates. Check receiptId. See the JavaDoc of this method for the decision on null sorting
+        if (this.receiptId == null) {
+            if (o.receiptId != null) {
+                return -1;
+            }
+        } else if (o.receiptId == null) {
+            return 1;
+        } else if (this.receiptId < o.receiptId) {
             return -1;
         } else if (this.receiptId > o.receiptId) {
             return 1;
