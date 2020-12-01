@@ -4,14 +4,18 @@ import ch.bolkhuis.kasboek.core.AccountType;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.InmateEntity;
 import ch.bolkhuis.kasboek.core.PlaceholderEntity;
-import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.*;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
+import javafx.util.StringConverter;
+import javafx.util.converter.NumberStringConverter;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Vector;
 
 /**
@@ -57,14 +61,18 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
         TreeTableColumn<AccountingEntity, String> balanceColumn = new TreeTableColumn<>("Balans");
 
         nameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<AccountingEntity, String> param) ->
-                new ReadOnlyStringWrapper(param.getValue().getValue().getName())
+                param.getValue().getValue().nameProperty()
         );
         // Only set the balance for TreeItems which are not roots
         balanceColumn.setCellValueFactory(param -> {
             if (!param.getValue().isLeaf()) {
                 return null;
             }
-            return new ReadOnlyStringWrapper(NumberFormat.getCurrencyInstance().format(param.getValue().getValue().getBalance()));
+            StringProperty stringProperty = new SimpleStringProperty();
+            ReadOnlyDoubleProperty doubleProperty = param.getValue().getValue().balanceProperty();
+            stringProperty.bind(Bindings.createStringBinding(
+                    () -> NumberFormat.getCurrencyInstance(Locale.GERMANY).format(doubleProperty.get()), doubleProperty));
+            return stringProperty;
         });
 
         // Set preferred widths for the columns

@@ -3,10 +3,7 @@ package ch.bolkhuis.kasboek.core;
 import ch.bolkhuis.kasboek.gson.CustomizedGson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
@@ -26,7 +23,7 @@ public class AccountingEntity {
     protected final int id;
     protected  @NotNull final StringProperty name;
     protected  @NotNull final AccountType accountType;
-    protected final DoubleProperty balance;
+    protected final ReadOnlyDoubleProperty balance;
     /**
      * Constructs a new AccountingEntry with {@code id} and {@code name}.
      * <br />
@@ -67,7 +64,7 @@ public class AccountingEntity {
     public final StringProperty nameProperty() { return name; }
     public String getName() { return name.get(); }
 
-    public final DoubleProperty balanceProperty() { return balance; }
+    public final ReadOnlyDoubleProperty balanceProperty() { return balance; }
     public double getBalance() { return balance.get(); }
 
     @NotNull
