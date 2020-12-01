@@ -71,7 +71,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
         nameColumn.setPrefWidth(300);
         balanceColumn.setPrefWidth(100);
 
-        getColumns().addAll(
+        getColumns().setAll(
                 nameColumn,
                 balanceColumn
         );
