@@ -12,7 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.text.NumberFormat;
 
 /**
- * TransactionTableView is an implementation of the TableView class for Transactions.
+ * TransactionTableView is an implementation of the TableView class for Transactions. This implementation does not support
+ * null valued Transactions but does not implement any checks YET for this TODO implement null checks.
  *
  * TODO add option to show only transactions from a specific date span
  * @author Aron Hoogeveen
