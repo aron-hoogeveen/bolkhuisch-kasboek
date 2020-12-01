@@ -11,6 +11,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.NumberFormat;
 
+/**
+ * TransactionTableView is an implementation of the TableView class for Transactions.
+ *
+ * TODO add option to show only transactions from a specific date span
+ * @author Aron Hoogeveen
+ */
 public class TransactionTableView extends TableView<Transaction> implements MapChangeListener<Integer, Transaction> {
     private final ObservableMap<Integer, Transaction> m_items;
 
@@ -105,9 +111,10 @@ public class TransactionTableView extends TableView<Transaction> implements MapC
 
         // update the backing ObservableList items
         if (change.wasAdded()) {
-            getItems().add(t);
-        } else {
-            getItems().remove(t);
+            getItems().add(change.getValueAdded());
+        }
+        if (change.wasRemoved()){
+            getItems().remove(change.getValueRemoved());
         }
     }
 }
