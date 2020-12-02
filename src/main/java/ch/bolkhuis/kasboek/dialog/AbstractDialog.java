@@ -21,6 +21,8 @@ public abstract class AbstractDialog<T> {
     protected final static Border errorBorder = new Border(errorBorderStroke);
     protected final static Border correctBorder = new Border(correctBorderStroke);
 
+    protected final static String numberRegex = "^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$";
+
     /**
      * The old T to edit if any, otherwise create a new T.
      */

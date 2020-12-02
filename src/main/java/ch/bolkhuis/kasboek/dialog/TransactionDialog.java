@@ -156,6 +156,12 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
         rootGridPane.add(descriptionTextField, 1, 3, 3, 1);
         rootGridPane.add(submitButton, 2, 5, 2, 1);
 
+        // Set borders indicating which inputs require a selection
+        debtorComboBox.setBorder(errorBorder);
+        creditorComboBox.setBorder(errorBorder);
+        amountTextField.setBorder(errorBorder);
+        descriptionTextField.setBorder(errorBorder);
+
         stage.setScene(new Scene(rootGridPane));
         stage.sizeToScene();
     }
@@ -187,6 +193,40 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
      */
     @Override
     protected void initBehaviour() {
-        System.err.println("The initBehaviour method of TransactionDialog is currently empty");
+        descriptionTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!Transaction.isCorrectDescription(newValue))
+                descriptionTextField.setBorder(errorBorder);
+            else
+                descriptionTextField.setBorder(correctBorder);
+        });
+
+        amountTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches(numberRegex))
+                amountTextField.setBorder(errorBorder);
+            else {
+                try {
+                    if (!Transaction.isCorrectAmount(Double.parseDouble(newValue)))
+                        amountTextField.setBorder(errorBorder);
+                    else
+                        amountTextField.setBorder(correctBorder);
+                } catch (Exception e) {
+                    amountTextField.setBorder(errorBorder);
+                }
+            }
+        });
+
+        debtorComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null)
+                debtorComboBox.setBorder(errorBorder);
+            else
+                debtorComboBox.setBorder(correctBorder);
+        });
+
+        creditorComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null)
+                creditorComboBox.setBorder(errorBorder);
+            else
+                creditorComboBox.setBorder(correctBorder);
+        });
     }
 }
