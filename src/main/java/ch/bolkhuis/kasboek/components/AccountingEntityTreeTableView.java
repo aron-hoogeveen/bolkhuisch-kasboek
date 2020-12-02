@@ -187,19 +187,27 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
             AccountingEntity entity = change.getValueAdded();
             TreeItem<AccountingEntity> leaf = new TreeItem<>(entity);
 
+            // If there is an entity with the same id, remove the old entry first
             if (entity instanceof InmateEntity) {
+                inmatesRoot.getChildren().removeIf(treeItem -> treeItem.getValue().getId() == entity.getId());
                 inmatesRoot.getChildren().add(leaf);
             } else if (entity.getAccountType().equals(AccountType.ASSET)) {
+                assetsRoot.getChildren().removeIf(treeItem -> treeItem.getValue().getId() == entity.getId());
                 assetsRoot.getChildren().add(leaf);
             } else if (entity.getAccountType().equals(AccountType.EXPENSE)) {
+                expensesRoot.getChildren().removeIf(treeItem -> treeItem.getValue().getId() == entity.getId());
                 expensesRoot.getChildren().add(leaf);
             } else if (entity.getAccountType().equals(AccountType.LIABILITY)) {
+                liabilitiesRoot.getChildren().removeIf(treeItem -> treeItem.getValue().getId() == entity.getId());
                 liabilitiesRoot.getChildren().add(leaf);
             } else if (entity.getAccountType().equals(AccountType.DIVIDEND)) {
+                dividendsRoot.getChildren().removeIf(treeItem -> treeItem.getValue().getId() == entity.getId());
                 dividendsRoot.getChildren().add(leaf);
             } else if (entity.getAccountType().equals(AccountType.REVENUE)) {
+                revenuesRoot.getChildren().removeIf(treeItem -> treeItem.getValue().getId() == entity.getId());
                 revenuesRoot.getChildren().add(leaf);
             } else if (entity.getAccountType().equals(AccountType.EQUITY)) {
+                equitiesRoot.getChildren().removeIf(treeItem -> treeItem.getValue().getId() == entity.getId());
                 equitiesRoot.getChildren().add(leaf);
             } else {
                 System.err.println("Added change event: AccountType \"" + entity.getAccountType() + "\" not supported by class " +
