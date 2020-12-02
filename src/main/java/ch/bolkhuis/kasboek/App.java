@@ -4,9 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 
@@ -18,6 +16,9 @@ public class App extends Application {
     public static final double INITIAL_HEIGHT = 720;
     public static final double MIN_WIDTH = 848;
     public static final double MIN_HEIGHT = 480;
+
+    public static final String CSS_STYLES = "ch.bolkhuis.kasboek.Styles.css";
+    public static final String CSS_SPLASH = "ch.bolkhuis.kasboek.splash.css";
 
     private Stage primaryStage;
     private Scene splashScene;
@@ -55,8 +56,8 @@ public class App extends Application {
 
             // Set the stylesheets
             splashScene.getStylesheets().addAll(
-                    "ch.bolkhuis.kasboek.Styles.css",
-                    "ch.bolkhuis.kasboek.splash.css");
+                    CSS_STYLES,
+                    CSS_SPLASH);
         });
     }
 
