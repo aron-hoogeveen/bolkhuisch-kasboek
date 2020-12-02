@@ -63,7 +63,14 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) {
+        // Do not close the Application when the last showing window is hidden
+        // However, Platform.exit() has to be called EXPLICITLY for the application to exit
+        Platform.setImplicitExit(false);
+
         primaryStage = stage;
+        stage.setOnCloseRequest(event -> {
+            Platform.exit(); // FIXME change this when the applicationScene is set
+        });
         stage.setScene(splashScene);
         stage.setTitle("Huisch Kasboek");
         stage.sizeToScene();

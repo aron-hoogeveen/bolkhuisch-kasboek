@@ -115,6 +115,8 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
         creditorComboBox.setItems(accountingEntityObservableList);
         List<Receipt> receipts = new ArrayList<>(receiptObservableMap.values());
         ObservableList<Receipt> receiptObservableList = FXCollections.observableList(receipts);
+//        receiptObservableList.add(null); // It is totally valid for a transaction to not be attached to a Receipt
+        // TODO add a null item to the BEGIN of the items list so the user can undo a faulty selection
         receiptComboBox.setItems(receiptObservableList);
 
         // Set the initial values if old is not null
