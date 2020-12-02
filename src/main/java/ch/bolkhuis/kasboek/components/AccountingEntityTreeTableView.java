@@ -5,10 +5,13 @@ import ch.bolkhuis.kasboek.core.AccountType;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.InmateEntity;
 import ch.bolkhuis.kasboek.core.PlaceholderEntity;
+import ch.bolkhuis.kasboek.dialog.AccountingEntityDialog;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.util.StringConverter;
@@ -249,24 +252,26 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
 
                 if (treeItem == inmatesRoot) {
                     addMenuItem.setText("Huischgenoot toevoegen");
+                    addMenuItem.setOnAction(event -> System.err.println("Action not implemented for Inmates"));
                 } else if (treeItem == assetsRoot) {
                     addMenuItem.setText("Asset toevoegen");
+                    addMenuItem.setOnAction(new AddEntityEventHandler(AccountType.ASSET));
                 } else if (treeItem == expensesRoot) {
                     addMenuItem.setText("Expense toevoegen");
+                    addMenuItem.setOnAction(new AddEntityEventHandler(AccountType.EXPENSE));
                 } else if (treeItem == liabilitiesRoot) {
                     addMenuItem.setText("Liability toevoegen");
+                    addMenuItem.setOnAction(new AddEntityEventHandler(AccountType.LIABILITY));
                 } else if (treeItem == dividendsRoot) {
                     addMenuItem.setText("Dividend toevoegen");
+                    addMenuItem.setOnAction(new AddEntityEventHandler(AccountType.DIVIDEND));
                 } else if (treeItem == revenuesRoot) {
                     addMenuItem.setText("Revenue toevoegen");
+                    addMenuItem.setOnAction(new AddEntityEventHandler(AccountType.REVENUE));
                 } else if (treeItem == equitiesRoot) {
                     addMenuItem.setText("Equity toevoegen");
+                    addMenuItem.setOnAction(new AddEntityEventHandler(AccountType.EQUITY));
                 }
-
-                // FIXME implement action
-                addMenuItem.setOnAction(event -> {
-                    System.err.println("ContextMenuAction not yet implemented");
-                });
 
                 contextMenu.getItems().clear();
                 contextMenu.getItems().add(addMenuItem);
@@ -274,6 +279,40 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
 
             setContextMenu(contextMenu);
 //            AccountingEntityTreeTableView.this.setContextMenu(contextMenu);
+        }
+    }
+
+    class AddEntityEventHandler implements EventHandler<ActionEvent> {
+        private final AccountType accountType;
+
+        public AddEntityEventHandler(AccountType accountType) {
+            this.accountType = accountType;
+        }
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            AccountingEntityDialog accountingEntityDialog = new AccountingEntityDialog(
+                    appSceneRoot.getApp().getPrimaryStage(),
+                    appSceneRoot.getHuischLedger().getAndIncrementNextAccountingEntityId(),
+                    accountType
+            );
+            accountingEntityDialog.showAndWait();
+            // isResultAvailable return false if no AccountingEntity was created
+            if (accountingEntityDialog.isResultAvailable()) {
+                AccountingEntity accountingEntity = accountingEntityDialog.getResult();
+                try {
+                    appSceneRoot.getHuischLedger().addAccountingEntity(accountingEntity);
+                } catch (Exception e) {
+                    System.err.println("Could not add to AccountingEntity returned from the AccountingEntityDialog");
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

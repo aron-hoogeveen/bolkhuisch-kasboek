@@ -181,6 +181,10 @@ public class ApplicationSceneRoot extends BorderPane {
         }
     }
 
+    public App getApp() { return app; }
+
+    public HuischLedger getHuischLedger() { return huischLedger; }
+
     // *****************************************************************************************************************
     // * Click Event Handlers
     // *****************************************************************************************************************
