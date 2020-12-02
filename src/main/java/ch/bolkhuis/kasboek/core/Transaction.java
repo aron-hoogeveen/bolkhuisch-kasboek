@@ -214,6 +214,10 @@ public final class Transaction implements Comparable<Transaction> {
                 && (!description.contains("\r"));
     }
 
+    public static boolean isCorrectAmount(double amount) {
+        return amount >= 0;
+    }
+
     /**
      * Returns the String representation of the {@code date} of this Transaction formatted as "dd-MM-uuuu".
      *
