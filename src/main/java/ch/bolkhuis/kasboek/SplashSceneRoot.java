@@ -60,7 +60,7 @@ public class SplashSceneRoot extends BorderPane {
     private void createAndSetChildren() {
         // Recent opened Ledgers
         List<RecentLedgerFile> recentLedgerFiles = loadRecentLedgers();
-        // FIXME DEBUG
+        // FIXME implement the actual loading of recent Ledger files
         recentLedgerFiles = new ArrayList<>(List.of(
                 new RecentLedgerFile(new File("~/nonexistant"), "Placeholder for Ledger"),
                 new RecentLedgerFile(new File("~/some/file.hlf"), "Official Ledger ofc")
@@ -223,9 +223,11 @@ public class SplashSceneRoot extends BorderPane {
 
         huischLedger.addTransaction(t1);
         huischLedger.addTransaction(t2);
-        huischLedger.addTransaction(r1_t3);
         huischLedger.addTransaction(r1_t4);
+        huischLedger.addTransaction(r1_t3);
         huischLedger.addReceipt(r1);
+
+        huischLedger.setNextAccountingEntityId(2);
 
         return huischLedger;
     }

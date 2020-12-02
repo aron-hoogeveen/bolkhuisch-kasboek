@@ -609,4 +609,14 @@ public class Ledger {
             }
         }
     }
+
+    /**
+     * Manually set the field {@code nextAccountingEntityId}. Do not use this method unless you are very sure what you
+     * are doing.
+     *
+     * @param id the new {@code nextAccountingEntityId}
+     */
+    public void setNextAccountingEntityId(int id) {
+        this.nextAccountingEntityId = id;
+    }
 }

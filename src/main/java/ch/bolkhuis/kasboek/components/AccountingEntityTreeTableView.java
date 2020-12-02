@@ -1,5 +1,6 @@
 package ch.bolkhuis.kasboek.components;
 
+import ch.bolkhuis.kasboek.ApplicationSceneRoot;
 import ch.bolkhuis.kasboek.core.AccountType;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.InmateEntity;
@@ -25,6 +26,7 @@ import java.util.Vector;
  * @author Aron Hoogeveen
  */
 public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntity> implements MapChangeListener<Integer, AccountingEntity> {
+    private final ApplicationSceneRoot appSceneRoot;
     // Backing ObservableMap
     private final ObservableMap<Integer, AccountingEntity> m_items;
     // Root TreeItems
@@ -41,9 +43,12 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
      *
      * @param m_items the AccountingEntities to put in this TreeTableView
      */
-    public AccountingEntityTreeTableView(@NotNull ObservableMap<Integer, AccountingEntity> m_items) {
+    public AccountingEntityTreeTableView(@NotNull ApplicationSceneRoot appSceneRoot,
+                                         @NotNull ObservableMap<Integer, AccountingEntity> m_items) {
+        if (appSceneRoot == null) { throw new NullPointerException(); }
         if (m_items == null) { throw new NullPointerException(); }
         this.m_items = m_items;
+        this.appSceneRoot = appSceneRoot;
 
         setShowRoot(false);
         m_items.addListener(this); // listen for changes in the backing ObservableMap

@@ -3,7 +3,9 @@ package ch.bolkhuis.kasboek;
 import ch.bolkhuis.kasboek.components.AccountingEntityTreeTableView;
 import ch.bolkhuis.kasboek.components.ReceiptTableView;
 import ch.bolkhuis.kasboek.components.TransactionTableView;
+import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.HuischLedger;
+import ch.bolkhuis.kasboek.dialog.AccountingEntityDialog;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -85,7 +87,7 @@ public class ApplicationSceneRoot extends BorderPane {
         // Edit menu
         Menu editMenu = new Menu("Bewerken");
         MenuItem addAccountingEntity = new MenuItem("Entiteit toevoegen");
-//        addAccountingEntity.setOnAction(new AddAccountingEntityEventHandler());
+        addAccountingEntity.setOnAction(new AddAccountingEntityEventHandler());
         MenuItem addInmateEntity = new MenuItem("Huischgenoot toevoegen");
 //        addInmateEntity.setOnAction(new AddInmateEntityEventHandler());
         MenuItem addReceipt = new MenuItem("Bonnetje toevoegen");
@@ -132,7 +134,10 @@ public class ApplicationSceneRoot extends BorderPane {
         Tab transactionsTab = new Tab("Transacties");
 
         // Entities Tab
-        AccountingEntityTreeTableView entityTreeTableView = new AccountingEntityTreeTableView(huischLedger.getAccountingEntities());
+        AccountingEntityTreeTableView entityTreeTableView = new AccountingEntityTreeTableView(
+                this,
+                huischLedger.getAccountingEntities()
+        );
         entitiesTab.setContent(new BorderPane(entityTreeTableView)); // this should make everything full sized
 
         // Receipts Tab
@@ -155,4 +160,46 @@ public class ApplicationSceneRoot extends BorderPane {
         );
         setCenter(tabPane);
     }
+
+    /**
+     * Shows an EntityDialog in which the user can create a new entity that is then added to the {@code huischLedger}.
+     */
+    public void showAccountingEntityDialog() {
+        AccountingEntityDialog accountingEntityDialog = new AccountingEntityDialog(
+                app.getPrimaryStage(),
+                huischLedger.getAndIncrementNextAccountingEntityId());
+        accountingEntityDialog.showAndWait();
+        // isResultAvailable return false if no AccountingEntity was created
+        if (accountingEntityDialog.isResultAvailable()) {
+            AccountingEntity accountingEntity = accountingEntityDialog.getResult();
+            try {
+                huischLedger.addAccountingEntity(accountingEntity);
+            } catch (Exception e) {
+                System.err.println("Could not add to AccountingEntity returned from the AccountingEntityDialog");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // *****************************************************************************************************************
+    // * Click Event Handlers
+    // *****************************************************************************************************************
+    private class AddAccountingEntityEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+                showAccountingEntityDialog();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
