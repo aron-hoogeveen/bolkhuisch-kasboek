@@ -8,6 +8,7 @@ import ch.bolkhuis.kasboek.core.HuischLedger;
 import ch.bolkhuis.kasboek.core.InmateEntity;
 import ch.bolkhuis.kasboek.dialog.AccountingEntityDialog;
 import ch.bolkhuis.kasboek.dialog.InmateEntityDialog;
+import ch.bolkhuis.kasboek.dialog.TransactionDialog;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -91,12 +92,15 @@ public class ApplicationSceneRoot extends BorderPane {
         MenuItem addAccountingEntity = new MenuItem("Entiteit toevoegen");
         addAccountingEntity.setOnAction(new AddAccountingEntityEventHandler());
         MenuItem addInmateEntity = new MenuItem("Huischgenoot toevoegen");
-        addInmateEntity.setOnAction(new AddInmateEntityEventHandler());
+    addInmateEntity.setOnAction(new AddInmateEntityEventHandler());
         MenuItem addReceipt = new MenuItem("Bonnetje toevoegen");
 //        addAccountingEntity.setOnAction(new AddAccountingEntityEventHandler());
+        MenuItem addTransaction = new MenuItem("Transactie toevoegen");
+        addTransaction.setOnAction(new AddTransactionEventHandler());
         editMenu.getItems().addAll(
                 addAccountingEntity,
                 addInmateEntity,
+                addTransaction,
                 addReceipt
         );
         // Print menu
@@ -200,6 +204,17 @@ public class ApplicationSceneRoot extends BorderPane {
         }
     }
 
+    public void showTransactionDialog() {
+        TransactionDialog transactionDialog = new TransactionDialog(
+                app.getPrimaryStage(),
+                huischLedger.getAccountingEntities(),
+                huischLedger.getReceipts(),
+                huischLedger.getAndIncrementNextTransactionId()
+        );
+        transactionDialog.showAndWait();
+        // FIXME finish this method
+    }
+
     public App getApp() { return app; }
 
     public HuischLedger getHuischLedger() { return huischLedger; }
@@ -237,6 +252,24 @@ public class ApplicationSceneRoot extends BorderPane {
         public void handle(ActionEvent event) {
             try {
                 showInmateEntityDialog();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class AddTransactionEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+                showTransactionDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }
