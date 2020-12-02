@@ -60,4 +60,9 @@ public class Receipt {
     public int getPayer() {
         return payer;
     }
+
+    @Override
+    public String toString() {
+        return name + " (" + date + ")";
+    }
 }
