@@ -5,7 +5,9 @@ import ch.bolkhuis.kasboek.components.ReceiptTableView;
 import ch.bolkhuis.kasboek.components.TransactionTableView;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.HuischLedger;
+import ch.bolkhuis.kasboek.core.InmateEntity;
 import ch.bolkhuis.kasboek.dialog.AccountingEntityDialog;
+import ch.bolkhuis.kasboek.dialog.InmateEntityDialog;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -89,7 +91,7 @@ public class ApplicationSceneRoot extends BorderPane {
         MenuItem addAccountingEntity = new MenuItem("Entiteit toevoegen");
         addAccountingEntity.setOnAction(new AddAccountingEntityEventHandler());
         MenuItem addInmateEntity = new MenuItem("Huischgenoot toevoegen");
-//        addInmateEntity.setOnAction(new AddInmateEntityEventHandler());
+        addInmateEntity.setOnAction(new AddInmateEntityEventHandler());
         MenuItem addReceipt = new MenuItem("Bonnetje toevoegen");
 //        addAccountingEntity.setOnAction(new AddAccountingEntityEventHandler());
         editMenu.getItems().addAll(
@@ -181,6 +183,23 @@ public class ApplicationSceneRoot extends BorderPane {
         }
     }
 
+    public void showInmateEntityDialog() {
+        InmateEntityDialog inmateEntityDialog = new InmateEntityDialog(
+                app.getPrimaryStage(),
+                huischLedger.getAndIncrementNextAccountingEntityId());
+        inmateEntityDialog.showAndWait();
+        // isResultAvailable return false if no AccountingEntity was created
+        if (inmateEntityDialog.isResultAvailable()) {
+            InmateEntity inmateEntity = inmateEntityDialog.getResult();
+            try {
+                huischLedger.addAccountingEntity(inmateEntity);
+            } catch (Exception e) {
+                System.err.println("Could not add the InmateEntity returned from the InmateEntityDialog");
+                e.printStackTrace();
+            }
+        }
+    }
+
     public App getApp() { return app; }
 
     public HuischLedger getHuischLedger() { return huischLedger; }
@@ -200,6 +219,24 @@ public class ApplicationSceneRoot extends BorderPane {
         public void handle(ActionEvent event) {
             try {
                 showAccountingEntityDialog();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class AddInmateEntityEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+                showInmateEntityDialog();
             } catch (Exception e) {
                 e.printStackTrace();
             }
