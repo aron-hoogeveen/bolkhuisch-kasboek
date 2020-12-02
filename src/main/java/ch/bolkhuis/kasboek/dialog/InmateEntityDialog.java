@@ -21,6 +21,8 @@ import java.util.List;
 /**
  * Calling {@code showDialog} on an instance of this class will present the user with a (blocking) dialog in which the
  * user can create a new InmateEntity.
+ *
+ * TODO extends AbstractDialog
  */
 public class InmateEntityDialog {
     private final Stage stage;

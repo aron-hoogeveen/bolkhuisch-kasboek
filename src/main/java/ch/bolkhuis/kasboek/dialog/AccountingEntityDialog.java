@@ -20,6 +20,8 @@ import java.util.List;
 /**
  * Calling {@code showDialog} on an instance of this class will present the user with a (blocking) dialog in which the
  * user can create a new AccountingEntity.
+ *
+ * TODO extends AbstractDialog
  */
 public class AccountingEntityDialog {
     private final Stage stage;
