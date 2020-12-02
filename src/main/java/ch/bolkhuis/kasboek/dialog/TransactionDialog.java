@@ -102,9 +102,7 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
         receiptLabel.setText("Receipt:");
         amountLabel.setText("Bedrag:");
         descriptionLabel.setText("Beschrijving:");
-
         submitButton.setText("Opslaan");
-        submitButton.setMaxWidth(Double.MAX_VALUE);
 
         // Set the prompts for the TextFields
         amountTextField.setPromptText("Het bedrag in euros");
@@ -131,6 +129,15 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
             // Set the date for the DatePicker to today
             datePicker.setValue(LocalDate.now());
         }
+
+        // Set the maximum widths of all inputs to Double.MAX_VALUE for equal widths
+        datePicker.setMaxWidth(Double.MAX_VALUE);
+        debtorComboBox.setMaxWidth(Double.MAX_VALUE);
+        creditorComboBox.setMaxWidth(Double.MAX_VALUE);
+        receiptComboBox.setMaxWidth(Double.MAX_VALUE);
+        amountTextField.setMaxWidth(Double.MAX_VALUE);
+        descriptionTextField.setMaxWidth(Double.MAX_VALUE);
+        submitButton.setMaxWidth(Double.MAX_VALUE);
 
         // Add all components to the rootGridPane
         rootGridPane.add(dateLabel, 0, 0);
