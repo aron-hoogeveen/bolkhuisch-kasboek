@@ -223,11 +223,6 @@ public class ApplicationSceneRoot extends BorderPane {
                 e.printStackTrace();
             }
         }
-
-        // FIXME remove debug
-        for (AccountingEntity entity : huischLedger.getAccountingEntities().values()) {
-            System.out.println("Entity: " + entity.toString());
-        }
     }
 
     public App getApp() { return app; }
