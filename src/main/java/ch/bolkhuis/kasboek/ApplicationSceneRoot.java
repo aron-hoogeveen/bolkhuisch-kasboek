@@ -6,6 +6,7 @@ import ch.bolkhuis.kasboek.components.TransactionTableView;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.HuischLedger;
 import ch.bolkhuis.kasboek.core.InmateEntity;
+import ch.bolkhuis.kasboek.core.Transaction;
 import ch.bolkhuis.kasboek.dialog.AccountingEntityDialog;
 import ch.bolkhuis.kasboek.dialog.InmateEntityDialog;
 import ch.bolkhuis.kasboek.dialog.TransactionDialog;
@@ -212,7 +213,21 @@ public class ApplicationSceneRoot extends BorderPane {
                 huischLedger.getAndIncrementNextTransactionId()
         );
         transactionDialog.showAndWait();
-        // FIXME finish this method
+
+        if (transactionDialog.isResultAvailable()) {
+            Transaction transaction = transactionDialog.getResult();
+            try {
+                huischLedger.addTransaction(transaction);
+            } catch (Exception e) {
+                System.err.println("Could not add the Transaction returned from the TransactionDialog");
+                e.printStackTrace();
+            }
+        }
+
+        // FIXME remove debug
+        for (AccountingEntity entity : huischLedger.getAccountingEntities().values()) {
+            System.out.println("Entity: " + entity.toString());
+        }
     }
 
     public App getApp() { return app; }

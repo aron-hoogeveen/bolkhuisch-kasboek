@@ -6,13 +6,12 @@ import ch.bolkhuis.kasboek.core.Transaction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.jetbrains.annotations.NotNull;
 
@@ -124,9 +123,11 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
             datePicker.setValue(old.getDate());
             debtorComboBox.getSelectionModel().select(accountingEntityObservableMap.get(old.getDebtorId()));
             creditorComboBox.getSelectionModel().select(accountingEntityObservableMap.get(old.getCreditorId()));
-            if (old.getReceiptId() != null) {
-                receiptComboBox.getSelectionModel().select(receiptObservableMap.get(old.getReceiptId()));
-            }
+//            if (old.getReceiptId() != null) {
+            receiptComboBox.getSelectionModel().select(receiptObservableMap.get(old.getReceiptId()));
+//            }
+            amountTextField.setText(String.valueOf(old.getAmount()));
+            descriptionTextField.setText(old.getDescription());
         } else {
             // Set the date for the DatePicker to today
             datePicker.setValue(LocalDate.now());
@@ -164,28 +165,6 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
 
         stage.setScene(new Scene(rootGridPane));
         stage.sizeToScene();
-    }
-
-    @Override
-    public void show() {
-        setTitle();
-        stage.show();
-    }
-
-    @Override
-    public void showAndWait() {
-        setTitle();
-        stage.showAndWait();
-    }
-
-    /**
-     * Sets the title of the scene based on whether an old Transaction is provided.
-     */
-    private void setTitle() {
-        if (old == null)
-            stage.setTitle("Transactie toevoegen");
-        else
-            stage.setTitle("Transactie bewerken");
     }
 
     /**
@@ -228,5 +207,92 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
             else
                 creditorComboBox.setBorder(correctBorder);
         });
+
+        submitButton.setOnAction(new InputProcessingEventHandler());
+    }
+
+    /**
+     * Sets the title of the scene based on whether an old Transaction is provided.
+     */
+    private void setTitle() {
+        if (old == null)
+            stage.setTitle("Transactie toevoegen");
+        else
+            stage.setTitle("Transactie bewerken");
+    }
+
+    @Override
+    public void show() {
+        setTitle();
+        stage.show();
+    }
+
+    @Override
+    public void showAndWait() {
+        setTitle();
+        stage.showAndWait();
+    }
+
+    private class InputProcessingEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            LocalDate date = datePicker.getValue();
+            AccountingEntity debtor = debtorComboBox.getValue();
+            AccountingEntity creditor = creditorComboBox.getValue();
+            Receipt receipt = receiptComboBox.getValue();
+            Integer receiptId = (receipt == null) ? null : receipt.getId();
+            String amountString = amountTextField.getText();
+            String description = descriptionTextField.getText();
+
+            // Validate the inputs
+            try {
+                if (Transaction.isCorrectAmount(Double.parseDouble(amountString)) && Transaction.isCorrectDescription(description)) {
+                    if (old == null) {
+                        result = new Transaction(
+                                newId,
+                                debtor.getId(), // could cause NullPointerException but it will be caught by the try-catch
+                                creditor.getId(), // same
+                                Double.parseDouble(amountString),
+                                receiptId,
+                                date,
+                                description
+                        );
+                    } else {
+                        result = new Transaction(
+                                old.getId(),
+                                old.getDebtorId(),
+                                old.getCreditorId(),
+                                old.getAmount(),
+                                old.getReceiptId(),
+                                date,
+                                description
+                        );
+                    }
+                    resultAvailable = true;
+                    stage.hide();
+                    return;
+                }
+            }
+            catch (NullPointerException ignored) {}
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Some inputs are illegal
+            Dialog<ButtonType> errorDialog = new Dialog<>();
+            ButtonType buttonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            errorDialog.getDialogPane().getButtonTypes().add(buttonType);
+            errorDialog.setTitle("Error");
+            errorDialog.setContentText("Een of meerdere inputs hebben illegale waarden. Vul alsjeblieft legale " +
+                    "waarden in.");
+            errorDialog.showAndWait();
+        }
     }
 }
