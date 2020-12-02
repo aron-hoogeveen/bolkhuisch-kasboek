@@ -6,6 +6,7 @@ import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.InmateEntity;
 import ch.bolkhuis.kasboek.core.PlaceholderEntity;
 import ch.bolkhuis.kasboek.dialog.AccountingEntityDialog;
+import ch.bolkhuis.kasboek.dialog.InmateEntityDialog;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.collections.MapChangeListener;
@@ -252,7 +253,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
 
                 if (treeItem == inmatesRoot) {
                     addMenuItem.setText("Huischgenoot toevoegen");
-                    addMenuItem.setOnAction(event -> System.err.println("Action not implemented for Inmates"));
+                    addMenuItem.setOnAction(new AddInmateEventHandler());
                 } else if (treeItem == assetsRoot) {
                     addMenuItem.setText("Asset toevoegen");
                     addMenuItem.setOnAction(new AddEntityEventHandler(AccountType.ASSET));
@@ -306,6 +307,34 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
             // isResultAvailable return false if no AccountingEntity was created
             if (accountingEntityDialog.isResultAvailable()) {
                 AccountingEntity accountingEntity = accountingEntityDialog.getResult();
+                try {
+                    appSceneRoot.getHuischLedger().addAccountingEntity(accountingEntity);
+                } catch (Exception e) {
+                    System.err.println("Could not add to AccountingEntity returned from the AccountingEntityDialog");
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class AddInmateEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            InmateEntityDialog inmateEntityDialog = new InmateEntityDialog(
+                    appSceneRoot.getApp().getPrimaryStage(),
+                    appSceneRoot.getHuischLedger().getAndIncrementNextAccountingEntityId()
+            );
+            inmateEntityDialog.showAndWait();
+            // isResultAvailable return false if no InmateEntity was created
+            if (inmateEntityDialog.isResultAvailable()) {
+                AccountingEntity accountingEntity = inmateEntityDialog.getResult();
                 try {
                     appSceneRoot.getHuischLedger().addAccountingEntity(accountingEntity);
                 } catch (Exception e) {
