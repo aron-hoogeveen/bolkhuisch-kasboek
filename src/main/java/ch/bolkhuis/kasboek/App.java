@@ -57,7 +57,6 @@ public class App extends Application {
             splashScene.getStylesheets().addAll(
                     "ch.bolkhuis.kasboek.Styles.css",
                     "ch.bolkhuis.kasboek.splash.css");
-            applicationScene.getStylesheets().add("ch.bolkhuis.kasboek.Styles.css");
         });
     }
 

@@ -99,6 +99,7 @@ public class SplashSceneRoot extends BorderPane {
                     new ApplicationSceneRoot(app, huischLedger, null),
                     App.INITIAL_WIDTH,
                     App.INITIAL_HEIGHT));
+            app.getApplicationScene().getStylesheets().add("ch.bolkhuis.kasboek.Styles.css");
             stage.setScene(app.getApplicationScene());
             stage.show();
         });

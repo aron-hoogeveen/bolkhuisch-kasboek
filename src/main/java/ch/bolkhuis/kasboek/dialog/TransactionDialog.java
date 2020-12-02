@@ -280,10 +280,7 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
                     return;
                 }
             }
-            catch (NullPointerException ignored) {}
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+            catch (Exception ignored) {}
 
             // Some inputs are illegal
             Dialog<ButtonType> errorDialog = new Dialog<>();
