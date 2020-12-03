@@ -305,7 +305,14 @@ public class Ledger {
         return new TreeMap<>(accountingEntities);
     }
 
-    public @NotNull ObservableMap<Integer, AccountingEntity> getAccountingEntities() { return accountingEntities; }
+    /**
+     * Returns an unmodifiable version of the ObservableMap of AccountingEntities.
+     *
+     * @return unmodifiable map of AccountingEntities
+     */
+    public @NotNull ObservableMap<Integer, AccountingEntity> getAccountingEntities() {
+        return FXCollections.unmodifiableObservableMap(accountingEntities);
+    }
 
     /**
      * Returns a deep copy of {@code transactions}. This method is linear time.
@@ -316,7 +323,14 @@ public class Ledger {
         return new TreeMap<>(transactions);
     }
 
-    public @NotNull ObservableMap<Integer, Transaction> getTransactions() { return transactions; }
+    /**
+     * Returns an unmodifiable version of the ObservableMap of Transactions.
+     *
+     * @return unmodifiable map of transactions
+     */
+    public @NotNull ObservableMap<Integer, Transaction> getTransactions() {
+        return FXCollections.unmodifiableObservableMap(transactions);
+    }
 
     /**
      * Returns if Object {@code o} is equal to this Ledger. This method does not take the Vector of EventListeners into

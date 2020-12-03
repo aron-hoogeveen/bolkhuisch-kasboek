@@ -304,7 +304,14 @@ public final class HuischLedger extends Ledger {
         return new TreeMap<>(receipts);
     }
 
-    public ObservableMap<Integer, Receipt> getReceipts() { return receipts; }
+    /**
+     * Returns an unmodifiable version of the ObservableMap of Receipts.
+     *
+     * @return unmodifiable map of Receipts
+     */
+    public ObservableMap<Integer, Receipt> getReceipts() {
+        return FXCollections.unmodifiableObservableMap(receipts);
+    }
 
     public int getAndIncrementNextReceiptId() {
         return nextReceiptId++;
