@@ -68,9 +68,6 @@ public class App extends Application {
         Platform.setImplicitExit(false);
 
         primaryStage = stage;
-        stage.setOnCloseRequest(event -> {
-            Platform.exit(); // FIXME change this when the applicationScene is set
-        });
 
         changeToSplashScene();
     }
@@ -85,6 +82,9 @@ public class App extends Application {
         );
         primaryStage.sizeToScene();
         primaryStage.setResizable(false);
+        primaryStage.setOnCloseRequest(event -> {
+            Platform.exit();
+        });
         primaryStage.show();
     }
 
