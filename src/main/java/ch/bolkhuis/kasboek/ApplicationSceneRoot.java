@@ -3,20 +3,16 @@ package ch.bolkhuis.kasboek;
 import ch.bolkhuis.kasboek.components.AccountingEntityTreeTableView;
 import ch.bolkhuis.kasboek.components.ReceiptTableView;
 import ch.bolkhuis.kasboek.components.TransactionTableView;
-import ch.bolkhuis.kasboek.core.AccountingEntity;
-import ch.bolkhuis.kasboek.core.HuischLedger;
-import ch.bolkhuis.kasboek.core.InmateEntity;
-import ch.bolkhuis.kasboek.core.Transaction;
+import ch.bolkhuis.kasboek.core.*;
 import ch.bolkhuis.kasboek.dialog.AccountingEntityDialog;
 import ch.bolkhuis.kasboek.dialog.InmateEntityDialog;
 import ch.bolkhuis.kasboek.dialog.TransactionDialog;
-import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.events.Event;
 
 import java.io.File;
 
@@ -31,7 +27,14 @@ import java.io.File;
 public class ApplicationSceneRoot extends BorderPane {
     private final HuischLedger huischLedger;
     private final File huischLedgerFile;
+
     private final App app;
+
+    // MapChangeListeners used for observing unsaved changes
+    private final AccountingEntityMapChangeListener entityMapChangeListener = new AccountingEntityMapChangeListener();
+    private final TransactionMapChangeListener transactionMapChangeListener = new TransactionMapChangeListener();
+    private final ReceiptMapChangeListener receiptMapChangeListener = new ReceiptMapChangeListener();
+    private boolean unsavedChanges = false;
 
     /**
      * Default constructor.
@@ -43,6 +46,16 @@ public class ApplicationSceneRoot extends BorderPane {
         this.app = app;
         this.huischLedger = huischLedger;
         this.huischLedgerFile = huischLedgerFile;
+
+        // set the listeners that observe unsaved changes
+        huischLedger.getAccountingEntities().addListener(entityMapChangeListener);
+        huischLedger.getTransactions().addListener(transactionMapChangeListener);
+        huischLedger.getReceipts().addListener(receiptMapChangeListener);
+
+        // a null-valued huischLedgerFile indicates a new HuischLedger which implies that it is not already saved.
+        if (huischLedgerFile == null) {
+            unsavedChanges = true;
+        }
 
         initAppearance();
         createAndSetChildren();
@@ -120,12 +133,33 @@ public class ApplicationSceneRoot extends BorderPane {
                 printSubMenu
         );
 
+        // Developer menu.
+        Menu developerMenu = new Menu("Developer");
+        MenuItem printSizeOfAccountingEntities = new MenuItem("size of entities");
+        printSizeOfAccountingEntities.setOnAction(event -> {
+            System.out.println("The size of entities is: " + huischLedger.getAccountingEntities().size());
+        });
+        MenuItem printSizeOfTransactions = new MenuItem("size of transactions");
+        printSizeOfTransactions.setOnAction(event -> {
+            System.out.println("The size of transactions is: " + huischLedger.getTransactions().size());
+        });
+        MenuItem printSizeOfReceipts = new MenuItem("size of receipts");
+        printSizeOfReceipts.setOnAction(event -> {
+            System.out.println("The size of receipts is: " + huischLedger.getReceipts().size());
+        });
+        developerMenu.getItems().addAll(
+                printSizeOfAccountingEntities,
+                printSizeOfTransactions,
+                printSizeOfReceipts
+        );
+
         // Add the File Menus to the MenuBar
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(
                 fileMenu,
                 editMenu,
-                toolsMenu
+                toolsMenu,
+                developerMenu
         );
 
         setTop(menuBar);
@@ -232,6 +266,31 @@ public class ApplicationSceneRoot extends BorderPane {
 
     public HuischLedger getHuischLedger() { return huischLedger; }
 
+//    /**
+//     * Called after a change has been made to an ObservableMap.
+//     * This method is called on every elementary change (put/remove) once.
+//     * This means, complex changes like keySet().removeAll(Collection) or clear()
+//     * may result in more than one call of onChanged method.
+//     *
+//     * @param change the change that was made
+//     */
+//    @Override
+//    public void onChanged(Change change) {
+//        // set the saved state to false, and then remove this from the observable listeners list. By removing this from
+//        // the listeners, we prevent a lot of update notifications that are irrelevant since we already know that the
+//        // state of the huischledger changed. This could be considered a hacky implementation for keeping track of
+//        // unsaved changes, but it is lightweight, and at the moment of writing the fewest work to implement (design/time
+//        // consideration).
+//
+//        System.out.println("HuischLedger changed. Unsaved changes exist.");
+//
+//        unsavedChanges = true;
+//
+//        huischLedger.getAccountingEntities().removeListener(this);
+//        huischLedger.getTransactions().removeListener(this);
+//        huischLedger.getReceipts().removeListener(this);
+//    }
+
     // *****************************************************************************************************************
     // * Click Event Handlers
     // *****************************************************************************************************************
@@ -286,6 +345,79 @@ public class ApplicationSceneRoot extends BorderPane {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * Sets the field {@code unsavedChanges} and updates the observers for unsaved changes accordingly.
+     *
+     * @param newValue the value to set for {@code unsavedChanges}
+     */
+    private void setUnsavedChanges(boolean newValue) {
+        if (newValue) {
+            System.out.println("Observed changes to the HuischLedger. Setting unsavedChanges to true.");
+            // remove the unsaved observing mapchangelisteners from the lists of mapchangelisteners
+            huischLedger.getAccountingEntities().removeListener(entityMapChangeListener);
+            huischLedger.getTransactions().removeListener(transactionMapChangeListener);
+            huischLedger.getReceipts().removeListener(receiptMapChangeListener);
+
+            unsavedChanges = newValue;
+        } else {
+            System.out.println("Changes are probably saved, because setUnsavedChanges was called with value false.");
+            // changes have been saved. Re-register the listeners for observing unsaved changes
+            huischLedger.getAccountingEntities().addListener(entityMapChangeListener);
+            huischLedger.getTransactions().addListener(transactionMapChangeListener);
+            huischLedger.getReceipts().addListener(receiptMapChangeListener);
+
+            unsavedChanges = newValue;
+        }
+    }
+
+    private class AccountingEntityMapChangeListener implements MapChangeListener<Integer, AccountingEntity> {
+
+        /**
+         * Called after a change has been made to an ObservableMap.
+         * This method is called on every elementary change (put/remove) once.
+         * This means, complex changes like keySet().removeAll(Collection) or clear()
+         * may result in more than one call of onChanged method.
+         *
+         * @param change the change that was made
+         */
+        @Override
+        public void onChanged(Change<? extends Integer, ? extends AccountingEntity> change) {
+            setUnsavedChanges(true);
+        }
+    }
+
+    private class TransactionMapChangeListener implements MapChangeListener<Integer, Transaction> {
+
+        /**
+         * Called after a change has been made to an ObservableMap.
+         * This method is called on every elementary change (put/remove) once.
+         * This means, complex changes like keySet().removeAll(Collection) or clear()
+         * may result in more than one call of onChanged method.
+         *
+         * @param change the change that was made
+         */
+        @Override
+        public void onChanged(Change<? extends Integer, ? extends Transaction> change) {
+            setUnsavedChanges(true);
+        }
+    }
+
+    private class ReceiptMapChangeListener implements  MapChangeListener<Integer, Receipt> {
+
+        /**
+         * Called after a change has been made to an ObservableMap.
+         * This method is called on every elementary change (put/remove) once.
+         * This means, complex changes like keySet().removeAll(Collection) or clear()
+         * may result in more than one call of onChanged method.
+         *
+         * @param change the change that was made
+         */
+        @Override
+        public void onChanged(Change<? extends Integer, ? extends Receipt> change) {
+            setUnsavedChanges(true);
         }
     }
 
