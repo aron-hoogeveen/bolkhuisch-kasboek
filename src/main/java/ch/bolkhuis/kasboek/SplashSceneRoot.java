@@ -90,18 +90,7 @@ public class SplashSceneRoot extends BorderPane {
             // FIXME this is a temporary action until the loading is implemented
             HuischLedger huischLedger = createTemporaryHuischLedger();
 
-            Stage stage = app.getPrimaryStage();
-            stage.hide();
-            stage.setResizable(true);
-            stage.setMinWidth(App.MIN_WIDTH);
-            stage.setMinHeight(App.MIN_HEIGHT);
-            app.setApplicationScene(new Scene(
-                    new ApplicationSceneRoot(app, huischLedger, null),
-                    App.INITIAL_WIDTH,
-                    App.INITIAL_HEIGHT));
-            app.getApplicationScene().getStylesheets().add(App.CSS_STYLES);
-            stage.setScene(app.getApplicationScene());
-            stage.show();
+            app.changeToApplicationScene(new ApplicationSceneRoot(app, huischLedger, null));
         });
         Button importLedgerButton = new Button("Importeer Kasboek", new ImageView("import-16.png"));
         Button getHelpButton = new Button("Krijg hulp", new ImageView("question-mark-16.png"));

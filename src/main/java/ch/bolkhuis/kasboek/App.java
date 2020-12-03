@@ -5,7 +5,11 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.util.List;
+import java.util.Vector;
 
 
 /**
@@ -20,9 +24,16 @@ public class App extends Application {
     public static final String CSS_STYLES = "ch.bolkhuis.kasboek.Styles.css";
     public static final String CSS_SPLASH = "ch.bolkhuis.kasboek.splash.css";
 
+    /**
+     * ExtensionFilters to be used for saving and opening HuischLedger files.
+     */
+    public static final Vector<FileChooser.ExtensionFilter> extensionFilters = new Vector<>(List.of(
+            new FileChooser.ExtensionFilter("Huischkasboek Bestanden", "*.hlf"),
+            new FileChooser.ExtensionFilter("Alle Bestanden", "*.*")
+    ));
+
     private Stage primaryStage;
-    private Scene splashScene;
-    private Scene applicationScene;
+    private Image splashLogo;
 
     /**
      * The application initialization method. This method is called immediately
@@ -47,18 +58,7 @@ public class App extends Application {
     public void init() throws Exception {
         // Load the splash screen image already and pass it to the SplashSceneRoot constructor
         // The width is determined from the
-        Image splashLogo = new Image("BolkhuischLogo.png", 240, 240, true, true);
-
-        // Create the scenes as soon as the Application Thread starts up.
-        Platform.runLater(() -> {
-            splashScene = new Scene(new SplashSceneRoot(this, splashLogo)); // Splash screen should as small as possible
-            applicationScene = new Scene(new Group(), INITIAL_WIDTH, INITIAL_HEIGHT); // placeholder
-
-            // Set the stylesheets
-            splashScene.getStylesheets().addAll(
-                    CSS_STYLES,
-                    CSS_SPLASH);
-        });
+        splashLogo = new Image("BolkhuischLogo.png", 240, 240, true, true);
     }
 
     @Override
@@ -71,12 +71,31 @@ public class App extends Application {
         stage.setOnCloseRequest(event -> {
             Platform.exit(); // FIXME change this when the applicationScene is set
         });
-        stage.setScene(splashScene);
-        stage.setTitle("Huisch Kasboek");
-        stage.sizeToScene();
-        // Splash screen should not be resizable.
-        stage.setResizable(false);
-        stage.show();
+
+        changeToSplashScene();
+    }
+
+    public void changeToSplashScene() {
+        primaryStage.hide();
+        primaryStage.setTitle("Huisch Kasboek");
+        primaryStage.setScene(new Scene(new SplashSceneRoot(this, splashLogo)));
+        primaryStage.getScene().getStylesheets().addAll(
+                CSS_STYLES,
+                CSS_SPLASH
+        );
+        primaryStage.sizeToScene();
+        primaryStage.setResizable(false);
+        primaryStage.show();
+    }
+
+    public void changeToApplicationScene(ApplicationSceneRoot root) {
+        primaryStage.hide();
+        primaryStage.setResizable(true);
+        primaryStage.setMinWidth(App.MIN_WIDTH);
+        primaryStage.setMinHeight(App.MIN_HEIGHT);
+        primaryStage.setScene(new Scene(root, INITIAL_WIDTH, INITIAL_HEIGHT));
+        primaryStage.getScene().getStylesheets().add(App.CSS_STYLES);
+        primaryStage.show();
     }
 
     public static void main(String[] args) {
@@ -87,12 +106,12 @@ public class App extends Application {
         return primaryStage;
     }
 
-    public Scene getSplashScene() {
-        return splashScene;
-    }
-
-    public void setApplicationScene(Scene scene) { applicationScene = scene; }
-    public Scene getApplicationScene() {
-        return applicationScene;
-    }
+//    public Scene getSplashScene() {
+//        return splashScene;
+//    }
+//
+//    public void setApplicationScene(Scene scene) { applicationScene = scene; }
+//    public Scene getApplicationScene() {
+//        return applicationScene;
+//    }
 }

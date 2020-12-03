@@ -5,6 +5,7 @@ module ch.bolkhuis.guis {
     requires java.desktop;
     requires com.google.gson;
     requires org.apache.commons.lang3;
+    requires java.prefs;
     exports ch.bolkhuis.kasboek;
     exports ch.bolkhuis.kasboek.core;
 }

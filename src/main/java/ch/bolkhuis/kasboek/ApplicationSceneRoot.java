@@ -5,6 +5,7 @@ import ch.bolkhuis.kasboek.components.ReceiptTableView;
 import ch.bolkhuis.kasboek.components.TransactionTableView;
 import ch.bolkhuis.kasboek.core.*;
 import ch.bolkhuis.kasboek.dialog.AccountingEntityDialog;
+import ch.bolkhuis.kasboek.dialog.ErrorDialog;
 import ch.bolkhuis.kasboek.dialog.InmateEntityDialog;
 import ch.bolkhuis.kasboek.dialog.TransactionDialog;
 import javafx.application.Platform;
@@ -13,10 +14,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.prefs.*;
 
 /**
  * ApplicationSceneRoot is the root for the main Scene of the Application class. The root presents the user with an
@@ -27,15 +32,27 @@ import java.io.File;
  * @author Aron Hoogeveen
  */
 public class ApplicationSceneRoot extends BorderPane {
+    // Preferences keys
+    private static final String PREF_FILE_CHOOSER_DIRECTORY = "FileChooserDirectory";
+    // Preferences default values
+    private static final String PREF_DEFAULT_FILE_CHOOSER_DIRECTORY = System.getProperty("user.home");
+    private final static String PREF_NODE_NAME = "/ch/bolkhuis/kasboek/ApplicationSceneRoot";
+
     private final HuischLedger huischLedger;
-    private final File huischLedgerFile;
+    private File huischLedgerFile; // this file can be updated, so no final here
 
     private final App app;
+
+    // Preferences object for this ApplicationSceneRoot
+    private final Preferences preferences;
 
     // MapChangeListeners used for observing unsaved changes
     private final AccountingEntityMapChangeListener entityMapChangeListener = new AccountingEntityMapChangeListener();
     private final TransactionMapChangeListener transactionMapChangeListener = new TransactionMapChangeListener();
     private final ReceiptMapChangeListener receiptMapChangeListener = new ReceiptMapChangeListener();
+    /**
+     * This field MUST NOT be changed other then by calling setUnsavedChanges(boolean)!
+     */
     private boolean unsavedChanges = false;
 
     /**
@@ -49,18 +66,14 @@ public class ApplicationSceneRoot extends BorderPane {
         this.huischLedger = huischLedger;
         this.huischLedgerFile = huischLedgerFile;
 
-        // set the listeners that observe unsaved changes
-        huischLedger.addEntityListener(entityMapChangeListener);
-        huischLedger.addTransactionListener(transactionMapChangeListener);
-        huischLedger.addReceiptListener(receiptMapChangeListener);
+        preferences = Preferences.userRoot().node(PREF_NODE_NAME);
 
         // set the onCloseRequest handler for the Application stage
         app.getPrimaryStage().setOnCloseRequest(new WindowCloseEventHandler());
 
         // a null-valued huischLedgerFile indicates a new HuischLedger which implies that it is not already saved.
-        if (huischLedgerFile == null) {
-            unsavedChanges = true;
-        }
+        // setUnsavedChanges handles the adding and removing of the listeners
+        setUnsavedChanges(huischLedgerFile == null);
 
         initAppearance();
         createAndSetChildren();
@@ -93,11 +106,11 @@ public class ApplicationSceneRoot extends BorderPane {
         MenuItem openFile = new MenuItem("Openen");
 //        openFile.setOnAction(new OpenFileEventHandler());
         MenuItem closeFile = new MenuItem("Sluiten");
-//        closeFile.setOnAction(new CloseFileEventHandler());
+        closeFile.setOnAction(new CloseEventHandler());
         MenuItem saveFile = new MenuItem("Opslaan");
-//        saveFile.setOnAction(new SaveFileEventHandler());
+        saveFile.setOnAction(new SaveEventHandler());
         MenuItem saveAsFile = new MenuItem("Opslaan als");
-//        saveAsFile.setOnAction(new SaveAsFileEventHandler());
+        saveAsFile.setOnAction(new SaveAsEventHandler());
         MenuItem preferences = new MenuItem("Instellingen");
         fileMenu.getItems().addAll(
                 newFile,
@@ -271,31 +284,6 @@ public class ApplicationSceneRoot extends BorderPane {
 
     public HuischLedger getHuischLedger() { return huischLedger; }
 
-//    /**
-//     * Called after a change has been made to an ObservableMap.
-//     * This method is called on every elementary change (put/remove) once.
-//     * This means, complex changes like keySet().removeAll(Collection) or clear()
-//     * may result in more than one call of onChanged method.
-//     *
-//     * @param change the change that was made
-//     */
-//    @Override
-//    public void onChanged(Change change) {
-//        // set the saved state to false, and then remove this from the observable listeners list. By removing this from
-//        // the listeners, we prevent a lot of update notifications that are irrelevant since we already know that the
-//        // state of the huischledger changed. This could be considered a hacky implementation for keeping track of
-//        // unsaved changes, but it is lightweight, and at the moment of writing the fewest work to implement (design/time
-//        // consideration).
-//
-//        System.out.println("HuischLedger changed. Unsaved changes exist.");
-//
-//        unsavedChanges = true;
-//
-//        huischLedger.getAccountingEntities().removeListener(this);
-//        huischLedger.getTransactions().removeListener(this);
-//        huischLedger.getReceipts().removeListener(this);
-//    }
-
     // *****************************************************************************************************************
     // * Click Event Handlers
     // *****************************************************************************************************************
@@ -424,6 +412,88 @@ public class ApplicationSceneRoot extends BorderPane {
         public void onChanged(Change<? extends Integer, ? extends Receipt> change) {
             setUnsavedChanges(true);
         }
+
+    }
+
+    /**
+     * Save the {@code huischLedger} to {@code huischLedgerFile}. If {@code huischLedgerFile} is {@code null} then
+     * {@link ApplicationSceneRoot#saveAs()} is called. Sets {@code unsavedChanges} to {@code true} on success
+     *
+     * @see ApplicationSceneRoot#saveAs()
+     */
+    private boolean save() throws IOException {
+        // save again also when unsavedChanges is false
+
+        // if there is no savefile set, saveAs()
+        if (huischLedgerFile == null) {
+            return saveAs();
+        }
+        HuischLedger.toFile(huischLedgerFile, huischLedger);
+
+        // save success
+        setUnsavedChanges(false);
+        return true;
+    }
+
+    /**
+     * Asks the user to provide file name for the file to save {@code huischLedger} to. Sets {@code unsavedChanges} to
+     * {@code true} on success.
+     *
+     * @see ApplicationSceneRoot#save()
+     */
+    private boolean saveAs() throws IOException {
+        // Present user with FileChooser dialog
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(preferences.get(PREF_FILE_CHOOSER_DIRECTORY, PREF_DEFAULT_FILE_CHOOSER_DIRECTORY)));
+        fileChooser.setTitle("Huisch Kasboek - Opslaan als");
+        fileChooser.getExtensionFilters().addAll(App.extensionFilters);
+        File file = fileChooser.showSaveDialog(app.getPrimaryStage());
+
+        if (file != null) {
+            HuischLedger.toFile(file, huischLedger);
+
+            // success
+            huischLedgerFile = file;
+            setUnsavedChanges(false);
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean close() {
+        if (unsavedChanges) {
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.getDialogPane().getButtonTypes().addAll(
+                    new ButtonType("Opslaan", ButtonBar.ButtonData.YES),
+                    new ButtonType("Sluiten", ButtonBar.ButtonData.NO),
+                    new ButtonType("Afbreken", ButtonBar.ButtonData.CANCEL_CLOSE)
+            );
+            dialog.setTitle("Opongeslagen wijzigingen");
+            dialog.setContentText("Er zijn wijzigingen die niet zijn opgeslagen. Weet je zeker dat je dit kasboek " +
+                    "wil sluiten?");
+            Optional<ButtonType> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                ButtonType res = result.get();
+                if (res.getButtonData().equals(ButtonBar.ButtonData.YES)) {
+                    try {
+                        boolean saved = save();
+                        if (saved) {
+                            return true;
+                        }
+                        // The saving is cancelled, do nothing.
+                    } catch (IOException ioException) {
+                        ErrorDialog errorDialog = new ErrorDialog("Er is wat fout gegaan bij het opslaan.");
+                        errorDialog.showAndWait();
+                    }
+                } else if (res.getButtonData().equals(ButtonBar.ButtonData.NO)) {
+                    return true;
+                }
+            }
+            System.err.println("Ehrm... The result of the dialog was not available. Not sure why.");
+        }
+
+        return false;
     }
 
     private class WindowCloseEventHandler implements EventHandler<WindowEvent> {
@@ -436,12 +506,65 @@ public class ApplicationSceneRoot extends BorderPane {
          */
         @Override
         public void handle(WindowEvent event) {
-            if (unsavedChanges) {
-                System.err.println("WARNING! There are unsaved changes but saving is not yet implemented. Your changes" +
-                        " are lost now.");
+            if (close()) {
+                System.out.println("Calling Platform.exit()");
+                Platform.exit();
             }
-            System.out.println("Calling Platform.exit()...");
-            Platform.exit();
+        }
+    }
+
+    private class SaveEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+                save();
+            } catch (IOException ioException) {
+                ErrorDialog errorDialog = new ErrorDialog("Het kasboek kon niet opgeslagen worden");
+                errorDialog.showAndWait();
+            }
+        }
+    }
+
+    private class SaveAsEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+                saveAs();
+            } catch (IOException ioException) {
+                ErrorDialog errorDialog = new ErrorDialog("Het kasboek kon niet opgeslagen worden in het " +
+                        "geselecteerde bestand.");
+                errorDialog.showAndWait();
+            }
+        }
+    }
+
+    private class CloseEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            if (close()) {
+                app.changeToSplashScene();
+            }
         }
     }
 
