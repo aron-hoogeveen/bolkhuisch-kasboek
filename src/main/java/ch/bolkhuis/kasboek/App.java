@@ -106,12 +106,4 @@ public class App extends Application {
         return primaryStage;
     }
 
-//    public Scene getSplashScene() {
-//        return splashScene;
-//    }
-//
-//    public void setApplicationScene(Scene scene) { applicationScene = scene; }
-//    public Scene getApplicationScene() {
-//        return applicationScene;
-//    }
 }
