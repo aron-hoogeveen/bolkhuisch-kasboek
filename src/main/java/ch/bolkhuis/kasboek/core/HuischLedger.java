@@ -6,6 +6,7 @@ import ch.bolkhuis.kasboek.exceptions.IllegalTemplateFormatException;
 import ch.bolkhuis.kasboek.exceptions.UnsupportedVersionException;
 import ch.bolkhuis.kasboek.gson.CustomizedGson;
 import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -378,5 +379,59 @@ public final class HuischLedger extends Ledger {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             return CustomizedGson.gson.fromJson(reader, HuischLedger.class);
         }
+    }
+
+    /**
+     * Adds the MapChangeListener {@code listener} to the listeners of the accountingEntities.
+     *
+     * @param listener the MapChangeListener
+     */
+    public void addEntityListener(MapChangeListener<Integer, AccountingEntity> listener) {
+        accountingEntities.addListener(listener);
+    }
+
+    /**
+     * Removes the listener from the observable AccountingEntities.
+     *
+     * @param listener the listener to remove
+     */
+    public void removeEntityListener(MapChangeListener<Integer, AccountingEntity> listener) {
+        accountingEntities.removeListener(listener);
+    }
+
+    /**
+     * Adds the MapChangeListener {@code listener} to the listeners of the transactions.
+     *
+     * @param listener the MapChangeListener
+     */
+    public void addTransactionListener(MapChangeListener<Integer, Transaction> listener) {
+        transactions.addListener(listener);
+    }
+
+    /**
+     * Removes the listener from the observable Transactions.
+     *
+     * @param listener the listener to remove
+     */
+    public void removeTransactionListener(MapChangeListener<Integer, Transaction> listener) {
+        transactions.removeListener(listener);
+    }
+
+    /**
+     * Adds the MapChangeListener {@code listener} to the listeners of the receipts.
+     *
+     * @param listener the MapChangeListener
+     */
+    public void addReceiptListener(MapChangeListener<Integer, Receipt> listener) {
+        receipts.addListener(listener);
+    }
+
+    /**
+     * Removes the listener from the observable Receipts.
+     *
+     * @param listener the listener to remove
+     */
+    public void removeReceiptListener(MapChangeListener<Integer, Receipt> listener) {
+        receipts.removeListener(listener);
     }
 }

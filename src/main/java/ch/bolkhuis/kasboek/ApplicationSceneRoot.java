@@ -48,9 +48,9 @@ public class ApplicationSceneRoot extends BorderPane {
         this.huischLedgerFile = huischLedgerFile;
 
         // set the listeners that observe unsaved changes
-        huischLedger.getAccountingEntities().addListener(entityMapChangeListener);
-        huischLedger.getTransactions().addListener(transactionMapChangeListener);
-        huischLedger.getReceipts().addListener(receiptMapChangeListener);
+        huischLedger.addEntityListener(entityMapChangeListener);
+        huischLedger.addTransactionListener(transactionMapChangeListener);
+        huischLedger.addReceiptListener(receiptMapChangeListener);
 
         // a null-valued huischLedgerFile indicates a new HuischLedger which implies that it is not already saved.
         if (huischLedgerFile == null) {
@@ -357,17 +357,17 @@ public class ApplicationSceneRoot extends BorderPane {
         if (newValue) {
             System.out.println("Observed changes to the HuischLedger. Setting unsavedChanges to true.");
             // remove the unsaved observing mapchangelisteners from the lists of mapchangelisteners
-            huischLedger.getAccountingEntities().removeListener(entityMapChangeListener);
-            huischLedger.getTransactions().removeListener(transactionMapChangeListener);
-            huischLedger.getReceipts().removeListener(receiptMapChangeListener);
+            huischLedger.removeEntityListener(entityMapChangeListener);
+            huischLedger.removeTransactionListener(transactionMapChangeListener);
+            huischLedger.removeReceiptListener(receiptMapChangeListener);
 
             unsavedChanges = newValue;
         } else {
             System.out.println("Changes are probably saved, because setUnsavedChanges was called with value false.");
             // changes have been saved. Re-register the listeners for observing unsaved changes
-            huischLedger.getAccountingEntities().addListener(entityMapChangeListener);
-            huischLedger.getTransactions().addListener(transactionMapChangeListener);
-            huischLedger.getReceipts().addListener(receiptMapChangeListener);
+            huischLedger.addEntityListener(entityMapChangeListener);
+            huischLedger.addTransactionListener(transactionMapChangeListener);
+            huischLedger.addReceiptListener(receiptMapChangeListener);
 
             unsavedChanges = newValue;
         }
