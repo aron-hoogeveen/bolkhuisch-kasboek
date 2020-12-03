@@ -80,13 +80,16 @@ public class ApplicationSceneRoot extends BorderPane {
 //        saveFile.setOnAction(new SaveFileEventHandler());
         MenuItem saveAsFile = new MenuItem("Opslaan als");
 //        saveAsFile.setOnAction(new SaveAsFileEventHandler());
+        MenuItem preferences = new MenuItem("Instellingen");
         fileMenu.getItems().addAll(
                 newFile,
                 openFile,
                 closeFile,
                 new SeparatorMenuItem(),
                 saveFile,
-                saveAsFile
+                saveAsFile,
+                new SeparatorMenuItem(),
+                preferences
         );
         // Edit menu
         Menu editMenu = new Menu("Bewerken");
