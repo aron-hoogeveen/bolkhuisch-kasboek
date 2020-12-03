@@ -7,11 +7,13 @@ import ch.bolkhuis.kasboek.core.*;
 import ch.bolkhuis.kasboek.dialog.AccountingEntityDialog;
 import ch.bolkhuis.kasboek.dialog.InmateEntityDialog;
 import ch.bolkhuis.kasboek.dialog.TransactionDialog;
+import javafx.application.Platform;
 import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.WindowEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -51,6 +53,9 @@ public class ApplicationSceneRoot extends BorderPane {
         huischLedger.addEntityListener(entityMapChangeListener);
         huischLedger.addTransactionListener(transactionMapChangeListener);
         huischLedger.addReceiptListener(receiptMapChangeListener);
+
+        // set the onCloseRequest handler for the Application stage
+        app.getPrimaryStage().setOnCloseRequest(new WindowCloseEventHandler());
 
         // a null-valued huischLedgerFile indicates a new HuischLedger which implies that it is not already saved.
         if (huischLedgerFile == null) {
@@ -418,6 +423,25 @@ public class ApplicationSceneRoot extends BorderPane {
         @Override
         public void onChanged(Change<? extends Integer, ? extends Receipt> change) {
             setUnsavedChanges(true);
+        }
+    }
+
+    private class WindowCloseEventHandler implements EventHandler<WindowEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(WindowEvent event) {
+            if (unsavedChanges) {
+                System.err.println("WARNING! There are unsaved changes but saving is not yet implemented. Your changes" +
+                        " are lost now.");
+            }
+            System.out.println("Calling Platform.exit()...");
+            Platform.exit();
         }
     }
 
