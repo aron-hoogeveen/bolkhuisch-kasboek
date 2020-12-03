@@ -26,13 +26,7 @@ import java.util.*;
  */
 public final class HuischLedger extends Ledger {
     private final static String introText = "Please replace this string with some info text";
-//    private final static ResourceBundle defaultInvoiceResourceBundle = ResourceBundle.getBundle("HuischInvoiceStrings",
-//            new ResourceBundle.Control() {
-//                @Override
-//                public List<Locale> getCandidateLocales(String baseName, Locale locale) {
-//                    return Collections.singletonList(Locale.ROOT);
-//                }
-//            });
+
     private final static int placeholderEntityId = -1;
 
     private final ObservableMap<Integer, Receipt> receipts;
@@ -323,9 +317,6 @@ public final class HuischLedger extends Ledger {
             throw new IllegalArgumentException("Duplicate key for new receipt");
         }
         receipts.put(receipt.getId(), receipt);
-
-        // Notify the ReceiptListeners of a change in the Collection of Receipts
-        fireReceiptEvent();
     }
 
     /**
@@ -379,23 +370,6 @@ public final class HuischLedger extends Ledger {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             return CustomizedGson.gson.fromJson(reader, HuischLedger.class);
-        }
-    }
-
-    /**
-     * Adds the ReceiptEventListener {@code eventListener} to the Vector of EventListeners.
-     *
-     * @param eventListener the ReceiptEventListener to add
-     */
-    public void addReceiptEventListener(ReceiptEventListener eventListener) {
-        eventListeners.add(eventListener);
-    }
-
-    private void fireReceiptEvent() {
-        for (EventListener eventListener : eventListeners) {
-            if (eventListener instanceof ReceiptEventListener) {
-                ((ReceiptEventListener)eventListener).receiptCollectionChanged(new ReceiptEvent());
-            }
         }
     }
 }

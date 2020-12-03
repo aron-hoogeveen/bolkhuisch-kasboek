@@ -31,10 +31,6 @@ public class Ledger {
     protected  @NotNull final ObservableMap<Integer, AccountingEntity> accountingEntities;
     protected int nextTransactionId;
     protected int nextAccountingEntityId;
-    /**
-     * Contains EventListeners of type AccountingEntityEventListener and TransactionEventListener
-     */
-    protected final Vector<EventListener> eventListeners = new Vector<>();
 
     /**
      * Creates a new Ledger with empty collections, and sets the {@code next***Id} fields to zero.
@@ -164,9 +160,6 @@ public class Ledger {
         // increase the nextTransactionId if applicable
         if (transaction.getId() >= nextTransactionId)
             nextTransactionId = transaction.getId() + 1;
-
-        // Notify all listeners that the Collection of Transactions changed
-        fireTransactionEvent();
     }
 
     private Transaction removeTransactionInternal(Transaction transaction) {
@@ -185,9 +178,6 @@ public class Ledger {
 
         // Remove the transaction
         Transaction removed = removeTransactionInternal(transaction);
-        // Notify all listeners that the Collection of Transactions changed
-        fireTransactionEvent();
-        fireAccountingEntityEvent();
         // return the removed Transaction
         return removed;
     }
@@ -284,9 +274,6 @@ public class Ledger {
         }
 
         accountingEntities.put(accountingEntity.getId(), accountingEntity);
-
-        // Notify all listeners that the Collection of AccountingEntities changed
-        fireAccountingEntityEvent();
     }
 
     /**
@@ -305,8 +292,6 @@ public class Ledger {
 
         // update the AccountingEntity and return the previous value
         AccountingEntity updated = accountingEntities.put(accountingEntity.getId(), accountingEntity);
-        // Notify all listeners that the Collection of AccountingEntities changed
-        fireAccountingEntityEvent();
         // Return the previous value
         return updated;
     }
@@ -573,41 +558,6 @@ public class Ledger {
      */
     private boolean containsAccountingEntity(int accountingEntityId) {
         return accountingEntities.containsKey(accountingEntityId);
-    }
-
-    /**
-     * Adds the TransactionEventListener {@code transactionEventListener} to the Vector of EventListeners.
-     *
-     * @param transactionEventListener the TransactionEventListener to add
-     */
-    public void addTransactionEventListener(TransactionEventListener transactionEventListener) {
-        eventListeners.add(transactionEventListener);
-    }
-
-    public void addAccountingEntityEventListener(AccountingEntityEventListener accountingEntityEventListener) {
-        eventListeners.add(accountingEntityEventListener);
-    }
-
-    /**
-     * Notify all TransactionEventListeners that the Collection of Transactions is updated.
-     */
-    private void fireTransactionEvent() {
-        for (EventListener eventListener : eventListeners) {
-            if (eventListener instanceof TransactionEventListener) {
-                ((TransactionEventListener)eventListener).transactionCollectionChanged(new TransactionEvent(this));
-            }
-        }
-    }
-
-    /**
-     * Notify all AccountingEntityEventListeners that the Collection of AccountingEntities is udpated.
-     */
-    private void fireAccountingEntityEvent() {
-        for (EventListener eventListener : eventListeners) {
-            if (eventListener instanceof AccountingEntityEventListener) {
-                ((AccountingEntityEventListener)eventListener).accountingEntityCollectionChanged(new AccountingEntityEvent(this));
-            }
-        }
     }
 
     /**
