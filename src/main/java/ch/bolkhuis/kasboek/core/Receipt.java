@@ -1,9 +1,10 @@
 package ch.bolkhuis.kasboek.core;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ import java.util.Set;
 public class Receipt {
     private final int id;
     private @NotNull final String name;
-    private @NotNull final Set<Integer> transactionIdSet;
+    private @NotNull final ObservableSet<Integer> transactionIdSet;
     private final @NotNull LocalDate date;
     private final int payer;
 
@@ -34,7 +35,7 @@ public class Receipt {
 
         this.id = id;
         this.name = name;
-        this.transactionIdSet = transactionIdSet;
+        this.transactionIdSet = FXCollections.observableSet(transactionIdSet);
         this.date = date;
         this.payer = payer;
     }
@@ -47,8 +48,8 @@ public class Receipt {
         return name;
     }
 
-    public @NotNull Set<Integer> getTransactionIdSet() {
-        return new HashSet<>(transactionIdSet);
+    public @NotNull ObservableSet<Integer> getTransactionIdSet() {
+        return transactionIdSet;
     }
 
     public @NotNull LocalDate getDate() {
