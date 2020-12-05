@@ -26,6 +26,8 @@ public class TransactionTableView extends TableView<Transaction> implements MapC
     private final ObservableMap<Integer, AccountingEntity> m_entities;
     private final ObservableMap<Integer, Receipt> m_receipts;
 
+    private final boolean hideReceiptColumn;
+
     /**
      * Creates a default TableView control with no content.
      *
@@ -40,6 +42,31 @@ public class TransactionTableView extends TableView<Transaction> implements MapC
         m_items = FXCollections.observableHashMap();
         this.m_entities = m_entities;
         this.m_receipts = m_receipts;
+        this.hideReceiptColumn = false;
+
+        setEditable(false); // disable editing in this table. Transactions are edited in a specific dialog presented to the user
+        m_items.addListener(this);
+
+        initColumns();
+        initChildren();
+    }
+
+    /**
+     * Creates a default TableView control with no content.
+     *
+     * <p>Refer to the {@link TableView} class documentation for details on the
+     * default state of other properties.
+     */
+    public TransactionTableView(@NotNull ObservableMap<Integer, AccountingEntity> m_entities,
+                                @NotNull ObservableMap<Integer, Receipt> m_receipts,
+                                boolean hideReceiptColumn) {
+        if (m_entities == null) { throw new NullPointerException(); }
+        if (m_receipts == null) { throw new NullPointerException(); }
+
+        m_items = FXCollections.observableHashMap();
+        this.m_entities = m_entities;
+        this.m_receipts = m_receipts;
+        this.hideReceiptColumn = hideReceiptColumn;
 
         setEditable(false); // disable editing in this table. Transactions are edited in a specific dialog presented to the user
         m_items.addListener(this);
@@ -68,6 +95,37 @@ public class TransactionTableView extends TableView<Transaction> implements MapC
         this.m_items = m_items;
         this.m_entities = m_entities;
         this.m_receipts = m_receipts;
+        this.hideReceiptColumn = false;
+
+        setEditable(false); // disable editing in this table. Transactions are edited in a specific dialog presented to the user
+        m_items.addListener(this);
+
+        initColumns();
+        initChildren();
+    }
+
+    /**
+     * Creates a TableView with the content provided in the items ObservableList.
+     * This also sets up an observer such that any changes to the items list
+     * will be immediately reflected in the TableView itself.
+     *
+     * <p>Refer to the {@link TableView} class documentation for details on the
+     * default state of other properties.
+     *
+     * @param m_items The items to insert into the TableView, and the list to watch
+     *              for changes (to automatically show in the TableView).
+     */
+    public TransactionTableView(@NotNull ObservableMap<Integer, Transaction> m_items,
+                                @NotNull ObservableMap<Integer, AccountingEntity> m_entities,
+                                @NotNull ObservableMap<Integer, Receipt> m_receipts,
+                                boolean hideReceiptColumn) {
+        if (m_items == null) { throw new NullPointerException(); }
+        if (m_entities == null) { throw new NullPointerException(); }
+        if (m_receipts == null) { throw new NullPointerException(); }
+        this.m_items = m_items;
+        this.m_entities = m_entities;
+        this.m_receipts = m_receipts;
+        this.hideReceiptColumn = hideReceiptColumn;
 
         setEditable(false); // disable editing in this table. Transactions are edited in a specific dialog presented to the user
         m_items.addListener(this);
@@ -107,14 +165,24 @@ public class TransactionTableView extends TableView<Transaction> implements MapC
         )));
         descriptionColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getDescription()));
 
-        getColumns().setAll(
-                dateColumn,
-                receiptColumn,
-                debtorColumn,
-                creditorColumn,
-                amountColumn,
-                descriptionColumn
-        );
+        if (hideReceiptColumn) {
+            getColumns().setAll(
+                    dateColumn,
+                    debtorColumn,
+                    creditorColumn,
+                    amountColumn,
+                    descriptionColumn
+            );
+        } else {
+            getColumns().setAll(
+                    dateColumn,
+                    receiptColumn,
+                    debtorColumn,
+                    creditorColumn,
+                    amountColumn,
+                    descriptionColumn
+            );
+        }
     }
 
     /**
