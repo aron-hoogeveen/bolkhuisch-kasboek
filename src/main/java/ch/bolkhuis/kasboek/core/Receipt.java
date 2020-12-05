@@ -11,6 +11,8 @@ import java.util.Set;
 /**
  * Class Receipt holds a collection of Transaction ids from related Transactions.
  *
+ * TODO add field that indicates that the payer is already invoiced for this Receipt. If the field is true, than this Receipt cannot be edited
+ *
  * @author Aron Hoogeveen
  * @version 0.2-pre-alpha
  */
