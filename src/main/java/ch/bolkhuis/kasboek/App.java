@@ -13,6 +13,8 @@ import java.util.Vector;
 
 /**
  * JavaFX App
+ *
+ * TODO add an option to import entities from another HuischLedgerFile
  */
 public class App extends Application {
     public static final double INITIAL_WIDTH = 1280;
