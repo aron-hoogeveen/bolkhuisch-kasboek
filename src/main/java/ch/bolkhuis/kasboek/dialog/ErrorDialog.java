@@ -3,7 +3,6 @@ package ch.bolkhuis.kasboek.dialog;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.stage.Modality;
 
 public class ErrorDialog extends Dialog<ButtonType> {
     public ErrorDialog(String contentText) {

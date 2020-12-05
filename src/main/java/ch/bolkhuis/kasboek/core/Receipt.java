@@ -3,11 +3,9 @@ package ch.bolkhuis.kasboek.core;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeMap;
 
 /**
  * Class Receipt holds a collection of Transaction ids from related Transactions.

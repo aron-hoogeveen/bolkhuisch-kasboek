@@ -3,7 +3,6 @@ package ch.bolkhuis.kasboek;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.lang.annotation.Native;
 
 public class RecentLedgerFile {
     private final File file;

@@ -15,8 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
-import javafx.util.StringConverter;
-import javafx.util.converter.NumberStringConverter;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.NumberFormat;
