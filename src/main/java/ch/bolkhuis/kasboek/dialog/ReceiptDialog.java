@@ -6,12 +6,14 @@ import ch.bolkhuis.kasboek.core.HuischLedger;
 import ch.bolkhuis.kasboek.core.Receipt;
 import ch.bolkhuis.kasboek.core.Transaction;
 import javafx.collections.*;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
+import javafx.util.StringConverter;
 import org.controlsfx.control.SearchableComboBox;
 import org.jetbrains.annotations.NotNull;
 
@@ -77,6 +79,9 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
     @Override
     protected void initAppearance() {
         GridPane rootGridPane = new GridPane();
+        rootGridPane.setPadding(new Insets(10));
+        rootGridPane.setVgap(10);
+        rootGridPane.setHgap(5);
 
         // Set the text of the labels
         nameLabel.setText("Naam:");
@@ -112,7 +117,17 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
 
         stage.setScene(new Scene(rootGridPane));
         stage.setTitle("Bewerken van bonnetje: " + old.getName());
-//        stage.titleProperty().bindBidirectional(old.name);
+        stage.titleProperty().bindBidirectional(nameTextField.textProperty(), new StringConverter<String>() {
+            @Override
+            public String toString(String object) {
+                return "Bewerken van bonnetje: " + object;
+            }
+
+            @Override
+            public String fromString(String string) {
+                return string;
+            }
+        });
         stage.sizeToScene();
     }
 
