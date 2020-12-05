@@ -206,7 +206,7 @@ public class ApplicationSceneRoot extends BorderPane {
         entitiesTab.setContent(new BorderPane(entityTreeTableView)); // this should make everything full sized
 
         // Receipts Tab
-        ReceiptTableView receiptTableView = new ReceiptTableView(huischLedger.getReceipts(), huischLedger.getAccountingEntities());
+        ReceiptTableView receiptTableView = new ReceiptTableView(huischLedger, huischLedger.getReceipts(), huischLedger.getAccountingEntities());
         receiptsTab.setContent(receiptTableView);
 
         // Transactions Tab

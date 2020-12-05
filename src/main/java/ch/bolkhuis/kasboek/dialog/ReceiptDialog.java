@@ -10,10 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 import javafx.util.StringConverter;
@@ -43,6 +40,7 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
     private final Label transactionsLabel = new Label();
     private final TransactionTableView transactionTableView;
     private final Button addTransactionButton = new Button();
+    private final Button importTransactionButton = new Button();
 
     /**
      * Creates a new AbstractDialog and initialises its owner and the old T to load.
@@ -106,9 +104,13 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
 
         // the transactionTableView is set in the constructor because of the way of constructing it.
 
-        // Add button
+        // Transaction buttons
         addTransactionButton.setText("Toevoegen");
         addTransactionButton.setOnAction(new AddTransactionEventHandler());
+        importTransactionButton.setText("Importeren");
+        importTransactionButton.setTooltip(new Tooltip("Importeer een bestaande transactie, die nog niet is " +
+                "gefactureerd en ook nog geen verbonden transactie heeft."));
+        importTransactionButton.setOnAction(new ImportTransactionEventHandler());
 
         // row 0
         rootGridPane.add(nameLabel, 0, 0);
@@ -122,6 +124,7 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
         // row 2
         rootGridPane.add(transactionsLabel, 0, 2);
         rootGridPane.add(addTransactionButton, 1, 2);
+        rootGridPane.add(importTransactionButton, 2, 2);
         rootGridPane.add(transactionTableView, 0, 3, 5, 1);
 
         stage.setScene(new Scene(rootGridPane));
@@ -188,6 +191,8 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
          */
         @Override
         public void handle(ActionEvent event) {
+            System.err.println("AddTransactionEventHanlder is not yet fully implemented");
+
             TransactionDialog transactionDialog = new TransactionDialog(
                     stage,
                     huischLedger.getAccountingEntities(),
@@ -197,6 +202,22 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
             );
 
             transactionDialog.showAndWait();
+
+            // TODO validate that either newTransaction.getDebtorId() or newTransaction.getCreditorId() equal is to old.getPayer()
+        }
+    }
+
+    private class ImportTransactionEventHandler implements  EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            System.err.println("ImportTransactionEventHandler is not yet implemented");
         }
     }
 }
