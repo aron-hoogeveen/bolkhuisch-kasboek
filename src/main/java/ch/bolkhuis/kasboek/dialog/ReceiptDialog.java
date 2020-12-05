@@ -6,8 +6,11 @@ import ch.bolkhuis.kasboek.core.HuischLedger;
 import ch.bolkhuis.kasboek.core.Receipt;
 import ch.bolkhuis.kasboek.core.Transaction;
 import javafx.collections.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -39,6 +42,7 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
     private final SearchableComboBox<AccountingEntity> payerComboBox = new SearchableComboBox<>();
     private final Label transactionsLabel = new Label();
     private final TransactionTableView transactionTableView;
+    private final Button addTransactionButton = new Button();
 
     /**
      * Creates a new AbstractDialog and initialises its owner and the old T to load.
@@ -102,6 +106,10 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
 
         // the transactionTableView is set in the constructor because of the way of constructing it.
 
+        // Add button
+        addTransactionButton.setText("Toevoegen");
+        addTransactionButton.setOnAction(new AddTransactionEventHandler());
+
         // row 0
         rootGridPane.add(nameLabel, 0, 0);
         rootGridPane.add(nameTextField, 1, 0);
@@ -112,7 +120,8 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
         rootGridPane.add(payerLabel, 0, 1);
         rootGridPane.add(payerComboBox, 1, 1);
         // row 2
-        rootGridPane.add(transactionsLabel, 0, 2, 5, 1);
+        rootGridPane.add(transactionsLabel, 0, 2);
+        rootGridPane.add(addTransactionButton, 1, 2);
         rootGridPane.add(transactionTableView, 0, 3, 5, 1);
 
         stage.setScene(new Scene(rootGridPane));
@@ -166,6 +175,28 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
                 return;
             int index = change.getElementRemoved();
             transactionObservableMap.remove(index); // remove the Transaction with id index
+        }
+    }
+
+    private class AddTransactionEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            TransactionDialog transactionDialog = new TransactionDialog(
+                    stage,
+                    huischLedger.getAccountingEntities(),
+                    huischLedger.getReceipts(),
+                    huischLedger.getAndIncrementNextTransactionId(),
+                    huischLedger.getAndIncrementNextReceiptId()
+            );
+
+            transactionDialog.showAndWait();
         }
     }
 }
