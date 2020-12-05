@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Window;
+import org.controlsfx.control.SearchableComboBox;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
@@ -28,11 +29,11 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
     private final Label dateLabel = new Label();
     private final DatePicker datePicker = new DatePicker();
     private final Label debtorLabel = new Label();
-    private final ComboBox<AccountingEntity> debtorComboBox = new ComboBox<>();
+    private final SearchableComboBox<AccountingEntity> debtorComboBox = new SearchableComboBox<>();
     private final Label creditorLabel = new Label();
-    private final ComboBox<AccountingEntity> creditorComboBox = new ComboBox<>();
+    private final SearchableComboBox<AccountingEntity> creditorComboBox = new SearchableComboBox<>();
     private final Label receiptLabel = new Label();
-    private final ComboBox<Receipt> receiptComboBox = new ComboBox<>();
+    private final SearchableComboBox<Receipt> receiptComboBox = new SearchableComboBox<>();
     private final Label amountLabel = new Label();
     private final TextField amountTextField = new TextField();
     private final Label descriptionLabel = new Label();
