@@ -23,6 +23,7 @@ import java.util.List;
 public class TransactionDialog extends AbstractDialog<Transaction> {
 
     private final int newId;
+    private final Integer receiptId;
     private final ObservableMap<Integer, AccountingEntity> accountingEntityObservableMap;
     private final ObservableMap<Integer, Receipt> receiptObservableMap;
 
@@ -58,6 +59,25 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
         this.accountingEntityObservableMap = accountingEntities;
         this.receiptObservableMap = receipts;
         this.newId = id;
+        this.receiptId = null;
+
+        initAppearance();
+        initBehaviour();
+    }
+
+    public TransactionDialog(
+            @NotNull Window owner,
+            @NotNull ObservableMap<Integer, AccountingEntity> accountingEntities,
+            @NotNull ObservableMap<Integer, Receipt> receipts,
+            int id,
+            int receiptId
+    ) {
+        super (owner);
+
+        this.accountingEntityObservableMap = accountingEntities;
+        this.receiptObservableMap = receipts;
+        this.newId = id;
+        this.receiptId = receiptId;
 
         initAppearance();
         initBehaviour();
@@ -80,6 +100,7 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
         this.accountingEntityObservableMap = accountingEntities;
         this.receiptObservableMap = receipts;
         this.newId = -1; // default id for when the id of old is used
+        this.receiptId = null;
 
         initAppearance();
         initBehaviour();
@@ -132,6 +153,11 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
         } else {
             // Set the date for the DatePicker to today
             datePicker.setValue(LocalDate.now());
+            if (receiptId != null) {
+                // set a mandatory receipt for this new Transaction
+                receiptComboBox.getSelectionModel().select(receiptObservableMap.get(receiptId));
+                receiptComboBox.setDisable(true);
+            }
         }
 
         // Set the maximum widths of all inputs to Double.MAX_VALUE for equal widths
