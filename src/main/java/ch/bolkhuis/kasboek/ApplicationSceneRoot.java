@@ -4,10 +4,7 @@ import ch.bolkhuis.kasboek.components.AccountingEntityTreeTableView;
 import ch.bolkhuis.kasboek.components.ReceiptTableView;
 import ch.bolkhuis.kasboek.components.TransactionTableView;
 import ch.bolkhuis.kasboek.core.*;
-import ch.bolkhuis.kasboek.dialog.AccountingEntityDialog;
-import ch.bolkhuis.kasboek.dialog.ErrorDialog;
-import ch.bolkhuis.kasboek.dialog.InmateEntityDialog;
-import ch.bolkhuis.kasboek.dialog.TransactionDialog;
+import ch.bolkhuis.kasboek.dialog.*;
 import javafx.application.Platform;
 import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
@@ -165,10 +162,16 @@ public class ApplicationSceneRoot extends BorderPane {
         printSizeOfReceipts.setOnAction(event -> {
             System.out.println("The size of receipts is: " + huischLedger.getReceipts().size());
         });
+        MenuItem showFirstReceipt = new MenuItem("Show first receipt");
+        showFirstReceipt.setOnAction(event -> {
+            ReceiptDialog receiptDialog = new ReceiptDialog(app.getPrimaryStage(), huischLedger, huischLedger.getReceipts().get(0));
+            receiptDialog.showAndWait();
+        });
         developerMenu.getItems().addAll(
                 printSizeOfAccountingEntities,
                 printSizeOfTransactions,
-                printSizeOfReceipts
+                printSizeOfReceipts,
+                showFirstReceipt
         );
 
         // Add the File Menus to the MenuBar
