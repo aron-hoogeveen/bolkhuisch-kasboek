@@ -115,7 +115,7 @@ public class ApplicationSceneRoot extends BorderPane {
         // File menu
         Menu fileMenu = new Menu("Bestand");
         MenuItem newFile = new MenuItem("Nieuwe maken");
-//        newFile.setOnAction(new NewFileEventHandler());
+        newFile.setOnAction(new NewFileEventHandler());
         MenuItem openFile = new MenuItem("Openen");
 //        openFile.setOnAction(new OpenFileEventHandler());
         MenuItem closeFile = new MenuItem("Sluiten");
@@ -547,6 +547,19 @@ public class ApplicationSceneRoot extends BorderPane {
         return false;
     }
 
+    private void newFile() {
+        // close the current loaded HuischLedger
+        if (close()) {
+            // set the new HuischLedger
+            ApplicationSceneRoot applicationSceneRoot = new ApplicationSceneRoot(
+                    app,
+                    new HuischLedger(),
+                    null
+            );
+            app.changeToApplicationScene(applicationSceneRoot);
+        }
+    }
+
     private class WindowCloseEventHandler implements EventHandler<WindowEvent> {
 
         /**
@@ -619,6 +632,24 @@ public class ApplicationSceneRoot extends BorderPane {
                 app.changeToSplashScene();
             } else {
                 event.consume();
+            }
+        }
+    }
+
+    private class NewFileEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+                newFile();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
