@@ -240,8 +240,6 @@ public final class HuischLedger extends Ledger {
                     amountString = numberFormat.format(-1 * amount);
                 }
 
-                // FIXME implement the rest of this function
-
                 // Add a table row for this transaction
                 tableDateStringBuilder
                         .append("\t\t<tr>\n")
