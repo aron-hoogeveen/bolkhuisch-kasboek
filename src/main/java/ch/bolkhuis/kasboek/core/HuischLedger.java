@@ -324,6 +324,7 @@ public final class HuischLedger extends Ledger {
         if (receipts.containsKey(receipt.getId())) {
             throw new IllegalArgumentException("Duplicate key for new receipt");
         }
+        // TODO should we register the receipt with the transactions that do not have the correct receiptId?
         receipts.put(receipt.getId(), receipt);
     }
 
@@ -433,5 +434,18 @@ public final class HuischLedger extends Ledger {
      */
     public void removeReceiptListener(MapChangeListener<Integer, Receipt> listener) {
         receipts.removeListener(listener);
+    }
+
+    @Override
+    public void addTransaction(@NotNull Transaction transaction) {
+        // Check that the receipt exists
+        if (transaction.getReceiptId() != null) {
+            if (receipts.containsKey(transaction.getReceiptId())) {
+                super.addTransaction(transaction);
+                receipts.get(transaction.getReceiptId()).registerTransaction(transaction.getId());
+            } else {
+                throw new IllegalArgumentException("The transaction has a non-existent receiptId: (T.Id:" + transaction.getId() + ",T.rId:" + transaction.getReceiptId() + ")");
+            }
+        }
     }
 }
