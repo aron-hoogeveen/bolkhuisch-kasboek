@@ -336,10 +336,10 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
                     appSceneRoot.getApp().getPrimaryStage(),
                     appSceneRoot.getHuischLedger().getAndIncrementNextAccountingEntityId()
             );
-            inmateEntityDialog.showAndWait();
+            Optional<InmateEntity> result = inmateEntityDialog.showAndWait();
             // isResultAvailable return false if no InmateEntity was created
-            if (inmateEntityDialog.isResultAvailable()) {
-                AccountingEntity accountingEntity = inmateEntityDialog.getResult();
+            if (result.isPresent()) {
+                AccountingEntity accountingEntity = result.get();
                 try {
                     appSceneRoot.getHuischLedger().addAccountingEntity(accountingEntity);
                 } catch (Exception e) {
