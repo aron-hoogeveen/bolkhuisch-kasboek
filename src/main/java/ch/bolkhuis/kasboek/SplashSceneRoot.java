@@ -35,7 +35,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class SplashSceneRoot extends BorderPane {
     private static final double WIDTH = 840;
@@ -166,7 +165,7 @@ public class SplashSceneRoot extends BorderPane {
 
     private HuischLedger createTemporaryHuischLedger() {
         HuischLedger huischLedger = new HuischLedger();
-        InmateEntity inmate = new InmateEntity(
+        ResidentEntity inmate = new ResidentEntity(
                 0,
                 "Gerrit",
                 0,

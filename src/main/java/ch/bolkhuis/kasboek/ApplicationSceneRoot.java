@@ -266,14 +266,14 @@ public class ApplicationSceneRoot extends BorderPane {
         InmateEntityDialog inmateEntityDialog = new InmateEntityDialog(
                 app.getPrimaryStage(),
                 huischLedger.getAndIncrementNextAccountingEntityId());
-        Optional<InmateEntity> result = inmateEntityDialog.showAndWait();
+        Optional<ResidentEntity> result = inmateEntityDialog.showAndWait();
         // isResultAvailable return false if no AccountingEntity was created
         if (result.isPresent()) {
-            InmateEntity inmateEntity = result.get();
+            ResidentEntity residentEntity = result.get();
             try {
-                huischLedger.addAccountingEntity(inmateEntity);
+                huischLedger.addAccountingEntity(residentEntity);
             } catch (Exception e) {
-                System.err.println("Could not add the InmateEntity returned from the InmateEntityDialog");
+                System.err.println("Could not add the ResidentEntity returned from the InmateEntityDialog");
                 e.printStackTrace();
             }
         }

@@ -33,7 +33,7 @@ public class CustomizedGson {
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTypeAdapter())
             .registerTypeAdapter(Transaction.class, new TransactionTypeAdapter())
             .registerTypeAdapter(AccountingEntity.class, new AccountingEntityTypeAdapter())
-            .registerTypeAdapter(InmateEntity.class, new InmateEntityTypeAdapter())
+            .registerTypeAdapter(ResidentEntity.class, new InmateEntityTypeAdapter())
             .registerTypeAdapter(HuischLedger.class, new HuischLedgerTypeAdapter())
             .registerTypeAdapter(Ledger.class, new LedgerTypeAdapter())
             .registerTypeAdapter(Receipt.class, new ReceiptTypeAdapter())

@@ -19,12 +19,12 @@ package ch.bolkhuis.kasboek.core;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Class InmateEntity represents an {@link AccountingEntity} that is a resident of the Bolkhuisch.
+ * Class ResidentEntity represents an {@link AccountingEntity} that is a resident of the Bolkhuisch.
  * TODO refactor name of this class to 'ResidentEntity'
  */
-public class InmateEntity extends AccountingEntity {
+public class ResidentEntity extends AccountingEntity {
     /**
-     * The vale of {@code balance} at the time the last invoice was generated for this InmateEntity
+     * The vale of {@code balance} at the time the last invoice was generated for this ResidentEntity
      */
     private final double previousBalance;
     /**
@@ -35,12 +35,12 @@ public class InmateEntity extends AccountingEntity {
      *
      * @param id           a unique identifier
      * @param name         the name of this AccountingEntry
-     * @param previousBalance the value of endBalance at the time the last invoice was generated for this InmateEntity
-     * @param balance   the current balance of this InmateEntity
+     * @param previousBalance the value of endBalance at the time the last invoice was generated for this ResidentEntity
+     * @param balance   the current balance of this ResidentEntity
      * @see AccountingEntity#isCorrectId(int)
      * @see AccountingEntity#isCorrectName(String)
      */
-    public InmateEntity(int id, @NotNull String name, double previousBalance, double balance) {
+    public ResidentEntity(int id, @NotNull String name, double previousBalance, double balance) {
         super(id, name, AccountType.LIABILITY, balance);
 
         this.previousBalance = previousBalance;
@@ -51,19 +51,19 @@ public class InmateEntity extends AccountingEntity {
     }
 
     @Override
-    public @NotNull InmateEntity debit(double amount) {
+    public @NotNull ResidentEntity debit(double amount) {
         if (amount < 0) { throw new IllegalArgumentException("You should not debit a negative amount, credit instead"); }
 
         double balance = (accountType.isDebit()) ? this.balance.get() + amount : this.balance.get() - amount;
-        return new InmateEntity(id, name.get(), previousBalance, balance);
+        return new ResidentEntity(id, name.get(), previousBalance, balance);
     }
 
     @Override
-    public @NotNull InmateEntity credit(double amount) {
+    public @NotNull ResidentEntity credit(double amount) {
         if (amount < 0) { throw new IllegalArgumentException("You should not credit a negative amount, debit instead"); }
 
         double balance = (accountType.isDebit()) ? this.balance.get() - amount : this.balance.get() + amount;
-        return new InmateEntity(id, name.get(), previousBalance, balance);
+        return new ResidentEntity(id, name.get(), previousBalance, balance);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class InmateEntity extends AccountingEntity {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        InmateEntity that = (InmateEntity) o;
+        ResidentEntity that = (ResidentEntity) o;
 
         return Double.compare(that.previousBalance, previousBalance) == 0;
     }

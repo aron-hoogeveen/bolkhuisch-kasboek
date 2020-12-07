@@ -3,7 +3,7 @@ package ch.bolkhuis.kasboek.components;
 import ch.bolkhuis.kasboek.ApplicationSceneRoot;
 import ch.bolkhuis.kasboek.core.AccountType;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
-import ch.bolkhuis.kasboek.core.InmateEntity;
+import ch.bolkhuis.kasboek.core.ResidentEntity;
 import ch.bolkhuis.kasboek.core.PlaceholderEntity;
 import ch.bolkhuis.kasboek.dialog.AccountingEntityDialog;
 import ch.bolkhuis.kasboek.dialog.InmateEntityDialog;
@@ -107,7 +107,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
 
         // populate the vectors with leaves
         for (AccountingEntity item : m_items.values()) {
-            if (item instanceof InmateEntity) {
+            if (item instanceof ResidentEntity) {
                 inmateLeaves.add(new TreeItem<>(item));
             } else {
                 TreeItem<AccountingEntity> leaf = new TreeItem<>(item);
@@ -185,7 +185,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
             TreeItem<AccountingEntity> leaf = new TreeItem<>(entity);
 
             // If there is an entity with the same id, remove the old entry first
-            if (entity instanceof InmateEntity) {
+            if (entity instanceof ResidentEntity) {
                 inmatesRoot.getChildren().removeIf(treeItem -> treeItem.getValue().getId() == entity.getId());
                 inmatesRoot.getChildren().add(leaf);
             } else if (entity.getAccountType().equals(AccountType.ASSET)) {
@@ -214,7 +214,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
         if (change.wasRemoved()) {
             AccountingEntity entity = change.getValueRemoved();
             TreeItem<AccountingEntity> leaf = new TreeItem<>(entity);
-            if (entity instanceof InmateEntity) {
+            if (entity instanceof ResidentEntity) {
                 inmatesRoot.getChildren().remove(leaf);
             } else if (entity.getAccountType().equals(AccountType.ASSET)) {
                 assetsRoot.getChildren().remove(leaf);
@@ -336,8 +336,8 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
                     appSceneRoot.getApp().getPrimaryStage(),
                     appSceneRoot.getHuischLedger().getAndIncrementNextAccountingEntityId()
             );
-            Optional<InmateEntity> result = inmateEntityDialog.showAndWait();
-            // isResultAvailable return false if no InmateEntity was created
+            Optional<ResidentEntity> result = inmateEntityDialog.showAndWait();
+            // isResultAvailable return false if no ResidentEntity was created
             if (result.isPresent()) {
                 AccountingEntity accountingEntity = result.get();
                 try {

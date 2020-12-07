@@ -72,7 +72,7 @@ public final class HuischLedger extends Ledger {
     }
 
     /**
-     * Generates an invoice for an InmateEntity with id {@code inmateEntityId} and writes it to the file {@code out}.
+     * Generates an invoice for an ResidentEntity with id {@code inmateEntityId} and writes it to the file {@code out}.
      * Transactions that belong to a Receipt are grouped together and shown as one on the Invoice. The counter-entity
      * for the Receipts will the denoted as "various" (or the locale different version from the provided resource file)
      * <br />
@@ -104,11 +104,11 @@ public final class HuischLedger extends Ledger {
             throw new IllegalArgumentException("The provided inmateEntityId has not corresponding AccountingEntity in the provided Ledger");
         }
 
-        // Check that the provided Entity is an InmateEntity
-        if (!(accountingEntity instanceof InmateEntity)) {
+        // Check that the provided Entity is an ResidentEntity
+        if (!(accountingEntity instanceof ResidentEntity)) {
             throw new IllegalArgumentException("The provided inmateEntityId does not belong to an inmate");
         }
-        InmateEntity inmateEntity = (InmateEntity) accountingEntity;
+        ResidentEntity residentEntity = (ResidentEntity) accountingEntity;
 
         // Update the string for the placeholderEntity
         huischLedger.accountingEntities.put(placeholderEntityId, new PlaceholderEntity(resourceBundle.getString("various")));
@@ -233,8 +233,8 @@ public final class HuischLedger extends Ledger {
                 double amount = t.getAmount();
                 String amountString;
 
-                if ((inmateEntity.getAccountType().isDebit() && t.getDebtorId() == inmateEntityId)
-                        || (!inmateEntity.getAccountType().isDebit() && t.getCreditorId() == inmateEntityId)) {
+                if ((residentEntity.getAccountType().isDebit() && t.getDebtorId() == inmateEntityId)
+                        || (!residentEntity.getAccountType().isDebit() && t.getCreditorId() == inmateEntityId)) {
                     amountString = numberFormat.format(amount);
                 } else {
                     amountString = numberFormat.format(-1 * amount);
@@ -263,10 +263,10 @@ public final class HuischLedger extends Ledger {
             });
 
             // Populate field ${NAME}
-            templateString = StringUtils.replace(templateString, "${NAME}", inmateEntity.getName());
+            templateString = StringUtils.replace(templateString, "${NAME}", residentEntity.getName());
             templateString = StringUtils.replace(templateString, "${INTRO_TEXT}", introText);
-            templateString = StringUtils.replace(templateString, "${START_BALANCE}", numberFormat.format(inmateEntity.getPreviousBalance()));
-            templateString = StringUtils.replace(templateString, "${END_BALANCE}", numberFormat.format(inmateEntity.getBalance()));
+            templateString = StringUtils.replace(templateString, "${START_BALANCE}", numberFormat.format(residentEntity.getPreviousBalance()));
+            templateString = StringUtils.replace(templateString, "${END_BALANCE}", numberFormat.format(residentEntity.getBalance()));
             templateString = StringUtils.replace(templateString, "${TABLE_DATA}", tableDateStringBuilder.toString());
         }
 

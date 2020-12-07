@@ -18,29 +18,25 @@ package ch.bolkhuis.kasboek.dialog;
 
 import ch.bolkhuis.kasboek.App;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
-import ch.bolkhuis.kasboek.core.InmateEntity;
+import ch.bolkhuis.kasboek.core.ResidentEntity;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
  * Calling {@code showDialog} on an instance of this class will present the user with a (blocking) dialog in which the
- * user can create a new InmateEntity.
+ * user can create a new ResidentEntity.
  *
  * TODO extends AbstractDialog
  */
-public class InmateEntityDialog extends AbstractDialog<InmateEntity> {
+public class InmateEntityDialog extends AbstractDialog<ResidentEntity> {
     private final Tooltip tooltip = new Tooltip();
 
     private final Label nameLabel = new Label();
@@ -53,7 +49,7 @@ public class InmateEntityDialog extends AbstractDialog<InmateEntity> {
 
     private final int newId;
 
-    public InmateEntityDialog(@NotNull Window owner, @NotNull InmateEntity old) {
+    public InmateEntityDialog(@NotNull Window owner, @NotNull ResidentEntity old) {
         super(owner, old);
         if (owner == null) { throw new NullPointerException(); }
         if (old == null) { throw new NullPointerException(); }
@@ -94,7 +90,7 @@ public class InmateEntityDialog extends AbstractDialog<InmateEntity> {
         submitButton.setText("Opslaan");
         submitButton.setMaxWidth(Double.MAX_VALUE);
 
-        nameTextField.setBorder(errorBorder); // TODO check via InmateEntity.isCorrectXXX() if a initial border needs to be set
+        nameTextField.setBorder(errorBorder); // TODO check via ResidentEntity.isCorrectXXX() if a initial border needs to be set
         previousBalanceTextField.setBorder(errorBorder);
         balanceTextField.setBorder(errorBorder);
 
@@ -161,7 +157,7 @@ public class InmateEntityDialog extends AbstractDialog<InmateEntity> {
      * Shows the dialog and waits before returning.
      */
     @Override
-    public Optional<InmateEntity> showAndWait() {
+    public Optional<ResidentEntity> showAndWait() {
         // if field old is not null we are updating otherwise creating
         if (old == null)
             stage.setTitle("Huischgenoot toevoegen");
@@ -200,9 +196,9 @@ public class InmateEntityDialog extends AbstractDialog<InmateEntity> {
 
             try {
                 if (old == null) {
-                    result = Optional.of(new InmateEntity(newId, name, Double.parseDouble(previousBalanceString), Double.parseDouble(balanceString)));
+                    result = Optional.of(new ResidentEntity(newId, name, Double.parseDouble(previousBalanceString), Double.parseDouble(balanceString)));
                 } else {
-                    result = Optional.of(new InmateEntity(old.getId(), name, Double.parseDouble(previousBalanceString), Double.parseDouble(balanceString)));
+                    result = Optional.of(new ResidentEntity(old.getId(), name, Double.parseDouble(previousBalanceString), Double.parseDouble(balanceString)));
                 }
             } catch (Exception e) {
                 System.err.println("There was an error while constructing a new AccountingEntity in " + InmateEntityDialog.this.getClass());

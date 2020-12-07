@@ -17,10 +17,9 @@
 package ch.bolkhuis.kasboek.gson;
 
 import ch.bolkhuis.kasboek.core.AccountingEntity;
-import ch.bolkhuis.kasboek.core.InmateEntity;
+import ch.bolkhuis.kasboek.core.ResidentEntity;
 import ch.bolkhuis.kasboek.core.Ledger;
 import ch.bolkhuis.kasboek.core.Transaction;
-import ch.bolkhuis.kasboek.gson.CustomizedGson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -74,12 +73,12 @@ public class LedgerTypeAdapter extends TypeAdapter<Ledger> {
         if (entries.size() > 0) {
             for (AccountingEntity a : entries.values()) {
                 // Safe the type in order to be able to correctly deserialize
-                if (a instanceof InmateEntity) {
+                if (a instanceof ResidentEntity) {
                     jsonWriter.beginObject();
                     jsonWriter.name("type");
-                    jsonWriter.value(InmateEntity.class.getCanonicalName());
+                    jsonWriter.value(ResidentEntity.class.getCanonicalName());
                     jsonWriter.name("object");
-                    CustomizedGson.gson.getAdapter(InmateEntity.class).write(jsonWriter, (InmateEntity)a);
+                    CustomizedGson.gson.getAdapter(ResidentEntity.class).write(jsonWriter, (ResidentEntity)a);
                     jsonWriter.endObject();
                 } else {
                     jsonWriter.beginObject();
@@ -137,11 +136,11 @@ public class LedgerTypeAdapter extends TypeAdapter<Ledger> {
                             }
                             entity = CustomizedGson.gson.fromJson(jsonReader, AccountingEntity.class);
                         }
-                        else if (canonicalName.equals(InmateEntity.class.getCanonicalName())) {
+                        else if (canonicalName.equals(ResidentEntity.class.getCanonicalName())) {
                             if (!jsonReader.nextName().equals("object")) {
                                 throw new IOException("missing required field 'object' for AccountingEntity");
                             }
-                            entity = CustomizedGson.gson.fromJson(jsonReader, InmateEntity.class);
+                            entity = CustomizedGson.gson.fromJson(jsonReader, ResidentEntity.class);
                         }
                         else {
                             throw new IOException("type '" + canonicalName + "' not recognized");

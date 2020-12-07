@@ -17,8 +17,7 @@
 package ch.bolkhuis.kasboek.gson;
 
 import ch.bolkhuis.kasboek.core.AccountType;
-import ch.bolkhuis.kasboek.core.InmateEntity;
-import ch.bolkhuis.kasboek.gson.CustomizedGson;
+import ch.bolkhuis.kasboek.core.ResidentEntity;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -31,7 +30,7 @@ import java.util.Objects;
  * @version v0.2-pre-alpha
  * @author Aron Hoogeveen
  */
-public class InmateEntityTypeAdapter extends TypeAdapter<InmateEntity> {
+public class InmateEntityTypeAdapter extends TypeAdapter<ResidentEntity> {
     private enum FieldNames {
         ID("id"),
         NAME("name"),
@@ -55,21 +54,21 @@ public class InmateEntityTypeAdapter extends TypeAdapter<InmateEntity> {
     }
 
     @Override
-    public void write(JsonWriter jsonWriter, InmateEntity inmateEntity) throws IOException {
-        if (inmateEntity == null) {
+    public void write(JsonWriter jsonWriter, ResidentEntity residentEntity) throws IOException {
+        if (residentEntity == null) {
             jsonWriter.nullValue();
             return;
         }
         jsonWriter.beginObject();
-        jsonWriter.name(FieldNames.ID.name).value(inmateEntity.getId());
-        jsonWriter.name(FieldNames.NAME.name).value(inmateEntity.getName());
-        jsonWriter.name(FieldNames.PREVIOUS_BALANCE.name).value(inmateEntity.getPreviousBalance());
-        jsonWriter.name(FieldNames.BALANCE.name).value(inmateEntity.getBalance());
+        jsonWriter.name(FieldNames.ID.name).value(residentEntity.getId());
+        jsonWriter.name(FieldNames.NAME.name).value(residentEntity.getName());
+        jsonWriter.name(FieldNames.PREVIOUS_BALANCE.name).value(residentEntity.getPreviousBalance());
+        jsonWriter.name(FieldNames.BALANCE.name).value(residentEntity.getBalance());
         jsonWriter.endObject();
     }
 
     @Override
-    public InmateEntity read(JsonReader jsonReader) throws IOException {
+    public ResidentEntity read(JsonReader jsonReader) throws IOException {
         if (jsonReader.peek() == JsonToken.NULL) {
             jsonReader.nextNull();
             return null;
@@ -122,7 +121,7 @@ public class InmateEntityTypeAdapter extends TypeAdapter<InmateEntity> {
         }
 
         if (fields == fieldCheck) {
-            return new InmateEntity(
+            return new ResidentEntity(
                     id,
                     Objects.requireNonNull(name, "name should not be null at this point"),
                     previousBalance,

@@ -18,7 +18,7 @@ package ch.bolkhuis.kasboek.gson;
 
 import ch.bolkhuis.kasboek.core.AccountType;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
-import ch.bolkhuis.kasboek.core.InmateEntity;
+import ch.bolkhuis.kasboek.core.ResidentEntity;
 import ch.bolkhuis.kasboek.core.Ledger;
 import com.google.gson.JsonSyntaxException;
 
@@ -29,13 +29,13 @@ public class GsonTester {
     private static Ledger ledger = new Ledger();
 
     public static void main(String[] args) {
-        AccountingEntity inmate1 = new InmateEntity(
+        AccountingEntity inmate1 = new ResidentEntity(
                 ledger.getAndIncrementNextAccountingEntityId(),
                 "Klaas",
                 0,
                 0
         );
-        AccountingEntity inmate2 = new InmateEntity(
+        AccountingEntity inmate2 = new ResidentEntity(
                 ledger.getAndIncrementNextAccountingEntityId(),
                 "Truus",
                 0,
