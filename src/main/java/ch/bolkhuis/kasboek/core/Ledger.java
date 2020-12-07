@@ -16,10 +16,6 @@
  */
 package ch.bolkhuis.kasboek.core;
 
-import ch.bolkhuis.kasboek.eventlisteners.AccountingEntityEvent;
-import ch.bolkhuis.kasboek.eventlisteners.AccountingEntityEventListener;
-import ch.bolkhuis.kasboek.eventlisteners.TransactionEvent;
-import ch.bolkhuis.kasboek.eventlisteners.TransactionEventListener;
 import ch.bolkhuis.kasboek.gson.CustomizedGson;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;

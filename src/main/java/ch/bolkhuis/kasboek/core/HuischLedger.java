@@ -16,8 +16,6 @@
  */
 package ch.bolkhuis.kasboek.core;
 
-import ch.bolkhuis.kasboek.eventlisteners.ReceiptEvent;
-import ch.bolkhuis.kasboek.eventlisteners.ReceiptEventListener;
 import ch.bolkhuis.kasboek.exceptions.IllegalTemplateFormatException;
 import ch.bolkhuis.kasboek.exceptions.UnsupportedVersionException;
 import ch.bolkhuis.kasboek.gson.CustomizedGson;
