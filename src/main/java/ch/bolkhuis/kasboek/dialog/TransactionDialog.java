@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class TransactionDialog extends AbstractDialog<Transaction> {
 
@@ -150,6 +151,12 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
 //            }
             amountTextField.setText(String.valueOf(old.getAmount()));
             descriptionTextField.setText(old.getDescription());
+
+            // Disable all fields that will not be used (stay the same)
+            debtorComboBox.setDisable(true);
+            creditorComboBox.setDisable(true);
+            amountTextField.setDisable(true);
+            receiptComboBox.setDisable(true);
         } else {
             // Set the date for the DatePicker to today
             datePicker.setValue(LocalDate.now());
@@ -255,9 +262,10 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
     }
 
     @Override
-    public void showAndWait() {
+    public Optional<Transaction> showAndWait() {
         setTitle();
         stage.showAndWait();
+        return result;
     }
 
     private class InputProcessingEventHandler implements EventHandler<ActionEvent> {
@@ -282,7 +290,7 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
             try {
                 if (Transaction.isCorrectAmount(Double.parseDouble(amountString)) && Transaction.isCorrectDescription(description)) {
                     if (old == null) {
-                        result = new Transaction(
+                        result = Optional.of(new Transaction(
                                 newId,
                                 debtor.getId(), // could cause NullPointerException but it will be caught by the try-catch
                                 creditor.getId(), // same
@@ -290,9 +298,9 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
                                 receiptId,
                                 date,
                                 description
-                        );
+                        ));
                     } else {
-                        result = new Transaction(
+                        result = Optional.of(new Transaction(
                                 old.getId(),
                                 old.getDebtorId(),
                                 old.getCreditorId(),
@@ -300,9 +308,8 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
                                 old.getReceiptId(),
                                 date,
                                 description
-                        );
+                        ));
                     }
-                    resultAvailable = true;
                     stage.hide();
                     return;
                 }

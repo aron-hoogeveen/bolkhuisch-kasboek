@@ -7,6 +7,8 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 /**
  * AbstractDialog is the abstract class for implementing a simple construction or edit dialog for class {@code T}.
  *
@@ -31,11 +33,7 @@ public abstract class AbstractDialog<T> {
     /**
      * Holds the newly created object of type T if any.
      */
-    protected T result;
-    /**
-     * Indicates whether or not the result is set.
-     */
-    protected boolean resultAvailable = false;
+    protected Optional<T> result = Optional.empty();
 
     /**
      * Creates a new AbstractDialog and initialises its owner.
@@ -88,11 +86,8 @@ public abstract class AbstractDialog<T> {
     /**
      * Shows the stage and blocks until it is closed.
      */
-    public void showAndWait() {
+    public Optional<T> showAndWait() {
         stage.showAndWait();
+        return result;
     }
-
-    public T getResult() { return result; }
-
-    public boolean isResultAvailable() { return  resultAvailable; }
 }
