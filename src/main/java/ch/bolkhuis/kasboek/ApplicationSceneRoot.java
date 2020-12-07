@@ -180,8 +180,8 @@ public class ApplicationSceneRoot extends BorderPane {
         });
         MenuItem showFirstReceipt = new MenuItem("Show first receipt");
         showFirstReceipt.setOnAction(event -> {
-            ReceiptDialog receiptDialog = new ReceiptDialog(app.getPrimaryStage(), huischLedger, huischLedger.getReceipts().get(0));
-            receiptDialog.showAndWait();
+            ViewReceiptDialog viewReceiptDialog = new ViewReceiptDialog(app.getPrimaryStage(), huischLedger, huischLedger.getReceipts().get(0));
+            viewReceiptDialog.showAndWait();
         });
         developerMenu.getItems().addAll(
                 printSizeOfAccountingEntities,

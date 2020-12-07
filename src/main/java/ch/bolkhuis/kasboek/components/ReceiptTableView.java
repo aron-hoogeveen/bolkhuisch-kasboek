@@ -3,7 +3,7 @@ package ch.bolkhuis.kasboek.components;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.HuischLedger;
 import ch.bolkhuis.kasboek.core.Receipt;
-import ch.bolkhuis.kasboek.dialog.ReceiptDialog;
+import ch.bolkhuis.kasboek.dialog.ViewReceiptDialog;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -96,12 +96,12 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
             HBox hBox = new HBox();
             Button editButton = new Button("Bewerken");
             editButton.setOnAction(event -> {
-                ReceiptDialog receiptDialog = new ReceiptDialog(
+                ViewReceiptDialog viewReceiptDialog = new ViewReceiptDialog(
                         owner,
                         huischLedger,
                         param.getValue()
                 );
-                receiptDialog.showAndWait();
+                viewReceiptDialog.showAndWait();
             });
             hBox.getChildren().add(
                     editButton

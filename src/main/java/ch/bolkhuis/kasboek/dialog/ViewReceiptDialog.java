@@ -40,11 +40,11 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * ReceiptDialog is a "Dialog" for viewing and editing a {@link Receipt}.
+ * ViewReceiptDialog is a "Dialog" for viewing and editing a {@link Receipt}.
  *
  * @author Aron Hoogeveen
  */
-public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeListener<Integer> {
+public class ViewReceiptDialog extends AbstractDialog<Receipt> implements SetChangeListener<Integer> {
     private final ObservableMap<Integer, Transaction> transactionObservableMap = FXCollections.observableHashMap();
     private final HuischLedger huischLedger;
 
@@ -67,7 +67,7 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
      * @param huischLedger the HuischLedger with which to populate the TransactionTableView
      * @param old   T to be edited
      */
-    public ReceiptDialog(@NotNull Window owner, @NotNull HuischLedger huischLedger, @NotNull Receipt old) {
+    public ViewReceiptDialog(@NotNull Window owner, @NotNull HuischLedger huischLedger, @NotNull Receipt old) {
         super(owner, old);
         if (old == null) { throw new NullPointerException(); }
 
