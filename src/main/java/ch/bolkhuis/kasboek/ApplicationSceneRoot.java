@@ -249,10 +249,10 @@ public class ApplicationSceneRoot extends BorderPane {
         AccountingEntityDialog accountingEntityDialog = new AccountingEntityDialog(
                 app.getPrimaryStage(),
                 huischLedger.getAndIncrementNextAccountingEntityId());
-        accountingEntityDialog.showAndWait();
+        Optional<AccountingEntity> result = accountingEntityDialog.showAndWait();
         // isResultAvailable return false if no AccountingEntity was created
-        if (accountingEntityDialog.isResultAvailable()) {
-            AccountingEntity accountingEntity = accountingEntityDialog.getResult();
+        if (result.isPresent()) {
+            AccountingEntity accountingEntity = result.get();
             try {
                 huischLedger.addAccountingEntity(accountingEntity);
             } catch (Exception e) {

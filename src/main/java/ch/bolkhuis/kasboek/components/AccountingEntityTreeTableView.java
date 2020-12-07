@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Vector;
 
 /**
@@ -307,10 +308,10 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
                     appSceneRoot.getHuischLedger().getAndIncrementNextAccountingEntityId(),
                     accountType
             );
-            accountingEntityDialog.showAndWait();
+            Optional<AccountingEntity> result = accountingEntityDialog.showAndWait();
             // isResultAvailable return false if no AccountingEntity was created
-            if (accountingEntityDialog.isResultAvailable()) {
-                AccountingEntity accountingEntity = accountingEntityDialog.getResult();
+            if (result.isPresent()) {
+                AccountingEntity accountingEntity = result.get();
                 try {
                     appSceneRoot.getHuischLedger().addAccountingEntity(accountingEntity);
                 } catch (Exception e) {
