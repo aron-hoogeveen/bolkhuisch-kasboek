@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * ReceiptDialog is a "Dialog" for viewing and editing a {@link Receipt}.
@@ -51,6 +52,7 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
      */
     public ReceiptDialog(@NotNull Window owner, @NotNull HuischLedger huischLedger, @NotNull Receipt old) {
         super(owner, old);
+        if (old == null) { throw new NullPointerException(); }
 
         this.huischLedger = huischLedger;
 
@@ -192,18 +194,40 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
         @Override
         public void handle(ActionEvent event) {
             System.err.println("AddTransactionEventHanlder is not yet fully implemented");
+            showTransactionDialog();
+        }
 
+        private void showTransactionDialog() {
             TransactionDialog transactionDialog = new TransactionDialog(
                     stage,
                     huischLedger.getAccountingEntities(),
                     huischLedger.getReceipts(),
-                    huischLedger.getAndIncrementNextTransactionId(),
-                    huischLedger.getAndIncrementNextReceiptId()
+                    huischLedger.getAndIncrementNextTransactionId(), // FIXME only increment nextTransactionId after a success of adding the transaction
+                    old.getId() // will not produce nptr exception since we checked old at construction
             );
 
-            transactionDialog.showAndWait();
+            Optional<Transaction> result = transactionDialog.showAndWait();
 
-            // TODO validate that either newTransaction.getDebtorId() or newTransaction.getCreditorId() equal is to old.getPayer()
+            if (result.isPresent()) {
+                Transaction transactionResult = result.get();
+                if (containsPayer(transactionResult)) {
+                    // possibly correct transaction. Try to add it to the HuischLedger to the correct receipt.
+                    try {
+                        huischLedger.addTransaction(transactionResult);
+                    } catch (Exception e) {
+                        System.err.println("Failed to add the transaction to the HuischLedger and corresponding receipt");
+                    }
+                } else {
+                    Dialog<ButtonType> errorDialog = new Dialog<>();
+                    errorDialog.getDialogPane().getButtonTypes().add(
+                            new ButtonType("OK", ButtonBar.ButtonData.OK_DONE)
+                    );
+                    errorDialog.setContentText("De debtor of creditor van deze transactie moet gelijk zijn aan '"
+                            + payerComboBox.getSelectionModel().getSelectedItem().getName() + "'");
+                    errorDialog.showAndWait();
+                    showTransactionDialog();
+                }
+            }
         }
     }
 
@@ -219,5 +243,15 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
         public void handle(ActionEvent event) {
             System.err.println("ImportTransactionEventHandler is not yet implemented");
         }
+    }
+
+    /**
+     * Returns whether {@code transaction} contains the payer as either debtor or creditor.
+     *
+     * @param transaction the Transaction to check
+     * @return {@code true} when either debtorId or creditorId equals payer
+     */
+    private boolean containsPayer(Transaction transaction) {
+        return (transaction.getDebtorId() == old.getPayer() || transaction.getCreditorId() == old.getPayer());
     }
 }

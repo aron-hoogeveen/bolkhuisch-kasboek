@@ -270,10 +270,10 @@ public class ApplicationSceneRoot extends BorderPane {
                 huischLedger.getReceipts(),
                 huischLedger.getAndIncrementNextTransactionId()
         );
-        transactionDialog.showAndWait();
+        Optional<Transaction> result = transactionDialog.showAndWait();
 
-        if (transactionDialog.isResultAvailable()) {
-            Transaction transaction = transactionDialog.getResult();
+        if (result.isPresent()) {
+            Transaction transaction = result.get();
             try {
                 huischLedger.addTransaction(transaction);
             } catch (Exception e) {

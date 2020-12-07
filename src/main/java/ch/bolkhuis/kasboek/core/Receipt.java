@@ -19,7 +19,7 @@ import java.util.Set;
 public class Receipt {
     private final int id;
     private @NotNull final String name;
-    private @NotNull final ObservableSet<Integer> transactionIdSet;
+    private @NotNull ObservableSet<Integer> transactionIdSet;
     private final @NotNull LocalDate date;
     private final int payer;
 
@@ -60,6 +60,16 @@ public class Receipt {
 
     public int getPayer() {
         return payer;
+    }
+
+    /**
+     * Returns {@code true} if the set did not already contain the transaction id.
+     *
+     * @param transactionId the id of the Transaction to register with this Receipt
+     * @return {@code true} if the set did not already contain this Transaction
+     */
+    public boolean registerTransaction(int transactionId) {
+        return transactionIdSet.add(transactionId);
     }
 
     @Override

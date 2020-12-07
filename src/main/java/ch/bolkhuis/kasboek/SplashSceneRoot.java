@@ -17,6 +17,7 @@ import java.io.File;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -183,10 +184,13 @@ public class SplashSceneRoot extends BorderPane {
                 "Another transaction"
         );
         // Receipt transactions
+        Set<Integer> set = new HashSet<>();
+        set.add(2);
+        set.add(3);
         Receipt r1 = new Receipt(
                 0,
                 "Makrorun",
-                Set.of(2, 3),
+                set, // FIXME bug, user can use an unmodifiable set as backing set. Ensure modifiable sets are provided!
                 LocalDate.parse("2020-01-15"),
                 0
         );
@@ -209,11 +213,12 @@ public class SplashSceneRoot extends BorderPane {
                 "Trans 2 bij Receipt 1"
         );
 
+        // First add receipt, then add transactions
+        huischLedger.addReceipt(r1);
         huischLedger.addTransaction(t1);
         huischLedger.addTransaction(t2);
         huischLedger.addTransaction(r1_t4);
         huischLedger.addTransaction(r1_t3);
-        huischLedger.addReceipt(r1);
 
         huischLedger.setNextAccountingEntityId(2);
 
