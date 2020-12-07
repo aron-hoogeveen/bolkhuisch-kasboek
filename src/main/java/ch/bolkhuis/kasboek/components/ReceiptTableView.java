@@ -1,18 +1,15 @@
 package ch.bolkhuis.kasboek.components;
 
-import ch.bolkhuis.kasboek.ApplicationSceneRoot;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.HuischLedger;
 import ch.bolkhuis.kasboek.core.Receipt;
 import ch.bolkhuis.kasboek.dialog.ReceiptDialog;
-import ch.bolkhuis.kasboek.dialog.TransactionDialog;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
