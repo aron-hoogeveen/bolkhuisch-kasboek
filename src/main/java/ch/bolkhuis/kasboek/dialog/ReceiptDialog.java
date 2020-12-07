@@ -224,6 +224,7 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
                     huischLedger.getAndIncrementNextTransactionId(), // FIXME only increment nextTransactionId after a success of adding the transaction
                     old.getId() // will not produce nptr exception since we checked old at construction
             );
+            transactionDialog.setInitialDate(old.getDate()); // Set the initial date equal to the date of the receipt
 
             Optional<Transaction> result = transactionDialog.showAndWait();
 

@@ -287,6 +287,15 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
         return result;
     }
 
+    /**
+     * Calls {@code setValue} on the DatePicker with value {@code date}.
+     * @param date the date to set the DatePicker to
+     */
+    public void setInitialDate(@NotNull LocalDate date) {
+        if (date == null) { throw new NullPointerException(); }
+        datePicker.setValue(date);
+    }
+
     private class InputProcessingEventHandler implements EventHandler<ActionEvent> {
 
         /**
