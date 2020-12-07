@@ -18,6 +18,10 @@ package ch.bolkhuis.kasboek.core;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Class InmateEntity represents an {@link AccountingEntity} that is a resident of the Bolkhuisch.
+ * TODO refactor name of this class to 'ResidentEntity'
+ */
 public class InmateEntity extends AccountingEntity {
     /**
      * The vale of {@code balance} at the time the last invoice was generated for this InmateEntity

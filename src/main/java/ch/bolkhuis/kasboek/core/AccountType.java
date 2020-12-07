@@ -19,8 +19,9 @@ package ch.bolkhuis.kasboek.core;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * @version v0.2-pre-alpha
- * @author Aron Hoogeveen
+ * AccountType is an enumeration that indicates what type a specific accounting entity is. See
+ * <a href="https://www.principlesofaccounting.com/account-types/" target="_top">PrinciplesOfAccounting.com</a> for the
+ * different accounting types.
  */
 public enum AccountType {
     @SerializedName("expense")

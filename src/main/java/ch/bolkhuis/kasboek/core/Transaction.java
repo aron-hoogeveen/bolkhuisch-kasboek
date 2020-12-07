@@ -35,9 +35,6 @@ import java.util.Objects;
  * life receipt with this transaction ({@code receiptId}).
  * Transaction enforces a short description of at most 100 characters, to ensure a concise description.
  * The amount is a positive number.
- *
- * @version 0.2-pre-alpha
- * @author Aron Hoogeveen
  */
 public final class Transaction implements Comparable<Transaction> {
     private final int id;

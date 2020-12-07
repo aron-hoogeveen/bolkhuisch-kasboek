@@ -18,6 +18,10 @@ package ch.bolkhuis.kasboek.core;
 
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * PlaceholderEntity is a hacky class used for an AccountingEntity from which only the name is important. All other
+ * fields are set to arbitrary values.
+ */
 public class PlaceholderEntity extends AccountingEntity {
     /**
      * Constructs a new PlaceholderEntity with {@code id} and {@code name}.

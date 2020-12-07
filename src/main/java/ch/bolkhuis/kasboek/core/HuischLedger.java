@@ -35,9 +35,6 @@ import java.util.*;
  * with negative ids are reserved by this class. It is possible to create AccountingEntities with negative ids, but if
  * that id collides with one of the reserved ids of this class that AccountingEntity will be overwritten at some point
  * without giving feedback.
- *
- * @author Aron Hoogeveen
- * @version 0.2-pre-alpha
  */
 public final class HuischLedger extends Ledger {
     private final static String introText = "Please replace this string with some info text";

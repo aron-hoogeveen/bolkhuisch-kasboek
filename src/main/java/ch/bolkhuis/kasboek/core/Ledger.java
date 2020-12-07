@@ -34,9 +34,6 @@ import java.util.*;
  *
  *
  * Note: versions v0.2-pre-alpha and higher are not compatible with earlier versions.
- *
- * @version v0.2-pre-alpha
- * @author Aron Hoogeveen
  */
 public class Ledger {
     protected  @NotNull final ObservableMap<Integer, Transaction> transactions;

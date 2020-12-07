@@ -31,9 +31,6 @@ import java.util.Objects;
  * The immutable class AccountingEntry resembles an account with value. Some fields adhere to the contracts specified
  * in the functions isCorrectXXX() where XXX is equal to the fields' name.
  * FIXME correctly handle Double inf/NaN
- *
- * @version v0.2-pre-alpha
- * @author Aron Hoogeveen
  */
 public class AccountingEntity {
     protected final int id;
