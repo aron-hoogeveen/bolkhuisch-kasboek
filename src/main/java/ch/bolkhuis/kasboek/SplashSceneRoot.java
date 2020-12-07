@@ -233,6 +233,7 @@ public class SplashSceneRoot extends BorderPane {
         huischLedger.addTransaction(r1_t3); // this will also register it to the correct receipt
 
         huischLedger.setNextAccountingEntityId(2);
+        huischLedger.setNextReceiptId(1);
 
         return huischLedger;
     }

@@ -328,6 +328,15 @@ public final class HuischLedger extends Ledger {
     }
 
     /**
+     * This method should never be used. It may make this HuischLedger unusable.
+     *
+     * @param id the value for nextReceiptId
+     */
+    public void setNextReceiptId(int id) {
+        nextReceiptId = id;
+    }
+
+    /**
      * Add a Receipt to the map of Receipts. If the Receipt contains a non-empty set of Transaction ids, the corresponding
      * Transactions are checked for having the correct receiptId value. If one or more of those transactions do have a
      * receiptId set, but not the correct one, no Transaction is modified, and this method will throw an

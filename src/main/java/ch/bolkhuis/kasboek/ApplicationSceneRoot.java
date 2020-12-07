@@ -140,9 +140,9 @@ public class ApplicationSceneRoot extends BorderPane {
         MenuItem addAccountingEntity = new MenuItem("Entiteit toevoegen");
         addAccountingEntity.setOnAction(new AddAccountingEntityEventHandler());
         MenuItem addInmateEntity = new MenuItem("Huischgenoot toevoegen");
-    addInmateEntity.setOnAction(new AddInmateEntityEventHandler());
+        addInmateEntity.setOnAction(new AddInmateEntityEventHandler());
         MenuItem addReceipt = new MenuItem("Bonnetje toevoegen");
-//        addAccountingEntity.setOnAction(new AddAccountingEntityEventHandler());
+        addReceipt.setOnAction(new AddReceiptEventHandler());
         MenuItem addTransaction = new MenuItem("Transactie toevoegen");
         addTransaction.setOnAction(new AddTransactionEventHandler());
         editMenu.getItems().addAll(
@@ -299,6 +299,20 @@ public class ApplicationSceneRoot extends BorderPane {
         }
     }
 
+    public void showCreateReceiptDialog() throws Exception {
+        CreateReceiptDialog receiptDialog = new CreateReceiptDialog(
+                app.getPrimaryStage(),
+                huischLedger.getAccountingEntities(),
+                huischLedger.getAndIncrementNextReceiptId()
+        );
+        Optional<Receipt> result = receiptDialog.showAndWait();
+
+        if (result.isPresent()) {
+            Receipt receipt = result.get();
+            huischLedger.addReceipt(receipt);
+        }
+    }
+
     public App getApp() { return app; }
 
     public HuischLedger getHuischLedger() { return huischLedger; }
@@ -355,6 +369,25 @@ public class ApplicationSceneRoot extends BorderPane {
             try {
                 showTransactionDialog();
             } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class AddReceiptEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+                showCreateReceiptDialog();
+            } catch (Exception e) {
+                System.err.println("Could not add Receipt returned from CreateReceiptDialog");
                 e.printStackTrace();
             }
         }
