@@ -101,10 +101,7 @@ public class SplashSceneRoot extends BorderPane {
         // Add buttons for creating of importing a Ledger or for getting help
         Button newLedgerButton = new Button("Nieuw Kasboek", new ImageView("plus-sign-16.png"));
         newLedgerButton.setOnAction(event -> {
-            // FIXME this is a temporary action until the loading is implemented
-            HuischLedger huischLedger = createTemporaryHuischLedger();
-
-            app.changeToApplicationScene(new ApplicationSceneRoot(app, huischLedger, null));
+            app.changeToApplicationScene(new ApplicationSceneRoot(app, new HuischLedger(), null));
         });
         Button importLedgerButton = new Button("Importeer Kasboek", new ImageView("import-16.png"));
         Button getHelpButton = new Button("Krijg hulp", new ImageView("question-mark-16.png"));
