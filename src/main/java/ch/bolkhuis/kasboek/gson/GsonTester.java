@@ -60,10 +60,12 @@ public class GsonTester {
             // Try to construct it again
             ledger = Ledger.fromFile(file);
         } catch (IOException ioException) {
-            System.out.println("A general IOException occurred");
+            ioException.printStackTrace();
+            System.err.println("A general IOException occurred");
             return;
         } catch (JsonSyntaxException jsonSyntaxException) {
-            System.out.println("JSON Syntax malformation: " + jsonSyntaxException.getMessage());
+            jsonSyntaxException.printStackTrace();
+            System.err.println("JSON Syntax malformation: " + jsonSyntaxException.getMessage());
             return;
         }
 

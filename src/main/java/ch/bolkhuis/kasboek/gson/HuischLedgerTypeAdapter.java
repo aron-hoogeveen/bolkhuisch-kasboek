@@ -21,8 +21,10 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import javafx.collections.FXCollections;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -108,9 +110,9 @@ public class HuischLedgerTypeAdapter extends TypeAdapter<HuischLedger> {
             return null;
         }
 
-        TreeMap<Integer, Transaction> transactions = new TreeMap<>();
-        TreeMap<Integer, Receipt> receipts = new TreeMap<>();
-        TreeMap<Integer, AccountingEntity> accountingEntities = new TreeMap<>();
+        HashMap<Integer, Transaction> transactions = new HashMap<>();
+        HashMap<Integer, Receipt> receipts = new HashMap<>();
+        HashMap<Integer, AccountingEntity> accountingEntities = new HashMap<>();
 
         jsonReader.beginObject();
         int fields = 0;
@@ -193,8 +195,11 @@ public class HuischLedgerTypeAdapter extends TypeAdapter<HuischLedger> {
         }
 
         if (fieldCheck == fields) {
-            throw new IOException("HuischLedgerTypeAdapter not completely implemented");
-            //            return new HuischLedger(accountingEntities, transactions, receipts);
+            return new HuischLedger(
+                    FXCollections.observableMap(accountingEntities),
+                    FXCollections.observableMap(transactions),
+                    FXCollections.observableMap(receipts)
+            );
         }
         throw new IOException("Not all required fields are available");
     }

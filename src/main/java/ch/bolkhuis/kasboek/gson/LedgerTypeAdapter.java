@@ -24,11 +24,10 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import javafx.collections.FXCollections;
 
 import java.io.IOException;
-import java.util.Objects;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @version v0.2-pre-alpha
@@ -60,7 +59,7 @@ public class LedgerTypeAdapter extends TypeAdapter<Ledger> {
         jsonWriter.beginObject();
         jsonWriter.name(FieldNames.TRANSACTIONS.name);
         jsonWriter.beginArray();
-        SortedMap<Integer, Transaction> transactionSortedMap = ledger.copyOfTransactions();
+        Map<Integer, Transaction> transactionSortedMap = ledger.getTransactions();
         if (transactionSortedMap.size() > 0) {
             for (Transaction t : transactionSortedMap.values()) {
                 CustomizedGson.gson.getAdapter(Transaction.class).write(jsonWriter, t);
@@ -69,7 +68,7 @@ public class LedgerTypeAdapter extends TypeAdapter<Ledger> {
         jsonWriter.endArray();
         jsonWriter.name(FieldNames.ACCOUNTING_ENTITIES.name);
         jsonWriter.beginArray();
-        SortedMap<Integer, AccountingEntity> entries = ledger.copyOfAccountingEntities();
+        Map<Integer, AccountingEntity> entries = ledger.getAccountingEntities();
         if (entries.size() > 0) {
             for (AccountingEntity a : entries.values()) {
                 // Safe the type in order to be able to correctly deserialize
@@ -101,8 +100,8 @@ public class LedgerTypeAdapter extends TypeAdapter<Ledger> {
             return null;
         }
 
-        TreeMap<Integer, Transaction> transactions = new TreeMap<>();
-        TreeMap<Integer, AccountingEntity> accountingEntities = new TreeMap<>();
+        HashMap<Integer, Transaction> transactions = new HashMap<>();
+        HashMap<Integer, AccountingEntity> accountingEntities = new HashMap<>();
 
         jsonReader.beginObject();
         int fields = 0;
@@ -174,8 +173,7 @@ public class LedgerTypeAdapter extends TypeAdapter<Ledger> {
         }
 
         if (fieldCheck == fields) {
-            throw new IOException("LedgerTypeAdapter is not completely implemented");
-//            return new Ledger(accountingEntities, transactions);
+            return new Ledger(FXCollections.observableMap(accountingEntities), FXCollections.observableMap(transactions));
         }
         throw new IOException("Not all required fields are available");
     }
