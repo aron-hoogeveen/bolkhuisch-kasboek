@@ -446,6 +446,8 @@ public final class HuischLedger extends Ledger {
             } else {
                 throw new IllegalArgumentException("The transaction has a non-existent receiptId: (T.Id:" + transaction.getId() + ",T.rId:" + transaction.getReceiptId() + ")");
             }
+        } else {
+            super.addTransaction(transaction);
         }
     }
 }
