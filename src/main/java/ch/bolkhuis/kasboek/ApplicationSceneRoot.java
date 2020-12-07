@@ -493,7 +493,6 @@ public class ApplicationSceneRoot extends BorderPane {
                     return true;
                 }
             }
-            System.err.println("Ehrm... The result of the dialog was not available. Not sure why.");
         }
 
         return false;
@@ -512,6 +511,8 @@ public class ApplicationSceneRoot extends BorderPane {
             if (close()) {
                 System.out.println("Calling Platform.exit()");
                 Platform.exit();
+            } else {
+                event.consume();
             }
         }
     }
@@ -567,6 +568,8 @@ public class ApplicationSceneRoot extends BorderPane {
         public void handle(ActionEvent event) {
             if (close()) {
                 app.changeToSplashScene();
+            } else {
+                event.consume();
             }
         }
     }
