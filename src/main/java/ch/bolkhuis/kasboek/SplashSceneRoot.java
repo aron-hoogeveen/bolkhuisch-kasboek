@@ -200,13 +200,10 @@ public class SplashSceneRoot extends BorderPane {
                 "Another transaction"
         );
         // Receipt transactions
-        Set<Integer> set = new HashSet<>();
-        set.add(2);
-        set.add(3);
         Receipt r1 = new Receipt(
                 0,
                 "Makrorun",
-                set, // FIXME bug, user can use an unmodifiable set as backing set. Ensure modifiable sets are provided!
+                new HashSet<>(),
                 LocalDate.parse("2020-01-15"),
                 0
         );
@@ -233,8 +230,8 @@ public class SplashSceneRoot extends BorderPane {
         huischLedger.addReceipt(r1);
         huischLedger.addTransaction(t1);
         huischLedger.addTransaction(t2);
-        huischLedger.addTransaction(r1_t4);
-        huischLedger.addTransaction(r1_t3);
+        huischLedger.addTransaction(r1_t4); // this will also register it to the correct receipt
+        huischLedger.addTransaction(r1_t3); // this will also register it to the correct receipt
 
         huischLedger.setNextAccountingEntityId(2);
 

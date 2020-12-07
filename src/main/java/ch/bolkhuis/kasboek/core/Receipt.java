@@ -40,7 +40,7 @@ public class Receipt {
      * Creates a Receipt. Fail-fast.
      * @param id the identifier
      * @param name the name
-     * @param transactionIdSet a Set with integers that correspond to related Transaction ids
+     * @param transactionIdSet a Set with integers that correspond to related Transaction ids // FIXME bug, user can use an unmodifiable set as backing set. Ensure modifiable sets are provided!
      * @param date the date this receipt 'happened'
      */
     public Receipt(int id, @NotNull String name, @NotNull Set<Integer> transactionIdSet, @NotNull LocalDate date, int payer) {

@@ -327,13 +327,43 @@ public final class HuischLedger extends Ledger {
         return nextReceiptId++;
     }
 
+    /**
+     * Add a Receipt to the map of Receipts. If the Receipt contains a non-empty set of Transaction ids, the corresponding
+     * Transactions are checked for having the correct receiptId value. If one or more of those transactions do have a
+     * receiptId set, but not the correct one, no Transaction is modified, and this method will throw an
+     * IllegalArgumentException. This method also throws an IllegalArgumentException when there is already a Receipt with
+     * the same id. This method is not save for asynchronous use.
+     * @param receipt the Receipt to add
+     * @throws IllegalArgumentException when the receipt is incorrect
+     */
     public void addReceipt(@NotNull Receipt receipt) {
         Objects.requireNonNull(receipt, "Parameter receipt cannot be null");
 
         if (receipts.containsKey(receipt.getId())) {
             throw new IllegalArgumentException("Duplicate key for new receipt");
         }
-        // TODO should we register the receipt with the transactions that do not have the correct receiptId?
+
+        // Validate all transactions
+        Set<Integer> transactionIdSet = new HashSet<>();
+        for (int i : receipt.getTransactionIdSet()) {
+            if (transactions.containsKey(i)) {
+                if (transactions.get(i).getReceiptId() != null) {
+                    if (transactions.get(i).getReceiptId() != receipt.getId()) {
+                        throw new IllegalArgumentException("This Receipt refers to a Transaction that says it belongs to a " +
+                                "different Receipt");
+                    }
+                    transactionIdSet.add(i);
+                }
+            } else {
+                throw new IllegalArgumentException("Receipt has an unknown transaction id.");
+            }
+        }
+        if (transactionIdSet.size() > 0) {
+            // update the transaction
+            // currently this is not supported
+            throw new IllegalArgumentException("All transactions need to reference this Receipt");
+        }
+
         receipts.put(receipt.getId(), receipt);
     }
 
