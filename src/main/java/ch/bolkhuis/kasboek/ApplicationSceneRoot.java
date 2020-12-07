@@ -117,7 +117,7 @@ public class ApplicationSceneRoot extends BorderPane {
         MenuItem newFile = new MenuItem("Nieuwe maken");
         newFile.setOnAction(new NewFileEventHandler());
         MenuItem openFile = new MenuItem("Openen");
-//        openFile.setOnAction(new OpenFileEventHandler());
+        openFile.setOnAction(new OpenFileEventHandler());
         MenuItem closeFile = new MenuItem("Sluiten");
         closeFile.setOnAction(new CloseEventHandler());
         MenuItem saveFile = new MenuItem("Opslaan");
@@ -542,9 +542,10 @@ public class ApplicationSceneRoot extends BorderPane {
                     return true;
                 }
             }
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     private void newFile() {
@@ -557,6 +558,36 @@ public class ApplicationSceneRoot extends BorderPane {
                     null
             );
             app.changeToApplicationScene(applicationSceneRoot);
+        }
+    }
+
+    /**
+     * Present the user with a FileChooser and try to load a HuischLedger from the selected File.
+     */
+    private void openFile() {
+        // can we safely close this ledger?
+        if (close()) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialDirectory(new File(preferences.get(PREF_FILE_CHOOSER_DIRECTORY, PREF_DEFAULT_FILE_CHOOSER_DIRECTORY)));
+            fileChooser.setTitle("Huisch Kasboek - Open Kasboek");
+            fileChooser.getExtensionFilters().addAll(App.extensionFilters);
+            File file = fileChooser.showOpenDialog(app.getPrimaryStage());
+
+            if (file != null) {
+                try {
+                    HuischLedger newLedger = HuischLedger.fromFile(file);
+
+                    ApplicationSceneRoot applicationSceneRoot = new ApplicationSceneRoot(
+                            app,
+                            huischLedger,
+                            file
+                    );
+                    app.changeToApplicationScene(applicationSceneRoot);
+                } catch (Exception e) {
+                    ErrorDialog errorDialog = new ErrorDialog("Kon geen Kasboek laden uit dat bestand.");
+                    errorDialog.showAndWait();
+                }
+            }
         }
     }
 
@@ -648,6 +679,24 @@ public class ApplicationSceneRoot extends BorderPane {
         public void handle(ActionEvent event) {
             try {
                 newFile();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class OpenFileEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+                openFile();
             } catch (Exception e) {
                 e.printStackTrace();
             }
