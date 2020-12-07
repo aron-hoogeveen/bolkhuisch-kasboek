@@ -16,12 +16,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
+import javafx.stage.Window;
 import org.jetbrains.annotations.NotNull;
 
 public class ReceiptTableView extends TableView<Receipt> implements MapChangeListener<Integer, Receipt> {
     private final ObservableMap<Integer, Receipt> m_items;
     private final ObservableMap<Integer, AccountingEntity> m_entities;
     private final HuischLedger huischLedger;
+    private final Window owner;
 
     /**
      * Creates a default TableView control with no content.
@@ -31,13 +33,15 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
      */
     public ReceiptTableView(
             @NotNull HuischLedger huischLedger,
-            @NotNull ObservableMap<Integer, AccountingEntity> m_entities
+            @NotNull ObservableMap<Integer, AccountingEntity> m_entities,
+            @NotNull Window owner
     ) {
         if (huischLedger == null) { throw new NullPointerException(); }
         if (m_entities == null) { throw new NullPointerException(); }
         m_items = FXCollections.observableHashMap();
         this.m_entities = m_entities;
         this.huischLedger = huischLedger;
+        this.owner = owner;
 
         setEditable(false); // disable editing in this table. Transactions are edited in a specific dialog presented to the user
         m_items.addListener(this);
@@ -57,7 +61,8 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
     public ReceiptTableView(
             @NotNull HuischLedger huischLedger,
             @NotNull ObservableMap<Integer, Receipt> m_items,
-            @NotNull ObservableMap<Integer, AccountingEntity> m_entities) {
+            @NotNull ObservableMap<Integer, AccountingEntity> m_entities,
+            @NotNull Window owner) {
         if (huischLedger == null) { throw new NullPointerException(); }
         if (m_items == null) { throw new NullPointerException(); }
         if (m_entities == null) { throw new NullPointerException(); }
@@ -65,6 +70,7 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
         this.huischLedger = huischLedger;
         this.m_items = m_items;
         this.m_entities = m_entities;
+        this.owner = owner;
 
         setEditable(false); // disable editing in this table. Transactions are edited in a specific dialog presented to the user
         this.m_items.addListener(this);
@@ -90,7 +96,7 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
             Button editButton = new Button("Bewerken");
             editButton.setOnAction(event -> {
                 ReceiptDialog receiptDialog = new ReceiptDialog(
-                        null,
+                        owner,
                         huischLedger,
                         param.getValue()
                 );
