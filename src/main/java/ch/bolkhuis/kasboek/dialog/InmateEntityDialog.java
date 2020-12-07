@@ -1,5 +1,6 @@
 package ch.bolkhuis.kasboek.dialog;
 
+import ch.bolkhuis.kasboek.App;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.InmateEntity;
 import javafx.event.ActionEvent;
@@ -115,7 +116,9 @@ public class InmateEntityDialog {
         rootGridPane.add(balanceTextField, 1, 2);
         rootGridPane.add(submitButton, 0, 4, 2, 1); // leave one extra row between content and submit button for prettier appearance
 
-        stage.setScene(new Scene(rootGridPane));
+        Scene scene = new Scene(rootGridPane);
+        scene.getStylesheets().add(App.CSS_STYLES);
+        stage.setScene(scene);
         stage.sizeToScene();
     }
 

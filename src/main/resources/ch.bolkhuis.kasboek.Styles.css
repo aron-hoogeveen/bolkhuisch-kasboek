@@ -13,3 +13,9 @@
     -fx-fill: forestgreen;
     -fx-text-alignment: center;
 }
+
+/* fix some of the unreadable text of disabled components */
+/*.combo-box:disabled, .combo-box:disabled > *,*/
+*:disabled {
+    -fx-opacity: 0.7; /* a much more readable opacity */
+}

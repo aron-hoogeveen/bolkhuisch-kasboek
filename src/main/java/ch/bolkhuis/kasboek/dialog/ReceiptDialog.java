@@ -1,5 +1,6 @@
 package ch.bolkhuis.kasboek.dialog;
 
+import ch.bolkhuis.kasboek.App;
 import ch.bolkhuis.kasboek.components.TransactionTableView;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.HuischLedger;
@@ -129,7 +130,9 @@ public class ReceiptDialog extends AbstractDialog<Receipt> implements SetChangeL
         rootGridPane.add(importTransactionButton, 2, 2);
         rootGridPane.add(transactionTableView, 0, 3, 5, 1);
 
-        stage.setScene(new Scene(rootGridPane));
+        Scene scene = new Scene(rootGridPane);
+        scene.getStylesheets().add(App.CSS_STYLES);
+        stage.setScene(scene);
         stage.setTitle("Bewerken van bonnetje: " + old.getName());
         stage.titleProperty().bindBidirectional(nameTextField.textProperty(), new StringConverter<String>() {
             @Override

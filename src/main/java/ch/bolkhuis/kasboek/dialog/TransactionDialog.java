@@ -1,5 +1,6 @@
 package ch.bolkhuis.kasboek.dialog;
 
+import ch.bolkhuis.kasboek.App;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.Receipt;
 import ch.bolkhuis.kasboek.core.Transaction;
@@ -197,7 +198,9 @@ public class TransactionDialog extends AbstractDialog<Transaction> {
         amountTextField.setBorder(errorBorder);
         descriptionTextField.setBorder(errorBorder);
 
-        stage.setScene(new Scene(rootGridPane));
+        Scene scene = new Scene(rootGridPane);
+        scene.getStylesheets().add(App.CSS_STYLES);
+        stage.setScene(scene);
         stage.sizeToScene();
     }
 
