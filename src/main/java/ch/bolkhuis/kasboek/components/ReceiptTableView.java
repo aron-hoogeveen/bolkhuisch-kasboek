@@ -19,6 +19,10 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Window;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * ReceiptTableView is an implementation of the {@link TableView} for {@link Receipt}s. The class uses a map as its
+ * backing structure and updates the backing list to reflect the map.values().
+ */
 public class ReceiptTableView extends TableView<Receipt> implements MapChangeListener<Integer, Receipt> {
     private final ObservableMap<Integer, Receipt> m_items;
     private final ObservableMap<Integer, AccountingEntity> m_entities;

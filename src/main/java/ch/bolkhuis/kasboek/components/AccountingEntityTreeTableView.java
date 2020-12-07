@@ -24,8 +24,6 @@ import java.util.Vector;
 /**
  * AccountingEntityTreeTableView is an implementation of a {@code TreeTableView<AccountingEntity>}. The class listens for
  * changes in its own backing ObservableMap and updates its leaves accordingly.
- *
- * @author Aron Hoogeveen
  */
 public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntity> implements MapChangeListener<Integer, AccountingEntity> {
     private final ApplicationSceneRoot appSceneRoot;

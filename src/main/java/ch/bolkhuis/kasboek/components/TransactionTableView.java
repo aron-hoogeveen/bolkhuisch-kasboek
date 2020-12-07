@@ -19,7 +19,6 @@ import java.util.Locale;
  * null valued Transactions but does not implement any checks YET for this TODO implement null checks.
  *
  * TODO add option to show only transactions from a specific date span
- * @author Aron Hoogeveen
  */
 public class TransactionTableView extends TableView<Transaction> implements MapChangeListener<Integer, Transaction> {
     private final ObservableMap<Integer, Transaction> m_items;
