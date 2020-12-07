@@ -535,6 +535,7 @@ public class ApplicationSceneRoot extends BorderPane {
                         }
                         // The saving is cancelled, do nothing.
                     } catch (IOException ioException) {
+                        ioException.printStackTrace();
                         ErrorDialog errorDialog = new ErrorDialog("Er is wat fout gegaan bij het opslaan.");
                         errorDialog.showAndWait();
                     }
@@ -584,6 +585,7 @@ public class ApplicationSceneRoot extends BorderPane {
                     );
                     app.changeToApplicationScene(applicationSceneRoot);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     ErrorDialog errorDialog = new ErrorDialog("Kon geen Kasboek laden uit dat bestand.");
                     errorDialog.showAndWait();
                 }
@@ -623,6 +625,7 @@ public class ApplicationSceneRoot extends BorderPane {
             try {
                 save();
             } catch (IOException ioException) {
+                ioException.printStackTrace();
                 ErrorDialog errorDialog = new ErrorDialog("Het kasboek kon niet opgeslagen worden");
                 errorDialog.showAndWait();
             }
@@ -642,6 +645,7 @@ public class ApplicationSceneRoot extends BorderPane {
             try {
                 saveAs();
             } catch (IOException ioException) {
+                ioException.printStackTrace();
                 ErrorDialog errorDialog = new ErrorDialog("Het kasboek kon niet opgeslagen worden in het " +
                         "geselecteerde bestand.");
                 errorDialog.showAndWait();
