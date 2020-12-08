@@ -138,7 +138,16 @@ public class App extends Application {
     }
 
     public void changeToApplicationScene(ApplicationSceneRoot root) {
+        changeToApplicationScenePrivate(root, "Bolkhuisch Kasboek");
+    }
+
+    public void changeToApplicationScene(ApplicationSceneRoot root, String ledgerName) {
+        changeToApplicationScenePrivate(root, "Bolkhuisch Kasboek - " + ledgerName);
+    }
+
+    private void changeToApplicationScenePrivate(ApplicationSceneRoot root, String title) {
         primaryStage.hide();
+        primaryStage.setTitle(title);
         primaryStage.setResizable(true);
         primaryStage.setMinWidth(App.MIN_WIDTH);
         primaryStage.setMinHeight(App.MIN_HEIGHT);
@@ -158,6 +167,15 @@ public class App extends Application {
     public void addRecentLedgerFile(RecentLedgerFile recentLedgerFile) {
         recentLedgerFiles.add(recentLedgerFile);
         // save the recent files
+        saveRecentLedgersAsync();
+    }
+
+    public void removeRecentLedgerFile(RecentLedgerFile recentLedgerFile) {
+        recentLedgerFiles.remove(recentLedgerFile);
+        saveRecentLedgersAsync();
+    }
+
+    private void saveRecentLedgersAsync() {
         new Thread(() -> {
             try {
                 String jsonString = CustomizedGson.gson.toJson(recentLedgerFiles, listType);
@@ -169,7 +187,6 @@ public class App extends Application {
                 e.printStackTrace();
             }
         }).start();
-        changeToSplashScene(); // reload the list with recent files
     }
 
     public ObservableList<RecentLedgerFile> getRecentLedgerFiles() { return recentLedgerFiles; }

@@ -20,9 +20,7 @@ import ch.bolkhuis.kasboek.App;
 import ch.bolkhuis.kasboek.ApplicationSceneRoot;
 import ch.bolkhuis.kasboek.core.HuischLedger;
 import javafx.scene.Cursor;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -83,6 +81,7 @@ public class LedgerFileCell extends ListCell<RecentLedgerFile> {
         if (item == null || empty) {
             setGraphic(null);
             setText(null);
+            setContextMenu(null);
         } else {
             // Set the graphic of the ListCell
             VBox root = new VBox();
@@ -107,11 +106,19 @@ public class LedgerFileCell extends ListCell<RecentLedgerFile> {
                             huischLedger,
                             item.getFile()
                     );
-                    parentListView.getApp().changeToApplicationScene(applicationSceneRoot);
+                    parentListView.getApp().changeToApplicationScene(applicationSceneRoot, item.getName());
                 } catch (IOException ioException) {
                     System.err.println("Could not load the HuischLedger from the file provided by a RecentLedgerFile");
                 }
             });
+
+            MenuItem menuItem = new MenuItem("Verwijderen");
+            menuItem.setOnAction(event -> {
+                LedgerFileListView parentListView = ((LedgerFileListView)getListView());
+                parentListView.getApp().removeRecentLedgerFile(item);
+            });
+            ContextMenu contextMenu = new ContextMenu(menuItem);
+            setContextMenu(contextMenu);
 
             setGraphic(root);
         }
