@@ -129,7 +129,7 @@ public class SplashSceneRoot extends BorderPane {
         centerGrid.setMaxSize(WIDTH, HEIGHT);
         if (recentLedgerFiles.size() > 0) {
             // Set a list of RecentLedgerFiles on the Left side of this BorderPane
-            LedgerFileListView ledgerFileListView = new LedgerFileListView(app, FXCollections.observableList(recentLedgerFiles));
+            LedgerFileListView ledgerFileListView = new LedgerFileListView(app, recentLedgerFiles);
             ledgerFileListView.setFocusTraversable(false); // We only want TAB to be used for the menu in the center
 
             // Set a fixed width of a third of the total width
