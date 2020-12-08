@@ -20,23 +20,31 @@ import ch.bolkhuis.kasboek.components.LedgerFileListView;
 import ch.bolkhuis.kasboek.components.RecentLedgerFile;
 import ch.bolkhuis.kasboek.core.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import org.controlsfx.control.*;
 import java.awt.Desktop;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.prefs.Preferences;
 
 public class SplashSceneRoot extends BorderPane {
     private static final double WIDTH = 840;
@@ -75,12 +83,13 @@ public class SplashSceneRoot extends BorderPane {
      */
     private void createAndSetChildren() {
         // Recent opened Ledgers
-        List<RecentLedgerFile> recentLedgerFiles = loadRecentLedgers();
-        // FIXME implement the actual loading of recent Ledger files
-        recentLedgerFiles = new ArrayList<>(List.of(
-                new RecentLedgerFile(new File("~/nonexistant"), "Placeholder for Ledger"),
-                new RecentLedgerFile(new File("~/some/file.hlf"), "Official Ledger ofc")
-        ));
+        ObservableList<RecentLedgerFile> recentLedgerFiles = app.getRecentLedgerFiles();
+//        List<RecentLedgerFile> recentLedgerFiles = loadRecentLedgers();
+//        // FIXME implement the actual loading of recent Ledger files
+//        recentLedgerFiles = new ArrayList<>(List.of(
+//                new RecentLedgerFile(new File("~/nonexistant"), "Placeholder for Ledger"),
+//                new RecentLedgerFile(new File("~/some/file.hlf"), "Official Ledger ofc")
+//        ));
 
         // create and set the main menu
         GridPane centerGrid = new GridPane();
@@ -106,6 +115,7 @@ public class SplashSceneRoot extends BorderPane {
             app.changeToApplicationScene(new ApplicationSceneRoot(app, new HuischLedger(), null));
         });
         Button importLedgerButton = new Button("Importeer Kasboek", new ImageView("import-16.png"));
+        importLedgerButton.setOnAction(new ImportLedgerEventHandler());
         Button getHelpButton = new Button("Krijg hulp", new ImageView("question-mark-16.png"));
         centerGrid.add(newLedgerButton, 0, 2);
         centerGrid.add(importLedgerButton, 0, 3);
@@ -117,9 +127,9 @@ public class SplashSceneRoot extends BorderPane {
         centerGrid.setMinSize(WIDTH, HEIGHT);
         centerGrid.setPrefSize(WIDTH, HEIGHT);
         centerGrid.setMaxSize(WIDTH, HEIGHT);
-        if (recentLedgerFiles != null) {
+        if (recentLedgerFiles.size() > 0) {
             // Set a list of RecentLedgerFiles on the Left side of this BorderPane
-            LedgerFileListView ledgerFileListView = new LedgerFileListView(FXCollections.observableList(recentLedgerFiles));
+            LedgerFileListView ledgerFileListView = new LedgerFileListView(app, FXCollections.observableList(recentLedgerFiles));
             ledgerFileListView.setFocusTraversable(false); // We only want TAB to be used for the menu in the center
 
             // Set a fixed width of a third of the total width
@@ -236,4 +246,40 @@ public class SplashSceneRoot extends BorderPane {
 
         return huischLedger;
     }
+
+    private class ImportLedgerEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            // TODO add the extensionFilters
+            fileChooser.setTitle("Importeer Kasboek bestand");
+            File file = fileChooser.showOpenDialog(app.getPrimaryStage());
+
+            if (file != null) {
+                try {
+                    HuischLedger huischLedger = HuischLedger.fromFile(file);
+                    TextInputDialog textInputDialog = new TextInputDialog(file.getName());
+                    Optional<String> result = textInputDialog.showAndWait();
+
+                    if (result.isPresent()) {
+                        if (!result.get().isBlank()) {
+                            RecentLedgerFile recentLedgerFile = new RecentLedgerFile(file, result.get());
+                            app.addRecentLedgerFile(recentLedgerFile);
+                        }
+                    }
+                } catch (IOException ioException) {
+                    System.err.println("Trying to import illegal HuischLedger file format.");
+                }
+            }
+        }
+    }
+
 }

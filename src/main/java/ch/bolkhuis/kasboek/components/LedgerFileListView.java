@@ -16,6 +16,7 @@
  */
 package ch.bolkhuis.kasboek.components;
 
+import ch.bolkhuis.kasboek.App;
 import ch.bolkhuis.kasboek.components.LedgerFileCell;
 import ch.bolkhuis.kasboek.components.RecentLedgerFile;
 import javafx.collections.ObservableList;
@@ -24,6 +25,7 @@ import javafx.scene.control.ListView;
 import javafx.util.Callback;
 
 public class LedgerFileListView extends ListView<RecentLedgerFile> {
+    private final App app;
     /**
      * Creates a default ListView which will display contents stacked vertically.
      * As no {@link ObservableList} is provided in this constructor, an empty
@@ -35,7 +37,11 @@ public class LedgerFileListView extends ListView<RecentLedgerFile> {
      * <p>Refer to the {@link ListView} class documentation for details on the
      * default state of other properties.
      */
-    public LedgerFileListView() {
+    public LedgerFileListView(App app) {
+        if (app == null) { throw new NullPointerException(); }
+
+        this.app = app;
+
         initCellFactory();
     }
 
@@ -51,8 +57,12 @@ public class LedgerFileListView extends ListView<RecentLedgerFile> {
      *
      * @param items the list of items
      */
-    public LedgerFileListView(ObservableList<RecentLedgerFile> items) {
+    public LedgerFileListView(App app, ObservableList<RecentLedgerFile> items) {
         super(items);
+
+        if (app == null) { throw new NullPointerException(); }
+
+        this.app = app;
 
         initCellFactory();
     }
@@ -72,4 +82,6 @@ public class LedgerFileListView extends ListView<RecentLedgerFile> {
             }
         };
     }
+
+    public App getApp() { return this.app; }
 }

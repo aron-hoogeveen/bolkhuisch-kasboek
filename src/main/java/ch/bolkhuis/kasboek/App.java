@@ -16,15 +16,25 @@
  */
 package ch.bolkhuis.kasboek;
 
+import ch.bolkhuis.kasboek.components.RecentLedgerFile;
+import ch.bolkhuis.kasboek.gson.CustomizedGson;
+import com.google.gson.reflect.TypeToken;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.*;
+import java.lang.reflect.Type;
+import java.nio.file.NoSuchFileException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.prefs.Preferences;
 
 
 /**
@@ -41,6 +51,10 @@ public class App extends Application {
     public static final String CSS_STYLES = "ch.bolkhuis.kasboek.Styles.css";
     public static final String CSS_SPLASH = "ch.bolkhuis.kasboek.splash.css";
 
+    private static final String PREF_RECENT_LEDGERS_FILE = "RecentLedgersFile";
+    private static final String PREF_DEF_RECENT_LEDGERS_FILE = System.getProperty("user.home") + "/.kasboek/RecentLedgers.json";
+    private static final String PREF_NODE_NAME = "/ch/bolkhuis/kasboek/App";
+
     /**
      * ExtensionFilters to be used for saving and opening HuischLedger files.
      */
@@ -51,6 +65,10 @@ public class App extends Application {
 
     private Stage primaryStage;
     private Image splashLogo;
+
+    private Preferences preferences;
+    private ObservableList<RecentLedgerFile> recentLedgerFiles = FXCollections.observableArrayList();
+    Type listType = new TypeToken<List<RecentLedgerFile>>() {}.getType();
 
     /**
      * The application initialization method. This method is called immediately
@@ -73,9 +91,23 @@ public class App extends Application {
      */
     @Override
     public void init() throws Exception {
+        preferences = Preferences.userRoot().node(PREF_NODE_NAME);
+
         // Load the splash screen image already and pass it to the SplashSceneRoot constructor
         // The width is determined from the
         splashLogo = new Image("BolkhuischLogo.png", 240, 240, true, true);
+
+        // load the recent ledgers
+        try {
+
+            BufferedReader ledgerFileReader = new BufferedReader(new FileReader(preferences.get(PREF_RECENT_LEDGERS_FILE, PREF_DEF_RECENT_LEDGERS_FILE)));
+            recentLedgerFiles = FXCollections.observableList(CustomizedGson.gson.fromJson(ledgerFileReader, listType));
+        } catch(FileNotFoundException fileNotFoundException) {
+            System.out.println("No RecentLedgerFiles file. Creating an empty one");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -122,5 +154,24 @@ public class App extends Application {
     public Stage getPrimaryStage() {
         return primaryStage;
     }
+
+    public void addRecentLedgerFile(RecentLedgerFile recentLedgerFile) {
+        recentLedgerFiles.add(recentLedgerFile);
+        // save the recent files
+        new Thread(() -> {
+            try {
+                String jsonString = CustomizedGson.gson.toJson(recentLedgerFiles, listType);
+                BufferedWriter ledgerFileWriter = new BufferedWriter(new FileWriter(preferences.get(PREF_RECENT_LEDGERS_FILE, PREF_DEF_RECENT_LEDGERS_FILE)));
+                ledgerFileWriter.write(jsonString);
+                ledgerFileWriter.close();
+            } catch (Exception e) {
+                System.err.println("Error while saving recentLedgerFiles on different Thread");
+                e.printStackTrace();
+            }
+        }).start();
+        changeToSplashScene(); // reload the list with recent files
+    }
+
+    public ObservableList<RecentLedgerFile> getRecentLedgerFiles() { return recentLedgerFiles; }
 
 }

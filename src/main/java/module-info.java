@@ -8,4 +8,5 @@ module ch.bolkhuis.guis {
     requires java.prefs;
     exports ch.bolkhuis.kasboek;
     exports ch.bolkhuis.kasboek.core;
+    exports ch.bolkhuis.kasboek.components;
 }

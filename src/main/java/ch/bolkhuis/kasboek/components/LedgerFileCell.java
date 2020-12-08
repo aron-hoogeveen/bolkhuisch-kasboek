@@ -16,13 +16,20 @@
  */
 package ch.bolkhuis.kasboek.components;
 
+import ch.bolkhuis.kasboek.App;
+import ch.bolkhuis.kasboek.ApplicationSceneRoot;
+import ch.bolkhuis.kasboek.core.HuischLedger;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import java.io.IOException;
+
 public class LedgerFileCell extends ListCell<RecentLedgerFile> {
+
     /**
      * The updateItem method should not be called by developers, but it is the
      * best method for developers to override to allow for them to customise the
@@ -88,6 +95,23 @@ public class LedgerFileCell extends ListCell<RecentLedgerFile> {
                     name,
                     location
             );
+            root.setCursor(Cursor.HAND);
+            // due to the selection of a listitem when first clicked this event is only fired when the listiem is double
+            // clicked or clicked when selected. Which I think is nice.
+            root.setOnMouseClicked(event -> {
+                try {
+                    LedgerFileListView parentListView = ((LedgerFileListView)getListView());
+                    HuischLedger huischLedger = HuischLedger.fromFile(item.getFile());
+                    ApplicationSceneRoot applicationSceneRoot = new ApplicationSceneRoot(
+                            parentListView.getApp(),
+                            huischLedger,
+                            item.getFile()
+                    );
+                    parentListView.getApp().changeToApplicationScene(applicationSceneRoot);
+                } catch (IOException ioException) {
+                    System.err.println("Could not load the HuischLedger from the file provided by a RecentLedgerFile");
+                }
+            });
 
             setGraphic(root);
         }
