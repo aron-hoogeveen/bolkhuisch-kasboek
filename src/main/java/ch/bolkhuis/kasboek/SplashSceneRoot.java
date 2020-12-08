@@ -181,6 +181,10 @@ public class SplashSceneRoot extends BorderPane {
                 try {
                     HuischLedger huischLedger = HuischLedger.fromFile(file);
                     TextInputDialog textInputDialog = new TextInputDialog(file.getName());
+                    textInputDialog.setHeaderText("Welke naam moet gebruikt worden voor dit kasboek?");
+                    textInputDialog.setGraphic(null);
+                    textInputDialog.setTitle("Kasboek importeren");
+                    textInputDialog.setContentText(null);
                     Optional<String> result = textInputDialog.showAndWait();
 
                     if (result.isPresent()) {
@@ -189,7 +193,7 @@ public class SplashSceneRoot extends BorderPane {
                             app.addRecentLedgerFile(recentLedgerFile);
                         }
                     }
-                } catch (IOException ioException) {
+                } catch (Exception e) {
                     System.err.println("Trying to import illegal HuischLedger file format.");
                 }
             }
