@@ -16,6 +16,8 @@
  */
 package ch.bolkhuis.kasboek;
 
+import ch.bolkhuis.kasboek.components.LedgerFileListView;
+import ch.bolkhuis.kasboek.components.RecentLedgerFile;
 import ch.bolkhuis.kasboek.core.*;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;

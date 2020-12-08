@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package ch.bolkhuis.kasboek;
+package ch.bolkhuis.kasboek.components;
 
 import org.jetbrains.annotations.NotNull;
 

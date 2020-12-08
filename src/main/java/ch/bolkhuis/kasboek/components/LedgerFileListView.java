@@ -14,8 +14,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package ch.bolkhuis.kasboek;
+package ch.bolkhuis.kasboek.components;
 
+import ch.bolkhuis.kasboek.components.LedgerFileCell;
+import ch.bolkhuis.kasboek.components.RecentLedgerFile;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
