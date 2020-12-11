@@ -192,6 +192,18 @@ public class Ledger {
     }
 
     /**
+     * Removes the provided Transaction.
+     *
+     * @param transaction the Transaction to remove
+     * @return the Transaction that got removed, or {@code null} if there was no such Transaction
+     */
+    public Transaction removeTransaction(Transaction transaction) {
+        if (!transactions.containsKey(transaction.getId())) { return null; }
+
+        return removeTransactionInternal(transaction);
+    }
+
+    /**
      * Processed the Transaction that has id {@code id}. The balances of accompanying AccountingEntities are updated
      * accordingly.<br />
      * <br />
