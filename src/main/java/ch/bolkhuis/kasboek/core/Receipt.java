@@ -85,6 +85,16 @@ public class Receipt {
         return transactionIdSet.add(transactionId);
     }
 
+    /**
+     * Unregisters the transaction with id {@code transactionId} from this Receipt.
+     *
+     * @param transactionId the id of the Transaction to unregister
+     * @return true if the set contained the id
+     */
+    public boolean unregisterTransaction(int transactionId) {
+        return transactionIdSet.remove(transactionId);
+    }
+
     @Override
     public String toString() {
         return name + " (" + date + ")";

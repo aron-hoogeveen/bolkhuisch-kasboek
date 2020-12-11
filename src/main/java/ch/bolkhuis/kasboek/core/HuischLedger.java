@@ -401,6 +401,27 @@ public final class HuischLedger extends Ledger {
         return CustomizedGson.gson.fromJson(bufferedReader, HuischLedger.class);
     }
 
+    @Override
+    protected Transaction removeTransactionInternal(Transaction transaction) {
+        Transaction removed = super.removeTransactionInternal(transaction);
+
+        if (removed != null) {
+            // If the transaction belonged to a Receipt, unregister it from that receipt
+            if (removed.getReceiptId() != null) {
+                Receipt receipt = receipts.get(removed.getReceiptId());
+                if (receipt != null) {
+                    receipt.unregisterTransaction(removed.getId());
+
+                    // update the receipt
+                    receipts.put(receipt.getId(), receipt);
+                    System.out.println("DEBUG: removed transactionId from receipt.");
+                }
+            }
+        }
+
+        return removed;
+    }
+
     /**
      * Writes {@code ledger} to the provided {@code file}.
      *

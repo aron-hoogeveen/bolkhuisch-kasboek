@@ -171,7 +171,7 @@ public class Ledger {
             nextTransactionId = transaction.getId() + 1;
     }
 
-    private Transaction removeTransactionInternal(Transaction transaction) {
+    protected Transaction removeTransactionInternal(Transaction transaction) {
         return unprocessAndRemoveTransaction(transaction);
     }
 
