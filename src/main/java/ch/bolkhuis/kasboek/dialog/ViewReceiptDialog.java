@@ -79,8 +79,6 @@ public class ViewReceiptDialog extends AbstractDialog<Receipt> implements SetCha
         for (Map.Entry<Integer, Transaction> entry : appSceneRoot.getHuischLedger().getTransactions().entrySet()) {
             if (old.getTransactionIdSet().contains(entry.getKey())) {
                 transactionObservableMap.put(entry.getKey(), entry.getValue());
-            } else {
-                System.err.println("Receipt (" + old.getName() + ") contains ids of transactions that do not exist");
             }
         }
 
