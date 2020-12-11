@@ -1,5 +1,6 @@
 package ch.bolkhuis.kasboek.components;
 
+import ch.bolkhuis.kasboek.ApplicationSceneRoot;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.HuischLedger;
 import ch.bolkhuis.kasboek.core.Receipt;
@@ -23,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class ReceiptTableView extends TableView<Receipt> implements MapChangeListener<Integer, Receipt> {
     private final ObservableMap<Integer, Receipt> m_items;
     private final ObservableMap<Integer, AccountingEntity> m_entities;
-    private final HuischLedger huischLedger;
+    private final ApplicationSceneRoot appSceneRoot;
     private final Window owner;
 
     /**
@@ -33,15 +34,15 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
      * default state of other properties.
      */
     public ReceiptTableView(
-            @NotNull HuischLedger huischLedger,
+            @NotNull ApplicationSceneRoot appSceneRoot,
             @NotNull ObservableMap<Integer, AccountingEntity> m_entities,
             @NotNull Window owner
     ) {
-        if (huischLedger == null) { throw new NullPointerException(); }
+        if (appSceneRoot == null) { throw new NullPointerException(); }
         if (m_entities == null) { throw new NullPointerException(); }
         m_items = FXCollections.observableHashMap();
         this.m_entities = m_entities;
-        this.huischLedger = huischLedger;
+        this.appSceneRoot = appSceneRoot;
         this.owner = owner;
 
         setEditable(false); // disable editing in this table. Transactions are edited in a specific dialog presented to the user
@@ -60,15 +61,15 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
      * @param m_items initial ObservableMap to be used as backing map
      */
     public ReceiptTableView(
-            @NotNull HuischLedger huischLedger,
+            @NotNull ApplicationSceneRoot appSceneRoot,
             @NotNull ObservableMap<Integer, Receipt> m_items,
             @NotNull ObservableMap<Integer, AccountingEntity> m_entities,
             @NotNull Window owner) {
-        if (huischLedger == null) { throw new NullPointerException(); }
+        if (appSceneRoot == null) { throw new NullPointerException(); }
         if (m_items == null) { throw new NullPointerException(); }
         if (m_entities == null) { throw new NullPointerException(); }
 
-        this.huischLedger = huischLedger;
+        this.appSceneRoot = appSceneRoot;
         this.m_items = m_items;
         this.m_entities = m_entities;
         this.owner = owner;
@@ -98,7 +99,7 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
             editButton.setOnAction(event -> {
                 ViewReceiptDialog viewReceiptDialog = new ViewReceiptDialog(
                         owner,
-                        huischLedger,
+                        appSceneRoot,
                         param.getValue()
                 );
                 viewReceiptDialog.showAndWait();

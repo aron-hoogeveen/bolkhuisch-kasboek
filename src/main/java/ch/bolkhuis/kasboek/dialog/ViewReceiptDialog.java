@@ -17,6 +17,7 @@
 package ch.bolkhuis.kasboek.dialog;
 
 import ch.bolkhuis.kasboek.App;
+import ch.bolkhuis.kasboek.ApplicationSceneRoot;
 import ch.bolkhuis.kasboek.components.TransactionTableView;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.HuischLedger;
@@ -46,7 +47,7 @@ import java.util.Optional;
  */
 public class ViewReceiptDialog extends AbstractDialog<Receipt> implements SetChangeListener<Integer> {
     private final ObservableMap<Integer, Transaction> transactionObservableMap = FXCollections.observableHashMap();
-    private final HuischLedger huischLedger;
+    private final ApplicationSceneRoot appSceneRoot;
 
     // Nodes
     private final Label nameLabel = new Label();
@@ -64,26 +65,28 @@ public class ViewReceiptDialog extends AbstractDialog<Receipt> implements SetCha
      * Creates a new AbstractDialog and initialises its owner and the old T to load.
      *
      * @param owner owner to be used for the stage
-     * @param huischLedger the HuischLedger with which to populate the TransactionTableView
+     * @param appSceneRoot the ApplicationSceneRoot
      * @param old   T to be edited
      */
-    public ViewReceiptDialog(@NotNull Window owner, @NotNull HuischLedger huischLedger, @NotNull Receipt old) {
+    public ViewReceiptDialog(@NotNull Window owner, @NotNull ApplicationSceneRoot appSceneRoot, @NotNull Receipt old) {
         super(owner, old);
         if (old == null) { throw new NullPointerException(); }
+        if (appSceneRoot == null) { throw new NullPointerException(); }
 
-        this.huischLedger = huischLedger;
+        this.appSceneRoot = appSceneRoot;
 
         // populate the observable map with all transactions that belong to the receipt
-        for (Map.Entry<Integer, Transaction> entry : huischLedger.getTransactions().entrySet()) {
+        for (Map.Entry<Integer, Transaction> entry : appSceneRoot.getHuischLedger().getTransactions().entrySet()) {
             if (old.getTransactionIdSet().contains(entry.getKey())) {
                 transactionObservableMap.put(entry.getKey(), entry.getValue());
             }
         }
 
         transactionTableView = new TransactionTableView(
+                appSceneRoot,
                 transactionObservableMap,
-                huischLedger.getAccountingEntities(),
-                huischLedger.getReceipts(),
+                appSceneRoot.getHuischLedger().getAccountingEntities(),
+                appSceneRoot.getHuischLedger().getReceipts(),
                 true // hide the column with value receipt, because we are only viewing transactions of one receipt
         );
 
@@ -115,10 +118,10 @@ public class ViewReceiptDialog extends AbstractDialog<Receipt> implements SetCha
         datePicker.setValue(old.getDate());
 
         // set searchable combo boxes
-        List<AccountingEntity> accountingEntitiesList = new ArrayList<>(huischLedger.getAccountingEntities().values());
+        List<AccountingEntity> accountingEntitiesList = new ArrayList<>(appSceneRoot.getHuischLedger().getAccountingEntities().values());
         ObservableList<AccountingEntity> accountingEntityObservableList = FXCollections.observableList(accountingEntitiesList);
         payerComboBox.setItems(accountingEntityObservableList);
-        payerComboBox.getSelectionModel().select(huischLedger.getAccountingEntities().get(old.getPayer()));
+        payerComboBox.getSelectionModel().select(appSceneRoot.getHuischLedger().getAccountingEntities().get(old.getPayer()));
         payerComboBox.setDisable(true); // The Receipt already contains transactions connected to this payer, and therefore this value must not change.
 
         // the transactionTableView is set in the constructor because of the way of constructing it.
@@ -188,7 +191,7 @@ public class ViewReceiptDialog extends AbstractDialog<Receipt> implements SetCha
             if (change.getElementAdded() == null)
                 return;
             int index = change.getElementAdded();
-            Transaction transaction = huischLedger.getTransactions().get(index);
+            Transaction transaction = appSceneRoot.getHuischLedger().getTransactions().get(index);
             // do not add null valued transactions
             if (transaction == null)
                 return;
@@ -219,9 +222,9 @@ public class ViewReceiptDialog extends AbstractDialog<Receipt> implements SetCha
         private void showTransactionDialog() {
             TransactionDialog transactionDialog = new TransactionDialog(
                     stage,
-                    huischLedger.getAccountingEntities(),
-                    huischLedger.getReceipts(),
-                    huischLedger.getAndIncrementNextTransactionId(), // FIXME only increment nextTransactionId after a success of adding the transaction
+                    appSceneRoot.getHuischLedger().getAccountingEntities(),
+                    appSceneRoot.getHuischLedger().getReceipts(),
+                    appSceneRoot.getHuischLedger().getAndIncrementNextTransactionId(), // FIXME only increment nextTransactionId after a success of adding the transaction
                     old.getId() // will not produce nptr exception since we checked old at construction
             );
             transactionDialog.setInitialDate(old.getDate()); // Set the initial date equal to the date of the receipt
@@ -233,7 +236,7 @@ public class ViewReceiptDialog extends AbstractDialog<Receipt> implements SetCha
                 if (containsPayer(transactionResult)) {
                     // possibly correct transaction. Try to add it to the HuischLedger to the correct receipt.
                     try {
-                        huischLedger.addTransaction(transactionResult);
+                        appSceneRoot.getHuischLedger().addTransaction(transactionResult);
                     } catch (Exception e) {
                         System.err.println("Failed to add the transaction to the HuischLedger and corresponding receipt");
                     }

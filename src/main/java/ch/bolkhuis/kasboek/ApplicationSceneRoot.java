@@ -180,7 +180,7 @@ public class ApplicationSceneRoot extends BorderPane {
         });
         MenuItem showFirstReceipt = new MenuItem("Show first receipt");
         showFirstReceipt.setOnAction(event -> {
-            ViewReceiptDialog viewReceiptDialog = new ViewReceiptDialog(app.getPrimaryStage(), huischLedger, huischLedger.getReceipts().get(0));
+            ViewReceiptDialog viewReceiptDialog = new ViewReceiptDialog(app.getPrimaryStage(), this, huischLedger.getReceipts().get(0));
             viewReceiptDialog.showAndWait();
         });
         developerMenu.getItems().addAll(
@@ -222,11 +222,12 @@ public class ApplicationSceneRoot extends BorderPane {
         entitiesTab.setContent(new BorderPane(entityTreeTableView)); // this should make everything full sized
 
         // Receipts Tab
-        ReceiptTableView receiptTableView = new ReceiptTableView(huischLedger, huischLedger.getReceipts(), huischLedger.getAccountingEntities(), app.getPrimaryStage());
+        ReceiptTableView receiptTableView = new ReceiptTableView(this, huischLedger.getReceipts(), huischLedger.getAccountingEntities(), app.getPrimaryStage());
         receiptsTab.setContent(receiptTableView);
 
         // Transactions Tab
         TransactionTableView transactionTableView = new TransactionTableView(
+                this,
                 huischLedger.getTransactions(),
                 huischLedger.getAccountingEntities(),
                 huischLedger.getReceipts()
