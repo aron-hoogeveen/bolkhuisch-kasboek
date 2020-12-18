@@ -215,7 +215,6 @@ public class ViewReceiptDialog extends AbstractDialog<Receipt> implements SetCha
          */
         @Override
         public void handle(ActionEvent event) {
-            System.err.println("AddTransactionEventHanlder is not yet fully implemented");
             showTransactionDialog();
         }
 
