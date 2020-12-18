@@ -533,4 +533,49 @@ public final class HuischLedger extends Ledger {
             super.addTransaction(transaction);
         }
     }
+
+    /**
+     * Removes the Receipt with id {@code receiptId}. Method {@link #removeReceiptAndRelatedTransactions(int)} also removes
+     * any associated Transactions.
+     *
+     * @param receiptId the id of the Receipt to remove
+     * @return the removed Receipt or {@code null} if there was no such Receipt
+     */
+    public Receipt removeReceipt(int receiptId) {
+        return receipts.remove(receiptId);
+    }
+
+    /**
+     * Removes the provided Receipt from the saved Receipts if it exists. Method
+     * {@link #removeReceiptAndRelatedTransactions(int)} also removes any associated Transactions.
+     *
+     * @param receipt the Receipt to remove
+     * @return the removed Receipt or {@code null} if there was no such Receipt
+     */
+    public Receipt removeReceipt(Receipt receipt) {
+        return receipts.remove(receipt.getId(), receipt) ? receipt : null;
+    }
+
+    /**
+     * Removes the Receipt with id {@code receiptId} from the saved Receipts if it exists and furthermore also deletes
+     * the corresponding Transactions.
+     *
+     * @param receiptId the id of the Receipt to remove
+     * @throws Exception as long as this function is not implemented
+     */
+    public void removeReceiptAndRelatedTransactions(int receiptId) throws Exception {
+        throw new Exception("Not yet implemented");
+    }
+
+    /**
+     * Removes the provided Receipt from the saved Receipts if it exists and furthermore also deletes
+     * the corresponding Transactions.
+     *
+     * @param receipt the Receipt to remove
+     * @throws Exception as long as this function is not implemented
+     */
+    public void removeReceiptAndRelatedTransactions(Receipt receipt) throws Exception {
+        throw new Exception("Not yet implemented");
+    }
+
 }
