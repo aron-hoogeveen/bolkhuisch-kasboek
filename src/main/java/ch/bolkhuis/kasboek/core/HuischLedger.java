@@ -174,6 +174,7 @@ public final class HuischLedger extends Ledger {
 
             // Separate the Transactions that belong to a Receipt from the stand-alone Transactions
             TreeMap<Integer, List<Transaction>> receiptIdToTransactionList = new TreeMap<>();
+            // loop through all existing receipts (do not loop all transactions and just assume that the corresponding receipt does exist)
             standAloneTransactionsSetCopy.forEach(transaction -> {
                 huischLedger.receipts.forEach((r_id, receipt) -> {
                     // If there is no list of transactions for this receipt, initialize an empty list
