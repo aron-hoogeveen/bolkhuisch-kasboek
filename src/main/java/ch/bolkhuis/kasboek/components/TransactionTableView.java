@@ -171,8 +171,12 @@ public class TransactionTableView extends TableView<Transaction> implements MapC
                 value = null;
             } else {
                 Receipt receipt = m_receipts.get(param.getValue().getReceiptId());
-                value = " (" + receipt.getDate() + ")";
-                value = receipt.getName() + value;
+                if (receipt != null) {
+                    value = " (" + receipt.getDate() + ")";
+                    value = receipt.getName() + value;
+                } else {
+                    value = "#ERROR, no such receipt id";
+                }
             }
 
             return new ReadOnlyStringWrapper(value);
