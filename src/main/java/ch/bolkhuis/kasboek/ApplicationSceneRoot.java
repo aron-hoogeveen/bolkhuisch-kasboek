@@ -294,7 +294,7 @@ public class ApplicationSceneRoot extends BorderPane {
             try {
                 huischLedger.addTransaction(transaction);
             } catch (Exception e) {
-                System.err.println("Could not add the Transaction returned from the TransactionDialog");
+                System.err.println("Could not add the Transaction returned from the TransactionDialog id: " + transaction.getId());
                 e.printStackTrace();
             }
         }

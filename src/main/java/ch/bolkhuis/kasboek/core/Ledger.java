@@ -131,7 +131,7 @@ public class Ledger {
             if (key == null) { throw new RuntimeException("old got modified before new was constructed"); }
             if (!(transaction.getId() == key)) { throw new IllegalArgumentException("id has te match the key"); }
 
-            nextTransactionId = (transaction.getId() > nextTransactionId) ? transaction.getId() + 1 : nextTransactionId;
+            nextTransactionId = (transaction.getId() >= nextTransactionId) ? transaction.getId() + 1 : nextTransactionId;
         }
         for (Map.Entry<Integer, AccountingEntity> entityEntry : accountingEntities.entrySet()) {
             if (entityEntry.getKey() != entityEntry.getValue().getId()) {
