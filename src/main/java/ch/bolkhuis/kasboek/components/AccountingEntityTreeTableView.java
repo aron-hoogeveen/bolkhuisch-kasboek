@@ -66,8 +66,13 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
         nameColumn.setCellFactory(param -> new AccountingEntityTreeTableCell());
         TreeTableColumn<AccountingEntity, String> balanceColumn = new TreeTableColumn<>("Balans");
 
-        nameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<AccountingEntity, String> param) ->
-                param.getValue().getValue().nameProperty()
+        nameColumn.setCellValueFactory((TreeTableColumn.CellDataFeatures<AccountingEntity, String> param) -> {
+                    AccountingEntity item = param.getValue().getValue();
+                    if (item != null) {
+                        return item.nameProperty();
+                    }
+                    return null;
+                }
         );
         // Only set the balance for TreeItems which are not roots
         balanceColumn.setCellValueFactory(param -> {
@@ -75,10 +80,14 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
                 return null;
             }
             StringProperty stringProperty = new SimpleStringProperty();
-            ReadOnlyDoubleProperty doubleProperty = param.getValue().getValue().balanceProperty();
-            stringProperty.bind(Bindings.createStringBinding(
-                    () -> NumberFormat.getCurrencyInstance(Locale.GERMANY).format(doubleProperty.get()), doubleProperty));
-            return stringProperty;
+            AccountingEntity item = param.getValue().getValue();
+            if (item != null) {
+                ReadOnlyDoubleProperty doubleProperty = param.getValue().getValue().balanceProperty();
+                stringProperty.bind(Bindings.createStringBinding(
+                        () -> NumberFormat.getCurrencyInstance(Locale.GERMANY).format(doubleProperty.get()), doubleProperty));
+                return stringProperty;
+            }
+            return new SimpleStringProperty();
         });
 
         // Set preferred widths for the columns
