@@ -69,6 +69,20 @@ public final class HuischLedger extends Ledger {
                         @NotNull ObservableMap<Integer, Receipt> receipts) {
         super(accountingEntities, transactions);
         this.receipts = Objects.requireNonNull(receipts, "Parameter receipts cannot be null");
+
+        // Check if all receipts are correct
+        for (Receipt receipt : receipts.values()) {
+            // check for existing transactions
+            for (int transactionId : receipt.getTransactionIdSet()) {
+                if (!this.transactions.containsKey(transactionId)) {
+                    throw new IllegalArgumentException("Receipt (id:" + receipt.getId() + ") contains a reference to " +
+                            "transaction (id:" + transactionId + ") that does not exist");
+                }
+            }
+
+            // update the nextReceiptId
+            nextReceiptId = (receipt.getId() >= nextReceiptId) ? receipt.getId() + 1 : nextReceiptId;
+        }
     }
 
     /**
