@@ -10,12 +10,12 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.Window;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 /**
  * ReceiptTableView is an implementation of the {@link TableView} for {@link Receipt}s. The class uses a map as its
@@ -88,34 +88,18 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
         TableColumn<Receipt, String> dateColumn = new TableColumn<>("Datum");
         TableColumn<Receipt, String> payerColumn = new TableColumn<>("Betaald Door");
         TableColumn<Receipt, String> nameColumn = new TableColumn<>("Beschrijving");
-        TableColumn<Receipt, HBox> actionColumn = new TableColumn<>("Acties");
 
         dateColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getDate().toString())); // FIXME change to property in Receipt class
         payerColumn.setCellValueFactory(param -> m_entities.get(param.getValue().getPayer()).nameProperty());
         nameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getName()));
-        actionColumn.setCellValueFactory(param -> {
-            HBox hBox = new HBox();
-            Button editButton = new Button("Bewerken");
-            editButton.setOnAction(event -> {
-                ViewReceiptDialog viewReceiptDialog = new ViewReceiptDialog(
-                        owner,
-                        appSceneRoot,
-                        param.getValue()
-                );
-                viewReceiptDialog.showAndWait();
-            });
-            hBox.getChildren().add(
-                    editButton
-            );
-            return new ReadOnlyObjectWrapper<>(hBox);
-        });
 
         getColumns().setAll(
                 dateColumn,
                 payerColumn,
-                nameColumn,
-                actionColumn
+                nameColumn
         );
+
+        setRowFactory(param -> new ReceiptTableRowFactory());
     }
 
     /**
@@ -142,6 +126,107 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
         }
         if (change.wasRemoved()){
             getItems().remove(change.getValueRemoved());
+        }
+    }
+
+    private class ReceiptTableRowFactory extends TableRow<Receipt> {
+        /**
+         * The updateItem method should not be called by developers, but it is the
+         * best method for developers to override to allow for them to customise the
+         * visuals of the cell. To clarify, developers should never call this method
+         * in their code (they should leave it up to the UI control, such as the
+         * {@link ListView} control) to call this method. However,
+         * the purpose of having the updateItem method is so that developers, when
+         * specifying custom cell factories (again, like the ListView
+         * {@link ListView#cellFactoryProperty() cell factory}),
+         * the updateItem method can be overridden to allow for complete customisation
+         * of the cell.
+         *
+         * <p>It is <strong>very important</strong> that subclasses
+         * of Cell override the updateItem method properly, as failure to do so will
+         * lead to issues such as blank cells or cells with unexpected content
+         * appearing within them. Here is an example of how to properly override the
+         * updateItem method:
+         *
+         * <pre>
+         * protected void updateItem(T item, boolean empty) {
+         *     super.updateItem(item, empty);
+         *
+         *     if (empty || item == null) {
+         *         setText(null);
+         *         setGraphic(null);
+         *     } else {
+         *         setText(item.toString());
+         *     }
+         * }
+         * </pre>
+         *
+         * <p>Note in this code sample two important points:
+         * <ol>
+         *     <li>We call the super.updateItem(T, boolean) method. If this is not
+         *     done, the item and empty properties are not correctly set, and you are
+         *     likely to end up with graphical issues.</li>
+         *     <li>We test for the <code>empty</code> condition, and if true, we
+         *     set the text and graphic properties to null. If we do not do this,
+         *     it is almost guaranteed that end users will see graphical artifacts
+         *     in cells unexpectedly.</li>
+         * </ol>
+         *  @param item The new item for the cell.
+         *
+         * @param empty whether or not this cell represents data from the list. If it
+         *              is empty, then it does not represent any domain data, but is a cell
+         */
+        @Override
+        protected void updateItem(Receipt item, boolean empty) {
+            super.updateItem(item, empty);
+            if (item != null && !empty) {
+                 MenuItem editItem = new MenuItem("Bewerken");
+                 MenuItem deleteItem = new MenuItem("Verwijderen");
+
+                 editItem.setOnAction(event -> {
+                     ViewReceiptDialog viewReceiptDialog = new ViewReceiptDialog(owner, appSceneRoot, item);
+                     viewReceiptDialog.showAndWait();
+                 });
+
+                 deleteItem.setOnAction(event -> {
+                     ButtonType yesType = new ButtonType("Verwijderen", ButtonBar.ButtonData.YES);
+                     ButtonType noType = new ButtonType("Annuleren", ButtonBar.ButtonData.NO);
+                     Dialog<ButtonType> dialog = new Dialog<>();
+                     dialog.getDialogPane().getButtonTypes().addAll(
+                             noType,
+                             yesType
+                     );
+                     dialog.setTitle("Bonnetje verwijderen");
+                     dialog.setHeaderText("Bonnetje \"" + item.getName() + "\" verwijderen?");
+                     dialog.setGraphic(null);
+                     // set initial selected button
+                     ((Button)dialog.getDialogPane().lookupButton(yesType)).setDefaultButton(false);
+                     ((Button)dialog.getDialogPane().lookupButton(noType)).setDefaultButton(true);
+                     Optional<ButtonType> result = dialog.showAndWait();
+
+                     if (result.isPresent()) {
+                         ButtonType resultButtonType = result.get();
+                         if (resultButtonType.getButtonData().equals(ButtonBar.ButtonData.YES)) {
+                             // delete transaction
+                             if (appSceneRoot.getHuischLedger().removeReceipt(item) == null) {
+                                 System.err.println("The receipt (id:" + item.getId() + ") could not be found and could" +
+                                         " therefore not be removed");
+                             }
+                         }
+                         // do not delete the transaction
+                     }
+                 });
+
+                 ContextMenu contextMenu = new ContextMenu(
+                         editItem,
+                         deleteItem
+                 );
+
+                 setContextMenu(contextMenu);
+            } else {
+                // remove the old contextmenu
+                setContextMenu(null);
+            }
         }
     }
 }
