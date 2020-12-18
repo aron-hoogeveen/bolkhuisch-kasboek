@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Vector;
 
@@ -116,6 +117,8 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
 
         // populate the vectors with leaves
         for (AccountingEntity item : m_items.values()) {
+            Objects.requireNonNull(item, "There must not be a null valued AccountingEntity");
+
             if (item instanceof ResidentEntity) {
                 inmateLeaves.add(new TreeItem<>(item));
             } else {
@@ -190,7 +193,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
     @Override
     public void onChanged(Change<? extends Integer, ? extends AccountingEntity> change) {
         if (change.wasAdded()) {
-            AccountingEntity entity = change.getValueAdded();
+            AccountingEntity entity = Objects.requireNonNull(change.getValueAdded(), "There should be no null valued AccountingEntities");
             TreeItem<AccountingEntity> leaf = new TreeItem<>(entity);
 
             // If there is an entity with the same id, remove the old entry first
@@ -221,7 +224,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
             }
         }
         if (change.wasRemoved()) {
-            AccountingEntity entity = change.getValueRemoved();
+            AccountingEntity entity = Objects.requireNonNull(change.getValueRemoved(), "There should be no null valued AccountingEntities");
             TreeItem<AccountingEntity> leaf = new TreeItem<>(entity);
             if (entity instanceof ResidentEntity) {
                 inmatesRoot.getChildren().remove(leaf);
