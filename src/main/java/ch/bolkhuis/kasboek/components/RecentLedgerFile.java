@@ -30,13 +30,14 @@ public class RecentLedgerFile {
      * @param file the Ledger file location
      * @param name the name of the Ledger
      */
-    public RecentLedgerFile(File file, @NotNull String name) {
+    public RecentLedgerFile(@NotNull File file, @NotNull String name) {
+        if (file == null) { throw new NullPointerException(); }
         if (name == null) { throw new NullPointerException(); }
 
         this.file = file;
         this.name = name;
     }
 
-    public File getFile() { return this.file; }
-    public String getName() { return this.name; }
+    public @NotNull File getFile() { return this.file; }
+    public @NotNull String getName() { return this.name; }
 }
