@@ -223,6 +223,14 @@ public class ReceiptTableView extends TableView<Receipt> implements MapChangeLis
                  );
 
                  setContextMenu(contextMenu);
+
+                 // Enable double-click to open the receipt
+                setOnMouseClicked(event -> {
+                    if (event.getClickCount() == 2) {
+                        ViewReceiptDialog viewReceiptDialog = new ViewReceiptDialog(owner, appSceneRoot, item);
+                        viewReceiptDialog.showAndWait();
+                    }
+                });
             } else {
                 // remove the old contextmenu
                 setContextMenu(null);
