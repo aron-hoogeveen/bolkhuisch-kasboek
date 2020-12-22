@@ -543,7 +543,7 @@ public final class HuischLedger extends Ledger {
      * @return the removed Receipt or {@code null} if there was no such Receipt
      */
     public Receipt removeReceipt(int receiptId) {
-        return receipts.remove(receiptId);
+        return removeReceiptInternal(receiptId);
     }
 
     /**
@@ -554,7 +554,39 @@ public final class HuischLedger extends Ledger {
      * @return the removed Receipt or {@code null} if there was no such Receipt
      */
     public Receipt removeReceipt(Receipt receipt) {
-        return receipts.remove(receipt.getId(), receipt) ? receipt : null;
+        Receipt r = receipts.get(receipt.getId());
+        if (r != receipt) {
+            return null; // the receipt with that ID is not equal to the provided receipt
+        }
+
+        return removeReceiptInternal(receipt.getId());
+    }
+
+    /**
+     * Implementation of removing a receipt by receiptId. Removing a receipt will also cause any mentioned transactions
+     * to be updated to not point to this receipt anymore. This does not guarantee that no transaction will still point to
+     * this receiptId, for example when a transaction points to this receipt, but this receipt does not point to that
+     * transaction.
+     *
+     * @param receiptId the id of the receipt to remove
+     * @return the removed receipt
+     */
+    private Receipt removeReceiptInternal(int receiptId) {
+        Receipt receipt = receipts.get(receiptId);
+        if (receipt == null) {
+            return null;
+        }
+
+        // the receipt exists. Remove all associations with the transactions
+        for (int transactionId : receipt.getTransactionIdSet()) {
+            Transaction transaction = transactions.get(transactionId);
+            if (transaction != null) {
+                // update the saved transaction
+                transactions.put(transaction.getId(), transaction.clearReceiptId());
+            }
+        }
+
+        return receipts.remove(receiptId);
     }
 
     /**

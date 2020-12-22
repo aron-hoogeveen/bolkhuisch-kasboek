@@ -309,4 +309,22 @@ public final class Transaction implements Comparable<Transaction> {
         // Equal amounts. Check description
         return this.description.compareTo(o.description);
     }
+
+    /**
+     * Returns a Transaction with the same values for all its fields, except for the {@code receiptId} field, which will
+     * always be null.
+     *
+     * @return Transaction
+     */
+    public Transaction clearReceiptId() {
+        return new Transaction(
+                id,
+                debtorId,
+                creditorId,
+                amount,
+                null, // remove the association with a receipt
+                date,
+                description
+        );
+    }
 }
