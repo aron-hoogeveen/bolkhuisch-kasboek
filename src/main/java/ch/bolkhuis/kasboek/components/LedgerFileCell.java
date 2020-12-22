@@ -98,17 +98,19 @@ public class LedgerFileCell extends ListCell<RecentLedgerFile> {
             // due to the selection of a listitem when first clicked this event is only fired when the listiem is double
             // clicked or clicked when selected. Which I think is nice.
             root.setOnMouseClicked(event -> {
-                try {
-                    LedgerFileListView parentListView = ((LedgerFileListView)getListView());
-                    HuischLedger huischLedger = HuischLedger.fromFile(item.getFile());
-                    ApplicationSceneRoot applicationSceneRoot = new ApplicationSceneRoot(
-                            parentListView.getApp(),
-                            huischLedger,
-                            item.getFile()
-                    );
-                    parentListView.getApp().changeToApplicationScene(applicationSceneRoot, item.getName());
-                } catch (IOException ioException) {
-                    System.err.println("Could not load the HuischLedger from the file provided by a RecentLedgerFile");
+                if (event.getClickCount() == 2) {
+                    try {
+                        LedgerFileListView parentListView = ((LedgerFileListView) getListView());
+                        HuischLedger huischLedger = HuischLedger.fromFile(item.getFile());
+                        ApplicationSceneRoot applicationSceneRoot = new ApplicationSceneRoot(
+                                parentListView.getApp(),
+                                huischLedger,
+                                item.getFile()
+                        );
+                        parentListView.getApp().changeToApplicationScene(applicationSceneRoot, item.getName());
+                    } catch (IOException ioException) {
+                        System.err.println("Could not load the HuischLedger from the file provided by a RecentLedgerFile");
+                    }
                 }
             });
 
