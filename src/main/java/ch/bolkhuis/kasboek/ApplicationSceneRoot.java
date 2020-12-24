@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.prefs.*;
 
@@ -183,11 +184,27 @@ public class ApplicationSceneRoot extends BorderPane {
             ViewReceiptDialog viewReceiptDialog = new ViewReceiptDialog(app.getPrimaryStage(), this, huischLedger.getReceipts().get(0));
             viewReceiptDialog.showAndWait();
         });
+        MenuItem invoiceFirstResident = new MenuItem("Invoice first resident");
+        invoiceFirstResident.setOnAction(event -> {
+            // get the resident with id "1" and create an invoice with set dates.
+            LocalDate startDate = LocalDate.parse("2020-01-01");
+            LocalDate endDate = LocalDate.parse("2020-01-31");
+            System.out.println("Invoice dates: " + startDate.toString() + ", " + endDate.toString());
+            File out = new File("out/test_invoice_output.html");
+            File template = new File("out/Template HuischInvoice.html");
+            try {
+                HuischLedger.generateResidentInvoice(out, template, huischLedger, 0, startDate, endDate);
+            } catch (Exception e) {
+                System.err.println("Something went wrong while testing the invoicing system");
+                e.printStackTrace();
+            }
+        });
         developerMenu.getItems().addAll(
                 printSizeOfAccountingEntities,
                 printSizeOfTransactions,
                 printSizeOfReceipts,
-                showFirstReceipt
+                showFirstReceipt,
+                invoiceFirstResident
         );
 
         // Add the File Menus to the MenuBar
