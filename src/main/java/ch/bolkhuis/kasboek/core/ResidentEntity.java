@@ -85,4 +85,20 @@ public class ResidentEntity extends AccountingEntity {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
+
+    /**
+     * Returns a ResidentEntity with the same properties as this ResidentEntity except for the value of the {@code previousBalance}
+     * property.
+     *
+     * @param d the value to set {@code previousBalance} to
+     * @return the new ResidentEntity
+     */
+    public ResidentEntity setPreviousBalance(double d) {
+        return new ResidentEntity(
+                id,
+                getName(),
+                d,
+                getBalance()
+        );
+    }
 }

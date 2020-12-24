@@ -123,6 +123,8 @@ public final class HuischLedger extends Ledger {
             throw new IllegalArgumentException("The provided residentEntityId does not belong to an inmate");
         }
         ResidentEntity residentEntity = (ResidentEntity) accountingEntity;
+        // Get the end_balance after processing al selected transactions
+        double endBalance = residentEntity.getPreviousBalance();
 
         // Update the string for the placeholderEntity
         huischLedger.accountingEntities.put(placeholderEntityId, new PlaceholderEntity(resourceBundle.getString("various")));
@@ -235,7 +237,8 @@ public final class HuischLedger extends Ledger {
 
             // Generate the TABLE_DATA from the transactions
             StringBuilder tableDateStringBuilder = new StringBuilder();
-            standAloneTransactionsSet.forEach((t) -> {
+            // Get the end_balance after processing al selected transactions
+            for (Transaction t : standAloneTransactionsSet) {
                 if (t == null) { return; }
                 // Get the counter-entity.
                 int counterEntityId = (t.getDebtorId() == residentEntityId) ? t.getCreditorId() : t.getDebtorId();
@@ -251,8 +254,10 @@ public final class HuischLedger extends Ledger {
                 if ((residentEntity.getAccountType().isDebit() && t.getDebtorId() == residentEntityId)
                         || (!residentEntity.getAccountType().isDebit() && t.getCreditorId() == residentEntityId)) {
                     amountString = numberFormat.format(amount);
+                    endBalance += amount;
                 } else {
                     amountString = numberFormat.format(-1 * amount);
+                    endBalance -= amount;
                 }
 
                 // Add a table row for this transaction
@@ -275,19 +280,22 @@ public final class HuischLedger extends Ledger {
                         .append(amountString)
                         .append("\n\t\t\t</td>\n")
                         .append("\t\t</tr>\n");
-            });
+            }
 
             // Populate field ${NAME}
             templateString = StringUtils.replace(templateString, "${NAME}", residentEntity.getName());
             templateString = StringUtils.replace(templateString, "${INTRO_TEXT}", introText);
             templateString = StringUtils.replace(templateString, "${START_BALANCE}", numberFormat.format(residentEntity.getPreviousBalance()));
-            templateString = StringUtils.replace(templateString, "${END_BALANCE}", numberFormat.format(residentEntity.getBalance()));
+            templateString = StringUtils.replace(templateString, "${END_BALANCE}", numberFormat.format(endBalance));
             templateString = StringUtils.replace(templateString, "${TABLE_DATA}", tableDateStringBuilder.toString());
         }
 
         // Write to the out file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(out))) {
             writer.write(templateString);
+        } finally {
+            // if creating the invoice succeeded, update the previous_balance
+            huischLedger.updateAccountingEntity(residentEntity.setPreviousBalance(endBalance));
         }
     }
 
