@@ -96,14 +96,14 @@ public final class HuischLedger extends Ledger {
      * @param out the output file
      * @param template the template for the invoice
      * @param huischLedger the huischLedger containing the AccountingEntity
-     * @param inmateEntityId the id of the AccountingEntity to generate an invoice for
+     * @param residentEntityId the id of the AccountingEntity to generate an invoice for
      * @param resourceBundle the ResourceBundle for supplying Locale specific Strings
      * @throws IOException when there are problems reading/writing the Files
      * @throws UnsupportedVersionException when the template version is not supported
      */
-    private static void generateInmateInvoice(@NotNull File out, @NotNull File template, @NotNull HuischLedger huischLedger,
-                                              int inmateEntityId, @NotNull LocalDate from,
-                                              @NotNull LocalDate to, @NotNull ResourceBundle resourceBundle)
+    private static void generateResidentInvoice(@NotNull File out, @NotNull File template, @NotNull HuischLedger huischLedger,
+                                                int residentEntityId, @NotNull LocalDate from,
+                                                @NotNull LocalDate to, @NotNull ResourceBundle resourceBundle)
             throws IOException {
         Objects.requireNonNull(out, "Parameter out cannot be null");
         Objects.requireNonNull(template, "Parameter template cannot be null");
@@ -113,14 +113,14 @@ public final class HuischLedger extends Ledger {
         Objects.requireNonNull(resourceBundle, "Parameter resourceBundle cannot be null");
 
         // Check that the provided inmateEntityId matches an AccountingEntity in the Ledger
-        AccountingEntity accountingEntity = huischLedger.getAccountingEntityById(inmateEntityId);
+        AccountingEntity accountingEntity = huischLedger.getAccountingEntityById(residentEntityId);
         if (accountingEntity == null) {
-            throw new IllegalArgumentException("The provided inmateEntityId has not corresponding AccountingEntity in the provided Ledger");
+            throw new IllegalArgumentException("The provided residentEntityId has not corresponding AccountingEntity in the provided Ledger");
         }
 
         // Check that the provided Entity is an ResidentEntity
         if (!(accountingEntity instanceof ResidentEntity)) {
-            throw new IllegalArgumentException("The provided inmateEntityId does not belong to an inmate");
+            throw new IllegalArgumentException("The provided residentEntityId does not belong to an inmate");
         }
         ResidentEntity residentEntity = (ResidentEntity) accountingEntity;
 
@@ -168,7 +168,7 @@ public final class HuischLedger extends Ledger {
             });
 
             // Get all transactions
-            Set<Transaction> standAloneTransactionsSet = huischLedger.getTransactionsOf(inmateEntityId, from, to);
+            Set<Transaction> standAloneTransactionsSet = huischLedger.getTransactionsOf(residentEntityId, from, to);
             Set<Transaction> standAloneTransactionsSetCopy = new HashSet<>(standAloneTransactionsSet);
 //            TreeMap<Integer, Transaction> copyOfStandAloneTransactions = new TreeMap<>(standAloneTransactions);
 
@@ -238,7 +238,7 @@ public final class HuischLedger extends Ledger {
             standAloneTransactionsSet.forEach((t) -> {
                 if (t == null) { return; }
                 // Get the counter-entity.
-                int counterEntityId = (t.getDebtorId() == inmateEntityId) ? t.getCreditorId() : t.getDebtorId();
+                int counterEntityId = (t.getDebtorId() == residentEntityId) ? t.getCreditorId() : t.getDebtorId();
                 AccountingEntity counterEntity = huischLedger.getAccountingEntityById(counterEntityId);
 
                 // Use an empty string if the counterEntity is not available
@@ -248,8 +248,8 @@ public final class HuischLedger extends Ledger {
                 double amount = t.getAmount();
                 String amountString;
 
-                if ((residentEntity.getAccountType().isDebit() && t.getDebtorId() == inmateEntityId)
-                        || (!residentEntity.getAccountType().isDebit() && t.getCreditorId() == inmateEntityId)) {
+                if ((residentEntity.getAccountType().isDebit() && t.getDebtorId() == residentEntityId)
+                        || (!residentEntity.getAccountType().isDebit() && t.getCreditorId() == residentEntityId)) {
                     amountString = numberFormat.format(amount);
                 } else {
                     amountString = numberFormat.format(-1 * amount);
@@ -301,10 +301,10 @@ public final class HuischLedger extends Ledger {
      * @throws IOException when there are problems reading/writing the Files
      * @throws UnsupportedVersionException when the template version is not supported
      */
-    public static void generateInmateInvoice(@NotNull File out, @NotNull File template, @NotNull HuischLedger ledger,
-                                             int inmateEntityId, @NotNull LocalDate from, @NotNull LocalDate to) throws IOException {
+    public static void generateResidentInvoice(@NotNull File out, @NotNull File template, @NotNull HuischLedger ledger,
+                                               int inmateEntityId, @NotNull LocalDate from, @NotNull LocalDate to) throws IOException {
         ResourceBundle defaultInvoiceResourceBundle = ResourceBundle.getBundle("HuischInvoiceStrings");
-        generateInmateInvoice(out, template, ledger, inmateEntityId, from, to, defaultInvoiceResourceBundle);
+        generateResidentInvoice(out, template, ledger, inmateEntityId, from, to, defaultInvoiceResourceBundle);
     }
 
     /**
@@ -318,11 +318,11 @@ public final class HuischLedger extends Ledger {
      * @throws UnsupportedVersionException when the template version is not supported
      * @throws MissingResourceException when no resource if found for the requested Locale
      */
-    public static void generateInmateInvoice(@NotNull File out, @NotNull File template, @NotNull HuischLedger ledger,
-                                             int inmateEntityId, @NotNull LocalDate from,
-                                             @NotNull LocalDate to, @NotNull Locale locale) throws IOException {
+    public static void generateResidentInvoice(@NotNull File out, @NotNull File template, @NotNull HuischLedger ledger,
+                                               int inmateEntityId, @NotNull LocalDate from,
+                                               @NotNull LocalDate to, @NotNull Locale locale) throws IOException {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("HuischInvoiceStrings", locale);
-        generateInmateInvoice(out, template, ledger, inmateEntityId, from, to, resourceBundle);
+        generateResidentInvoice(out, template, ledger, inmateEntityId, from, to, resourceBundle);
     }
 
     public @Deprecated TreeMap<Integer, Receipt> copyOfReceipts() {
