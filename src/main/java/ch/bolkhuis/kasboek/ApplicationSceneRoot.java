@@ -157,6 +157,7 @@ public class ApplicationSceneRoot extends BorderPane {
         Menu printSubMenu = new Menu("Factuur Printen");
         MenuItem printInvoicesForAllInmates = new MenuItem("Alle Huischgenoten");
         MenuItem printInvoicesForSelectedInmates = new MenuItem("Selecteer Huischgenoten");
+        printInvoicesForSelectedInmates.setOnAction(new InvoiceSelectedResidentsEventHandler());
         printSubMenu.getItems().addAll(
                 printInvoicesForAllInmates,
                 printInvoicesForSelectedInmates
@@ -722,6 +723,21 @@ public class ApplicationSceneRoot extends BorderPane {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private class InvoiceSelectedResidentsEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+            InvoicingDialog invoicingDialog = new InvoicingDialog(preferences, huischLedger, app.getPrimaryStage());
+            invoicingDialog.showAndWait();
         }
     }
 
