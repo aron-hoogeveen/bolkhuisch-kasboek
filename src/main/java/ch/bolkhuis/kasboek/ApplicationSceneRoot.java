@@ -47,9 +47,9 @@ import java.util.prefs.*;
  */
 public class ApplicationSceneRoot extends BorderPane {
     // Preferences keys
-    private static final String PREF_FILE_CHOOSER_DIRECTORY = "FileChooserDirectory";
+    public static final String PREF_FILE_CHOOSER_DIRECTORY = "FileChooserDirectory";
     // Preferences default values
-    private static final String PREF_DEFAULT_FILE_CHOOSER_DIRECTORY = System.getProperty("user.home");
+    public static final String PREF_DEFAULT_FILE_CHOOSER_DIRECTORY = System.getProperty("user.home");
     private final static String PREF_NODE_NAME = "/ch/bolkhuis/kasboek/ApplicationSceneRoot";
 
     private final HuischLedger huischLedger;
