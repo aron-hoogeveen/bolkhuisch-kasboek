@@ -32,13 +32,13 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
     // Backing ObservableMap
     private final ObservableMap<Integer, AccountingEntity> m_items;
     // Root TreeItems
-    private final TreeItem<AccountingEntity> inmatesRoot = new TreeTableRootItem<>(new PlaceholderEntity("Huischgenoten"));
-    private final TreeItem<AccountingEntity> assetsRoot = new TreeTableRootItem<>(new PlaceholderEntity("Assets"));
-    private final TreeItem<AccountingEntity> expensesRoot = new TreeTableRootItem<>(new PlaceholderEntity("Expenses"));
-    private final TreeItem<AccountingEntity> liabilitiesRoot = new TreeTableRootItem<>(new PlaceholderEntity("Liabilities"));
-    private final TreeItem<AccountingEntity> dividendsRoot = new TreeTableRootItem<>(new PlaceholderEntity("Dividends"));
-    private final TreeItem<AccountingEntity> revenuesRoot = new TreeTableRootItem<>(new PlaceholderEntity("Revenues"));
-    private final TreeItem<AccountingEntity> equitiesRoot = new TreeTableRootItem<>(new PlaceholderEntity("Equities"));
+    private final TreeItem<AccountingEntity> inmatesRoot = new TreeTableRootItem<>(new PlaceholderEntity(-1, "Huischgenoten"));
+    private final TreeItem<AccountingEntity> assetsRoot = new TreeTableRootItem<>(new PlaceholderEntity(-1, "Assets"));
+    private final TreeItem<AccountingEntity> expensesRoot = new TreeTableRootItem<>(new PlaceholderEntity(-1, "Expenses"));
+    private final TreeItem<AccountingEntity> liabilitiesRoot = new TreeTableRootItem<>(new PlaceholderEntity(-1, "Liabilities"));
+    private final TreeItem<AccountingEntity> dividendsRoot = new TreeTableRootItem<>(new PlaceholderEntity(-1, "Dividends"));
+    private final TreeItem<AccountingEntity> revenuesRoot = new TreeTableRootItem<>(new PlaceholderEntity(-1, "Revenues"));
+    private final TreeItem<AccountingEntity> equitiesRoot = new TreeTableRootItem<>(new PlaceholderEntity(-1, "Equities"));
 
     /**
      * Creates a TreeTableView populated with the AccountingEntities from the ObservableMap {@code items}.
@@ -105,7 +105,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
      * Populate all the root items with leaves.
      */
     private void initChildren() {
-        TreeItem<AccountingEntity> root = new TreeTableRootItem<>(new PlaceholderEntity("Entiteiten"));
+        TreeItem<AccountingEntity> root = new TreeTableRootItem<>(new PlaceholderEntity(-1, "Entiteiten"));
 
         Vector<TreeItem<AccountingEntity>> inmateLeaves = new Vector<>();
         Vector<TreeItem<AccountingEntity>> assetLeaves = new Vector<>();

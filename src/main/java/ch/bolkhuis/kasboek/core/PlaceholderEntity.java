@@ -34,7 +34,7 @@ public class PlaceholderEntity extends AccountingEntity {
      * @see AccountingEntity#isCorrectId(int)
      * @see AccountingEntity#isCorrectName(String)
      */
-    public PlaceholderEntity(@NotNull String name) {
-        super(999, name, AccountType.NON_EXISTENT, 0);
+    public PlaceholderEntity(int id, @NotNull String name) {
+        super(id, name, AccountType.NON_EXISTENT, 0);
     }
 }

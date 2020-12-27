@@ -35,6 +35,8 @@ import java.util.*;
  * with negative ids are reserved by this class. It is possible to create AccountingEntities with negative ids, but if
  * that id collides with one of the reserved ids of this class that AccountingEntity will be overwritten at some point
  * without giving feedback.
+ * This class must not add objects directly to the ObservableMaps of its parent class. Great care should be taken when
+ * doing this when still doing this.
  */
 public final class HuischLedger extends Ledger {
     private final static String introText = "Please replace this string with some info text";
@@ -127,7 +129,11 @@ public final class HuischLedger extends Ledger {
         double endBalance = residentEntity.getPreviousBalance();
 
         // Update the string for the placeholderEntity
-        huischLedger.accountingEntities.put(placeholderEntityId, new PlaceholderEntity(resourceBundle.getString("various")));
+        // FIXME think of a different design for the placeholderentity
+        huischLedger.accountingEntities.put(
+                placeholderEntityId,
+                new PlaceholderEntity(placeholderEntityId, resourceBundle.getString("various"))
+        );
 
 
         // TODO change the used currency based on the provided Locale
