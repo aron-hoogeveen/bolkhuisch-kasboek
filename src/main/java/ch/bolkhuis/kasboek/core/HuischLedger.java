@@ -244,8 +244,9 @@ public final class HuischLedger extends Ledger {
             // Generate the TABLE_DATA from the transactions
             StringBuilder tableDateStringBuilder = new StringBuilder();
             // Get the end_balance after processing al selected transactions
-            for (Transaction t : standAloneTransactionsSet) {
-                // FIXME sort the standAloneTransactionsSet by date before processing
+            List<Transaction> standAloneTransactionsList = new ArrayList<>(standAloneTransactionsSet);
+            Collections.sort(standAloneTransactionsList);
+            for (Transaction t : standAloneTransactionsList) {
                 if (t == null) { return; }
                 // Get the counter-entity.
                 int counterEntityId = (t.getDebtorId() == residentEntityId) ? t.getCreditorId() : t.getDebtorId();
