@@ -221,8 +221,7 @@ public class InvoicingDialog {
          * which will prevent the listener from being garbage collected and may
          * result in a memory leak. It is recommended to either unregister a
          * listener by calling {@link #removeListener(ChangeListener)
-         * removeListener} after use or to use an instance of
-         * {@link WeakChangeListener} avoid this situation.
+         * removeListener} after use.
          *
          * @param listener The listener to register
          * @throws NullPointerException if the listener is null
@@ -274,8 +273,7 @@ public class InvoicingDialog {
          * which will prevent the listener from being garbage collected and may
          * result in a memory leak. It is recommended to either unregister a
          * listener by calling {@link #removeListener(InvalidationListener)
-         * removeListener} after use or to use an instance of
-         * {@link WeakInvalidationListener} avoid this situation.
+         * removeListener} after use.
          *
          * @param listener The listener to register
          * @throws NullPointerException if the listener is null
