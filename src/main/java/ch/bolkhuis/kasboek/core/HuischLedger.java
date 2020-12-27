@@ -39,8 +39,6 @@ import java.util.*;
  * doing this when still doing this.
  */
 public final class HuischLedger extends Ledger {
-    private final static String introText = "Please replace this string with some info text";
-
     private final static int placeholderEntityId = -1;
 
     private final ObservableMap<Integer, Receipt> receipts;
@@ -105,7 +103,8 @@ public final class HuischLedger extends Ledger {
      */
     private static void generateResidentInvoice(@NotNull File out, @NotNull File template, @NotNull HuischLedger huischLedger,
                                                 int residentEntityId, @NotNull LocalDate from,
-                                                @NotNull LocalDate to, @NotNull ResourceBundle resourceBundle)
+                                                @NotNull LocalDate to, @NotNull ResourceBundle resourceBundle,
+                                                @NotNull String introText)
             throws IOException {
         Objects.requireNonNull(out, "Parameter out cannot be null");
         Objects.requireNonNull(template, "Parameter template cannot be null");
@@ -318,9 +317,10 @@ public final class HuischLedger extends Ledger {
      * @throws UnsupportedVersionException when the template version is not supported
      */
     public static void generateResidentInvoice(@NotNull File out, @NotNull File template, @NotNull HuischLedger ledger,
-                                               int inmateEntityId, @NotNull LocalDate from, @NotNull LocalDate to) throws IOException {
+                                               int inmateEntityId, @NotNull LocalDate from, @NotNull LocalDate to,
+                                               @NotNull String introText) throws IOException {
         ResourceBundle defaultInvoiceResourceBundle = ResourceBundle.getBundle("HuischInvoiceStrings");
-        generateResidentInvoice(out, template, ledger, inmateEntityId, from, to, defaultInvoiceResourceBundle);
+        generateResidentInvoice(out, template, ledger, inmateEntityId, from, to, defaultInvoiceResourceBundle, introText);
     }
 
     /**
@@ -336,9 +336,10 @@ public final class HuischLedger extends Ledger {
      */
     public static void generateResidentInvoice(@NotNull File out, @NotNull File template, @NotNull HuischLedger ledger,
                                                int inmateEntityId, @NotNull LocalDate from,
-                                               @NotNull LocalDate to, @NotNull Locale locale) throws IOException {
+                                               @NotNull LocalDate to, @NotNull String introText,
+                                               @NotNull Locale locale) throws IOException {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("HuischInvoiceStrings", locale);
-        generateResidentInvoice(out, template, ledger, inmateEntityId, from, to, resourceBundle);
+        generateResidentInvoice(out, template, ledger, inmateEntityId, from, to, resourceBundle, introText);
     }
 
     public @Deprecated TreeMap<Integer, Receipt> copyOfReceipts() {

@@ -98,6 +98,7 @@ public class InvoicingDialog {
         targetDirectoryLabel.setText("Uitvoermap:");
         submitButton.setText("Factureren");
         submitButton.setMaxWidth(Double.MAX_VALUE);
+        submitButton.setOnAction(new SubmitEventHandler());
 
         informationLabel.setWrapText(true);
         introTextTextArea.setWrapText(true);
@@ -183,6 +184,20 @@ public class InvoicingDialog {
             if (newTargetDir != null) {
                 fileProperty.set(newTargetDir);
             }
+        }
+    }
+
+    private class SubmitEventHandler implements EventHandler<ActionEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(ActionEvent event) {
+
         }
     }
 

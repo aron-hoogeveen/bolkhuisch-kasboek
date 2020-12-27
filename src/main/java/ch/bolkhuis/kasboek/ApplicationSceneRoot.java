@@ -194,7 +194,8 @@ public class ApplicationSceneRoot extends BorderPane {
             File out = new File("out/test_invoice_output.html");
             File template = new File("out/Template HuischInvoice.html");
             try {
-                HuischLedger.generateResidentInvoice(out, template, huischLedger, 0, startDate, endDate);
+                HuischLedger.generateResidentInvoice(out, template, huischLedger, 0, startDate, endDate,
+                        "This is hardcoded text for the development option");
             } catch (Exception e) {
                 System.err.println("Something went wrong while testing the invoicing system");
                 e.printStackTrace();
