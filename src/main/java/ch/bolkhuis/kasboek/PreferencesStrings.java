@@ -32,6 +32,6 @@ public final class PreferencesStrings {
      */
     public static final String INVOICINGDIALOG_INTRO_TEXT = "IntroText";
     public static final String INVOICINGDIALOG_DEFAULT_INTRO_TEXT = "Dit is de huischrekening van ${start_date} tot " +
-            "${end_date}. Hieronder vind jouw saldo na deze verrekening. Als deze negatief is, gelieve het bedrag zo snel" +
+            "${end_date}. Hieronder vind jouw nieuwe saldo. Als deze negatief is, gelieve het bedrag zo snel" +
             " mogelijk overmaken naar de huisch bankrekening.";
 }
