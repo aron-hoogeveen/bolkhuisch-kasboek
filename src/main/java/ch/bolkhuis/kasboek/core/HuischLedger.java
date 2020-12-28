@@ -295,9 +295,7 @@ public final class HuischLedger extends Ledger {
 
             // Populate field ${NAME}
             templateString = StringUtils.replace(templateString, "${name}", residentEntity.getName());
-            System.out.println(templateString);
             templateString = StringUtils.replace(templateString, "${intro_text}", introText);
-            System.out.println(templateString);
             templateString = StringUtils.replace(templateString, "${start_balance}", numberFormat.format(residentEntity.getPreviousBalance()));
             templateString = StringUtils.replace(templateString, "${end_balance}", numberFormat.format(endBalance));
             templateString = StringUtils.replace(templateString, "${table_data}", tableDateStringBuilder.toString());
