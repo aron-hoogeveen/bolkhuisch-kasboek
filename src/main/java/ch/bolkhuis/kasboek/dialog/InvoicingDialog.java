@@ -160,6 +160,11 @@ public class InvoicingDialog {
                 }
             }
         });
+        startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && endDatePicker.getValue() == null) {
+                endDatePicker.setValue(newValue); // set a default date for the end date to improve user experience
+            }
+        });
         startDatePicker.setMaxWidth(Double.MAX_VALUE);
         endDatePicker.setMaxWidth(Double.MAX_VALUE);
 
