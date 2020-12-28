@@ -17,7 +17,6 @@
 package ch.bolkhuis.kasboek.dialog;
 
 import ch.bolkhuis.kasboek.App;
-import ch.bolkhuis.kasboek.ApplicationSceneRoot;
 import ch.bolkhuis.kasboek.PreferencesStrings;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.HuischLedger;
@@ -54,8 +53,6 @@ import java.util.prefs.Preferences;
  * generating one or more invoices.
  */
 public class InvoicingDialog {
-
-
 
     private final Stage stage;
     private final Preferences preferences;
