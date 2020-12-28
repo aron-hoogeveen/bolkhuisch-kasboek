@@ -50,7 +50,7 @@ import java.util.prefs.Preferences;
 
 /**
  * InvoicingDialog is the class used for showing a dialog in which the user can supply all information needed for
- * generating one or more invoices.
+ * generating invoices for one or more ResidentEntities.
  */
 public class InvoicingDialog {
 
