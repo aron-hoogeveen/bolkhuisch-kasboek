@@ -36,11 +36,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.*;
+import org.apache.commons.io.FileUtils;
 import org.controlsfx.control.ListSelectionView;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Vector;
 import java.util.prefs.Preferences;
 
@@ -51,8 +55,10 @@ import java.util.prefs.Preferences;
 public class InvoicingDialog {
     private final Stage stage;
     private final Preferences preferences;
+    private final HuischLedger huischLedger;
     
-    private final FileProperty fileProperty = new FileProperty();
+    private final FileProperty targetDirectoryFileProperty = new FileProperty();
+    private final FileProperty templateFileProperty = new FileProperty();
 
     /*
      * Scene components
@@ -61,7 +67,13 @@ public class InvoicingDialog {
     private final TextArea introTextTextArea = new TextArea();
     private final Label informationLabel = new Label();
     private final Label targetDirectoryLabel = new Label();
+    private final Label templateFileLabel = new Label();
     private final CustomTextField targetDirectoryTextField = new CustomTextField();
+    private final CustomTextField templateFileTextField = new CustomTextField();
+    private final Label startDateLabel = new Label();
+    private final Label endDateLabel = new Label();
+    private final DatePicker startDatePicker = new DatePicker();
+    private final DatePicker endDatePicker = new DatePicker();
     private final ListSelectionView<ResidentEntity> listSelectionView = new ListSelectionView<>();
     private final Button submitButton = new Button();
 
@@ -72,6 +84,7 @@ public class InvoicingDialog {
                            @NotNull final HuischLedger huischLedger,
                            final Window owner) {
         this.preferences = preferences;
+        this.huischLedger = huischLedger;
 
         stage = new Stage();
         stage.initOwner(owner);
@@ -96,6 +109,9 @@ public class InvoicingDialog {
                 "Hierbij worden alle bestanden en submappen in die map verwijderd.");
         introTextLabel.setText("Introtekst:");
         targetDirectoryLabel.setText("Uitvoermap:");
+        templateFileLabel.setText("Template bestand:");
+        startDateLabel.setText("Start datum:");
+        endDateLabel.setText("Eind datum:");
         submitButton.setText("Factureren");
         submitButton.setMaxWidth(Double.MAX_VALUE);
         submitButton.setOnAction(new SubmitEventHandler());
@@ -105,17 +121,56 @@ public class InvoicingDialog {
 
         // targetDirectory
         targetDirectoryTextField.setPromptText("Selecteer een uitvoer locatie...");
-        Image image = new Image("icons8-folder-24.png");
-        ImageView imageView = new ImageView(image);
-        imageView.setCursor(Cursor.HAND);
-        imageView.setOnMouseClicked(new TargetDirectorySelectionEventHandler());
-        targetDirectoryTextField.setRight(imageView);
+        templateFileTextField.setPromptText("Selecteer de template...");
+        Image image1 = new Image("icons8-folder-24.png");
+        Image image2 = new Image("icons8-folder-24.png");
+        ImageView imageView1 = new ImageView(image1);
+        ImageView imageView2 = new ImageView(image2);
+        imageView1.setCursor(Cursor.HAND);
+        imageView2.setCursor(Cursor.HAND);
+        imageView1.setOnMouseClicked(new TargetDirectorySelectionEventHandler());
+        imageView2.setOnMouseClicked(new TemplateFileSelectionEventHandler());
+        targetDirectoryTextField.setRight(imageView1);
         targetDirectoryTextField.setEditable(false);
         targetDirectoryTextField.setTooltip(new Tooltip("Tekstinput wordt momenteel niet ondersteunt voor dit component"));
-        fileProperty.addListener((observable, oldValue, newValue) -> {
-            targetDirectoryTextField.setText(newValue.getAbsolutePath());
+        targetDirectoryFileProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                targetDirectoryTextField.setText(newValue.getAbsolutePath());
+            } else {
+                targetDirectoryTextField.setText(null);
+            }
         });
 
+        // init the date pickers
+        // For convenience disable all dates dat are before the selected start_date for the endDatePicker (although it
+        // would perfectly be legal to allow dates that are before that day. However that would result in no transactions
+        // being selected
+        endDatePicker.setDayCellFactory(param -> new DateCell() {
+            /**
+             * {@inheritDoc}
+             *
+             * @param item
+             * @param empty
+             */
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                setDisable(item.isBefore(startDatePicker.getValue()));
+            }
+        });
+        startDatePicker.setMaxWidth(Double.MAX_VALUE);
+        endDatePicker.setMaxWidth(Double.MAX_VALUE);
+
+        templateFileTextField.setRight(imageView2);
+        templateFileTextField.setEditable(false);
+        templateFileTextField.setTooltip(new Tooltip("Tekstinput wordt momenteel niet ondersteunt voor dit component"));
+        templateFileProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                templateFileTextField.setText(newValue.getAbsolutePath());
+            } else {
+                templateFileTextField.setText(null);
+            }
+        });
 
         // Initialize the ListSelectionView
         // Get all residents
@@ -136,13 +191,19 @@ public class InvoicingDialog {
         scrollPane.setMaxHeight(100);
 
         root.add(scrollPane, 0, 0, 2, 1);
-        root.add(introTextLabel, 0, 1);
-        root.add(introTextTextArea, 0, 2, 2, 1);
-        root.add(targetDirectoryLabel, 0, 3);
-        root.add(targetDirectoryTextField, 1, 3);
+        root.add(startDateLabel, 0, 1);
+        root.add(endDateLabel, 1, 1);
+        root.add(startDatePicker, 0, 2);
+        root.add(endDatePicker, 1, 2);
+        root.add(introTextLabel, 0, 3);
+        root.add(introTextTextArea, 0, 4, 2, 1);
+        root.add(templateFileLabel, 0, 5);
+        root.add(templateFileTextField, 1, 5);
+        root.add(targetDirectoryLabel, 0, 6);
+        root.add(targetDirectoryTextField, 1, 6);
         // TODO root.add(targetDirectorySelector
-        root.add(listSelectionView, 0, 4, 2, 1);
-        root.add(submitButton, 0, 5);
+        root.add(listSelectionView, 0, 7, 2, 1);
+        root.add(submitButton, 0, 8);
 
         root.setStyle("-fx-padding: 10px;");
         Scene scene = new Scene(root);
@@ -171,18 +232,46 @@ public class InvoicingDialog {
         public void handle(MouseEvent event) {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Uitvoermap");
-            if (fileProperty.getValue() == null) {
+            if (targetDirectoryFileProperty.getValue() == null) {
                 directoryChooser.setInitialDirectory(new File(preferences.get(
                         ApplicationSceneRoot.PREF_FILE_CHOOSER_DIRECTORY,
                         ApplicationSceneRoot.PREF_DEFAULT_FILE_CHOOSER_DIRECTORY
                 )));
             } else {
-                directoryChooser.setInitialDirectory(fileProperty.getValue());
+                directoryChooser.setInitialDirectory(targetDirectoryFileProperty.getValue());
             }
             File newTargetDir = directoryChooser.showDialog(stage);
 
             if (newTargetDir != null) {
-                fileProperty.set(newTargetDir);
+                targetDirectoryFileProperty.set(newTargetDir);
+            }
+        }
+    }
+
+    private class TemplateFileSelectionEventHandler implements EventHandler<MouseEvent> {
+
+        /**
+         * Invoked when a specific event of the type for which this handler is
+         * registered happens.
+         *
+         * @param event the event which occurred
+         */
+        @Override
+        public void handle(MouseEvent event) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Selecteer Template Bestand");
+            if (templateFileProperty.getValue() == null) {
+                fileChooser.setInitialDirectory(new File(preferences.get(
+                        ApplicationSceneRoot.PREF_FILE_CHOOSER_DIRECTORY,
+                        ApplicationSceneRoot.PREF_DEFAULT_FILE_CHOOSER_DIRECTORY
+                )));
+            } else {
+                fileChooser.setInitialDirectory(templateFileProperty.getValue().getParentFile());
+            }
+            File newTemplateFile = fileChooser.showOpenDialog(stage);
+
+            if (newTemplateFile != null) {
+                templateFileProperty.set(newTemplateFile);
             }
         }
     }
@@ -197,7 +286,121 @@ public class InvoicingDialog {
          */
         @Override
         public void handle(ActionEvent event) {
+            File targetDir = targetDirectoryFileProperty.getValue();
+            File templateFile = templateFileProperty.getValue();
 
+            // check target directory
+            if (targetDir == null) {
+                ErrorDialog errorDialog = new ErrorDialog("Kies aub een uitvoermap");
+                errorDialog.showAndWait();
+                return;
+            }
+
+            // check template file
+            if (templateFile == null) {
+                ErrorDialog errorDialog = new ErrorDialog("Kies aub een template");
+                errorDialog.showAndWait();
+                return;
+            }
+
+            if (!targetDir.isDirectory()) {
+                System.err.println("Selected file is not a directory");
+                return;
+            }
+
+            if (!templateFile.isFile()) {
+                System.err.println("Selected file is not a file");
+            }
+
+            if (startDatePicker.getValue() == null || endDatePicker.getValue() == null) {
+                ErrorDialog errorDialog = new ErrorDialog("Kies een start en eind datum");
+                errorDialog.showAndWait();
+                return;
+            }
+
+            // Check if the directory contains files, remove if the user gives permission
+            if (targetDir.list().length > 0) {
+                Dialog<ButtonType> dialog = new Dialog<>();
+                ButtonType yesButtonType = new ButtonType("Verwijderen", ButtonBar.ButtonData.YES);
+                ButtonType noButtonType = new ButtonType("Annuleren", ButtonBar.ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().setAll(
+                        yesButtonType,
+                        noButtonType
+                );
+                ((Button) dialog.getDialogPane().lookupButton(noButtonType)).setDefaultButton(true);
+                dialog.setGraphic(null);
+                dialog.setHeaderText("De geselecteerde map bevat nog bestanden. Wil je verder gaan en alle bestanden " +
+                        "verwijderen of annuleren en een andere doelmap kiezen?");
+                Optional<ButtonType> result = dialog.showAndWait();
+
+                if (result.isPresent()) {
+                    ButtonType resultButtonType = result.get();
+                    if (!resultButtonType.equals(yesButtonType)) {
+                        // do not delete the contents. Let the user select another targetDir
+                        return;
+                    }
+                } else {
+                    System.err.println("The result of the dialog is not present yet (InvoicingDialog)");
+                    return;
+                }
+
+                try {
+                    FileUtils.cleanDirectory(targetDir);
+                } catch (IOException ioException) {
+                    System.err.println("An error occured during cleaning of the target directory. Cancelling the " +
+                            "invoicing operation...");
+                    ioException.printStackTrace();
+                    return;
+                }
+            }
+
+            // generate an invoice for all selected ResidentEntities
+            ObservableList<ResidentEntity> targetItems = listSelectionView.getTargetItems();
+            if (targetItems == null) {
+                return;
+            }
+            boolean allInvoicesSuccessfullyGenerated = true;
+            for (ResidentEntity residentEntity : targetItems) {
+                String name = residentEntity.getName();
+                if (!name.matches("[a-zA-Z ]*")) {
+                    // illegal name, not safe for processing. Only allow alphabetic characters and spaces for simplicity
+                    allInvoicesSuccessfullyGenerated = false;
+                    System.err.println("Encountered a ResidentEntity with a name that is not supported by the InvoicingDialog (" +
+                            "name:" + residentEntity.getName() + ")");
+                    continue; // skip this residentEntity
+                }
+                File out = FileUtils.getFile(targetDir, residentEntity.getName() + ".html");
+                try {
+                    HuischLedger.generateResidentInvoice(
+                            out,
+                            templateFile,
+                            huischLedger,
+                            residentEntity.getId(),
+                            startDatePicker.getValue(),
+                            endDatePicker.getValue(),
+                            introTextTextArea.getText()
+                    );
+                } catch (Exception exception) {
+                    allInvoicesSuccessfullyGenerated = false;
+                    System.err.println("An error occurred while generating the invoice for ResidentEntity with name '" +
+                            residentEntity.getName() + "'");
+                    exception.printStackTrace();
+                }
+            }
+
+            if (!allInvoicesSuccessfullyGenerated) {
+                ErrorDialog errorDialog = new ErrorDialog("Een of meerdere facturen konden niet gegenereerd " +
+                        "worden. Zie de console voor een stacktrace of errorbericht.");
+                errorDialog.showAndWait();
+            } else {
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+                dialog.setGraphic(null);
+                dialog.setHeaderText("Alle facturen zijn successvol gegenereerd");
+                dialog.showAndWait();
+            }
+
+            stage.hide(); // close the invoicing dialog
         }
     }
 

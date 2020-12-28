@@ -158,11 +158,11 @@ public final class HuischLedger extends Ledger {
 
             // Make sure all fields are in the template
             List<String> fields = List.of(
-                    "${NAME}",
-                    "${INTRO_TEXT}",
-                    "${START_BALANCE}",
-                    "${END_BALANCE}",
-                    "${TABLE_DATA}"
+                    "${name}",
+                    "${intro_text}",
+                    "${start_balance}",
+                    "${end_balance}",
+                    "${table_data}"
             );
             String finalTemplateString = templateString;
             fields.forEach(e -> {
@@ -289,12 +289,18 @@ public final class HuischLedger extends Ledger {
                         .append("\t\t</tr>\n");
             }
 
+            // parse any placeholders in the introtext
+            introText = StringUtils.replace(introText, "${start_date}", from.toString());
+            introText = StringUtils.replace(introText, "${end_date}", to.toString());
+
             // Populate field ${NAME}
-            templateString = StringUtils.replace(templateString, "${NAME}", residentEntity.getName());
-            templateString = StringUtils.replace(templateString, "${INTRO_TEXT}", introText);
-            templateString = StringUtils.replace(templateString, "${START_BALANCE}", numberFormat.format(residentEntity.getPreviousBalance()));
-            templateString = StringUtils.replace(templateString, "${END_BALANCE}", numberFormat.format(endBalance));
-            templateString = StringUtils.replace(templateString, "${TABLE_DATA}", tableDateStringBuilder.toString());
+            templateString = StringUtils.replace(templateString, "${name}", residentEntity.getName());
+            System.out.println(templateString);
+            templateString = StringUtils.replace(templateString, "${intro_text}", introText);
+            System.out.println(templateString);
+            templateString = StringUtils.replace(templateString, "${start_balance}", numberFormat.format(residentEntity.getPreviousBalance()));
+            templateString = StringUtils.replace(templateString, "${end_balance}", numberFormat.format(endBalance));
+            templateString = StringUtils.replace(templateString, "${table_data}", tableDateStringBuilder.toString());
         }
 
         // Write to the out file
