@@ -155,7 +155,9 @@ public class InvoicingDialog {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
-                setDisable(item.isBefore(startDatePicker.getValue()));
+                if (startDatePicker.getValue() != null) {
+                    setDisable(item.isBefore(startDatePicker.getValue()));
+                }
             }
         });
         startDatePicker.setMaxWidth(Double.MAX_VALUE);
