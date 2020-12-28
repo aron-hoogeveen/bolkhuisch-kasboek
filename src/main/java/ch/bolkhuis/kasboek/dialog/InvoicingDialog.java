@@ -172,6 +172,12 @@ public class InvoicingDialog {
         startDatePicker.setMaxWidth(Double.MAX_VALUE);
         endDatePicker.setMaxWidth(Double.MAX_VALUE);
 
+        // Set the default text for the intro text
+        introTextTextArea.setText(preferences.get(
+                PreferencesStrings.INVOICINGDIALOG_INTRO_TEXT,
+                PreferencesStrings.INVOICINGDIALOG_DEFAULT_INTRO_TEXT
+        ));
+
         templateFileTextField.setRight(imageView2);
         templateFileTextField.setEditable(false);
         templateFileTextField.setTooltip(new Tooltip("Tekstinput wordt momenteel niet ondersteunt voor dit component"));
