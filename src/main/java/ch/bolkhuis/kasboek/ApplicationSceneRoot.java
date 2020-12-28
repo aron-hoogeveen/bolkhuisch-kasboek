@@ -47,10 +47,10 @@ import java.util.prefs.*;
  */
 public class ApplicationSceneRoot extends BorderPane {
     // Preferences keys
-    public static final String PREF_FILE_CHOOSER_DIRECTORY = "FileChooserDirectory";
-    // Preferences default values
-    public static final String PREF_DEFAULT_FILE_CHOOSER_DIRECTORY = System.getProperty("user.home");
-    private final static String PREF_NODE_NAME = "/ch/bolkhuis/kasboek/ApplicationSceneRoot";
+//    public static final String PREF_FILE_CHOOSER_DIRECTORY = "FileChooserDirectory";
+//    // Preferences default values
+//    public static final String PREF_DEFAULT_FILE_CHOOSER_DIRECTORY = System.getProperty("user.home");
+//    private final static String PREF_NODE_NAME = "/ch/bolkhuis/kasboek/ApplicationSceneRoot";
 
     private final HuischLedger huischLedger;
     private File huischLedgerFile; // this file can be updated, so no final here
@@ -80,7 +80,7 @@ public class ApplicationSceneRoot extends BorderPane {
         this.huischLedger = huischLedger;
         this.huischLedgerFile = huischLedgerFile;
 
-        preferences = Preferences.userRoot().node(PREF_NODE_NAME);
+        preferences = Preferences.userRoot().node(PreferencesStrings.APPLICATIONSCENEROOT_NODE);
 
         // set the onCloseRequest handler for the Application stage
         app.getPrimaryStage().setOnCloseRequest(new WindowCloseEventHandler());
@@ -517,7 +517,7 @@ public class ApplicationSceneRoot extends BorderPane {
     private boolean saveAs() throws IOException {
         // Present user with FileChooser dialog
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File(preferences.get(PREF_FILE_CHOOSER_DIRECTORY, PREF_DEFAULT_FILE_CHOOSER_DIRECTORY)));
+        fileChooser.setInitialDirectory(new File(preferences.get(PreferencesStrings.APPLICATIONSCENEROOT_FILE_CHOOSER_DIRECTORY, PreferencesStrings.APPLICATIONSCENEROOT_DEFAULT_FILE_CHOOSER_DIRECTORY)));
         fileChooser.setTitle("Huisch Kasboek - Opslaan als");
         fileChooser.getExtensionFilters().addAll(App.extensionFilters);
         File file = fileChooser.showSaveDialog(app.getPrimaryStage());
@@ -590,7 +590,10 @@ public class ApplicationSceneRoot extends BorderPane {
         // can we safely close this ledger?
         if (close()) {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialDirectory(new File(preferences.get(PREF_FILE_CHOOSER_DIRECTORY, PREF_DEFAULT_FILE_CHOOSER_DIRECTORY)));
+            fileChooser.setInitialDirectory(new File(preferences.get(
+                    PreferencesStrings.APPLICATIONSCENEROOT_FILE_CHOOSER_DIRECTORY,
+                    PreferencesStrings.APPLICATIONSCENEROOT_DEFAULT_FILE_CHOOSER_DIRECTORY
+            )));
             fileChooser.setTitle("Huisch Kasboek - Open Kasboek");
             fileChooser.getExtensionFilters().addAll(App.extensionFilters);
             File file = fileChooser.showOpenDialog(app.getPrimaryStage());

@@ -18,6 +18,7 @@ package ch.bolkhuis.kasboek.dialog;
 
 import ch.bolkhuis.kasboek.App;
 import ch.bolkhuis.kasboek.ApplicationSceneRoot;
+import ch.bolkhuis.kasboek.PreferencesStrings;
 import ch.bolkhuis.kasboek.core.AccountingEntity;
 import ch.bolkhuis.kasboek.core.HuischLedger;
 import ch.bolkhuis.kasboek.core.ResidentEntity;
@@ -53,6 +54,9 @@ import java.util.prefs.Preferences;
  * generating one or more invoices.
  */
 public class InvoicingDialog {
+
+
+
     private final Stage stage;
     private final Preferences preferences;
     private final HuischLedger huischLedger;
@@ -241,8 +245,8 @@ public class InvoicingDialog {
             directoryChooser.setTitle("Uitvoermap");
             if (targetDirectoryFileProperty.getValue() == null) {
                 directoryChooser.setInitialDirectory(new File(preferences.get(
-                        ApplicationSceneRoot.PREF_FILE_CHOOSER_DIRECTORY,
-                        ApplicationSceneRoot.PREF_DEFAULT_FILE_CHOOSER_DIRECTORY
+                        PreferencesStrings.APPLICATIONSCENEROOT_FILE_CHOOSER_DIRECTORY,
+                        PreferencesStrings.APPLICATIONSCENEROOT_DEFAULT_FILE_CHOOSER_DIRECTORY
                 )));
             } else {
                 directoryChooser.setInitialDirectory(targetDirectoryFileProperty.getValue());
@@ -269,8 +273,8 @@ public class InvoicingDialog {
             fileChooser.setTitle("Selecteer Template Bestand");
             if (templateFileProperty.getValue() == null) {
                 fileChooser.setInitialDirectory(new File(preferences.get(
-                        ApplicationSceneRoot.PREF_FILE_CHOOSER_DIRECTORY,
-                        ApplicationSceneRoot.PREF_DEFAULT_FILE_CHOOSER_DIRECTORY
+                        PreferencesStrings.APPLICATIONSCENEROOT_FILE_CHOOSER_DIRECTORY,
+                        PreferencesStrings.APPLICATIONSCENEROOT_DEFAULT_FILE_CHOOSER_DIRECTORY
                 )));
             } else {
                 fileChooser.setInitialDirectory(templateFileProperty.getValue().getParentFile());
