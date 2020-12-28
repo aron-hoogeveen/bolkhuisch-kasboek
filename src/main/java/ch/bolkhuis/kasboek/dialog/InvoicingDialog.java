@@ -44,6 +44,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Vector;
 import java.util.prefs.Preferences;
@@ -84,8 +85,8 @@ public class InvoicingDialog {
     public InvoicingDialog(@NotNull final Preferences preferences,
                            @NotNull final HuischLedger huischLedger,
                            final Window owner) {
-        this.preferences = preferences;
-        this.huischLedger = huischLedger;
+        this.preferences = Objects.requireNonNull(preferences);
+        this.huischLedger = Objects.requireNonNull(huischLedger);
 
         stage = new Stage();
         stage.initOwner(owner);
@@ -98,7 +99,9 @@ public class InvoicingDialog {
     /**
      * Creates and sets the components to a new Scene and calls {@code setScene} on the Stage with that scene.
      */
-    private void initComponents(HuischLedger huischLedger) {
+    private void initComponents(@NotNull final HuischLedger huischLedger) {
+        Objects.requireNonNull(huischLedger);
+
         GridPane root = new GridPane();
         root.setMaxWidth(1280);
         root.setMaxHeight(720);
@@ -156,7 +159,7 @@ public class InvoicingDialog {
             @Override
             public void updateItem(LocalDate item, boolean empty) {
                 super.updateItem(item, empty);
-                if (startDatePicker.getValue() != null) {
+                if (item != null && startDatePicker.getValue() != null) {
                     setDisable(item.isBefore(startDatePicker.getValue()));
                 }
             }
@@ -215,15 +218,19 @@ public class InvoicingDialog {
         root.add(templateFileTextField, 1, 5);
         root.add(targetDirectoryLabel, 0, 6);
         root.add(targetDirectoryTextField, 1, 6);
-        // TODO root.add(targetDirectorySelector
         root.add(listSelectionView, 0, 7, 2, 1);
         root.add(submitButton, 0, 8);
 
         root.setStyle("-fx-padding: 10px;");
         Scene scene = new Scene(root);
-        scene.getStylesheets().addAll(
-                App.CSS_STYLES
-        );
+        try {
+            scene.getStylesheets().addAll(
+                    App.CSS_STYLES
+            );
+        } catch (Exception e) {
+            System.err.println("Could not load/set the stylesheet for InvoicingDialog");
+        }
+
         stage.setScene(scene);
         stage.sizeToScene();
     }
@@ -246,13 +253,18 @@ public class InvoicingDialog {
         public void handle(MouseEvent event) {
             DirectoryChooser directoryChooser = new DirectoryChooser();
             directoryChooser.setTitle("Uitvoermap");
-            if (targetDirectoryFileProperty.getValue() == null) {
-                directoryChooser.setInitialDirectory(new File(preferences.get(
-                        PreferencesStrings.APPLICATIONSCENEROOT_FILE_CHOOSER_DIRECTORY,
-                        PreferencesStrings.APPLICATIONSCENEROOT_DEFAULT_FILE_CHOOSER_DIRECTORY
-                )));
-            } else {
-                directoryChooser.setInitialDirectory(targetDirectoryFileProperty.getValue());
+            try {
+                if (targetDirectoryFileProperty.getValue() == null) {
+                    directoryChooser.setInitialDirectory(new File(preferences.get(
+                            PreferencesStrings.APPLICATIONSCENEROOT_FILE_CHOOSER_DIRECTORY,
+                            PreferencesStrings.APPLICATIONSCENEROOT_DEFAULT_FILE_CHOOSER_DIRECTORY
+                    )));
+                } else {
+                    directoryChooser.setInitialDirectory(targetDirectoryFileProperty.getValue());
+                }
+            } catch (Exception e) {
+                System.err.println("Something went wrong while setting the initial directory for 'directoryChooser' in " +
+                        "class InvoicingDialog: " + e.getMessage());
             }
             File newTargetDir = directoryChooser.showDialog(stage);
 
@@ -274,13 +286,19 @@ public class InvoicingDialog {
         public void handle(MouseEvent event) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Selecteer Template Bestand");
-            if (templateFileProperty.getValue() == null) {
-                fileChooser.setInitialDirectory(new File(preferences.get(
-                        PreferencesStrings.APPLICATIONSCENEROOT_FILE_CHOOSER_DIRECTORY,
-                        PreferencesStrings.APPLICATIONSCENEROOT_DEFAULT_FILE_CHOOSER_DIRECTORY
-                )));
-            } else {
-                fileChooser.setInitialDirectory(templateFileProperty.getValue().getParentFile());
+            try {
+                if (templateFileProperty.getValue() == null) {
+                    fileChooser.setInitialDirectory(new File(preferences.get(
+                            PreferencesStrings.APPLICATIONSCENEROOT_FILE_CHOOSER_DIRECTORY,
+                            PreferencesStrings.APPLICATIONSCENEROOT_DEFAULT_FILE_CHOOSER_DIRECTORY
+                    )));
+                } else {
+                    fileChooser.setInitialDirectory(templateFileProperty.getValue().getParentFile());
+                }
+            }
+            catch (Exception e) {
+                System.out.println("Something went wrong while setting the initial directory for 'fileChooser' in class" +
+                        " InvoicingDialog: " + e.getMessage());
             }
             File newTemplateFile = fileChooser.showOpenDialog(stage);
 
@@ -324,6 +342,7 @@ public class InvoicingDialog {
 
             if (!templateFile.isFile()) {
                 System.err.println("Selected file is not a file");
+                return;
             }
 
             if (startDatePicker.getValue() == null || endDatePicker.getValue() == null) {
@@ -333,7 +352,8 @@ public class InvoicingDialog {
             }
 
             // Check if the directory contains files, remove if the user gives permission
-            if (targetDir.list().length > 0) {
+            String[] targetDirFileList = targetDir.list();
+            if (Objects.requireNonNull(targetDirFileList, "NPE, a file is provided that is not a directory where a directory was expected").length > 0) {
                 Dialog<ButtonType> dialog = new Dialog<>();
                 ButtonType yesButtonType = new ButtonType("Verwijderen", ButtonBar.ButtonData.YES);
                 ButtonType noButtonType = new ButtonType("Annuleren", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -350,7 +370,7 @@ public class InvoicingDialog {
                 if (result.isPresent()) {
                     ButtonType resultButtonType = result.get();
                     if (!resultButtonType.equals(yesButtonType)) {
-                        // do not delete the contents. Let the user select another targetDir
+                        // do not delete the contents. Let the user select another empty targetDir
                         return;
                     }
                 } else {
@@ -371,8 +391,12 @@ public class InvoicingDialog {
             // generate an invoice for all selected ResidentEntities
             ObservableList<ResidentEntity> targetItems = listSelectionView.getTargetItems();
             if (targetItems == null) {
+                ErrorDialog errorDialog = new ErrorDialog("De targetItems heeft 'null' teruggegeven. Laat dit de ontwikkelaar weten. (InvoicingDialog)");
+                errorDialog.showAndWait();
+                System.err.println("listSelectionView.getTargetItems() returned 'null'. See the docs of ListSelectionView how this is caused");
                 return;
             }
+
             boolean allInvoicesSuccessfullyGenerated = true;
             for (ResidentEntity residentEntity : targetItems) {
                 String name = residentEntity.getName();
