@@ -54,7 +54,7 @@ public class Ledger {
      * @see Ledger#equals(Object)
      */
     public Ledger(@NotNull Ledger old) {
-        Objects.requireNonNull(old, "Parameter old must not be null");
+        Objects.requireNonNull(old);
 
         this.accountingEntities = old.accountingEntities;
         this.transactions = old.transactions;
@@ -68,7 +68,7 @@ public class Ledger {
      * @param accountingEntities the initial AccountingEntities
      */
     public Ledger(@NotNull ObservableMap<Integer, AccountingEntity> accountingEntities) {
-        Objects.requireNonNull(accountingEntities, "Parameter accountingEntities cannot be null");
+        Objects.requireNonNull(accountingEntities);
 
         for (Map.Entry<Integer, AccountingEntity> entityEntry : accountingEntities.entrySet()) {
             if (entityEntry.getKey() != entityEntry.getValue().getId()) {
@@ -96,8 +96,8 @@ public class Ledger {
      */
     public Ledger(@NotNull ObservableMap<Integer, AccountingEntity> accountingEntities,
                   @NotNull ObservableMap<Integer, Transaction> transactions) {
-        Objects.requireNonNull(accountingEntities, "Parameter accountingEntities cannot be null");
-        Objects.requireNonNull(transactions, "Parameter transactions cannot be null");
+        Objects.requireNonNull(accountingEntities);
+        Objects.requireNonNull(transactions);
 
         int nextTransactionId = 0;
         for (Transaction transaction : transactions.values()) {
@@ -137,7 +137,7 @@ public class Ledger {
      * @throws IllegalArgumentException when transaction does not adhere to the contract this class has for Transactions
      */
     public void addTransaction(@NotNull Transaction transaction) {
-        Objects.requireNonNull(transaction, "Parameter transaction cannot be null");
+        Objects.requireNonNull(transaction);
 
         if (!accountingEntities.containsKey(transaction.getDebtorId()) || !accountingEntities.containsKey(transaction.getCreditorId())) {
             throw new IllegalArgumentException("Not all AccountingEntities are available in this ledger");
@@ -194,7 +194,7 @@ public class Ledger {
      * @throws IllegalArgumentException if there exists no Transaction with that {@code id}
      */
     private Transaction processAndPutTransaction(@NotNull Transaction transaction) {
-        Objects.requireNonNull(transaction, "Parameter transaction cannot be null");
+        Objects.requireNonNull(transaction);
 
         // Adjust the balances of the AccountingEntities
         AccountingEntity debtor = accountingEntities.get(transaction.getDebtorId());
@@ -226,7 +226,7 @@ public class Ledger {
      * @throws IllegalArgumentException if there exists no Transaction with that {@code id}
      */
     private Transaction unprocessAndRemoveTransaction(@NotNull Transaction transaction) {
-        Objects.requireNonNull(transaction, "Parameter transaction cannot be null");
+        Objects.requireNonNull(transaction);
 
         // Adjust the balances of the AccountingEntities
         AccountingEntity debtor = accountingEntities.get(transaction.getDebtorId());
@@ -265,7 +265,7 @@ public class Ledger {
      * @throws IllegalArgumentException when {@code accountingEntity} does not adhere to the contract of this class
      */
     public void addAccountingEntity(@NotNull AccountingEntity accountingEntity) {
-        Objects.requireNonNull(accountingEntity, "Parameter accountingEntity cannot be null");
+        Objects.requireNonNull(accountingEntity);
 
         if (accountingEntities.containsKey(accountingEntity.getId())) { throw new IllegalArgumentException("Key already exists"); }
 
@@ -284,7 +284,7 @@ public class Ledger {
      * @return the previous value of AccountingEntity that is replaced
      */
     public AccountingEntity updateAccountingEntity(@NotNull AccountingEntity accountingEntity) {
-        Objects.requireNonNull(accountingEntity, "Parameter accountingEntity cannot be null");
+        Objects.requireNonNull(accountingEntity);
 
         // make sure that the id already exists
         if (!accountingEntities.containsKey(accountingEntity.getId())) {
@@ -381,7 +381,7 @@ public class Ledger {
      * @throws com.google.gson.JsonIOException see GSON docs
      */
     public static Ledger fromJson(@NotNull Reader reader) {
-        Objects.requireNonNull(reader, "Parameter reader cannot be null");
+        Objects.requireNonNull(reader);
 
         BufferedReader bufferedReader = new BufferedReader(reader);
         return CustomizedGson.gson.fromJson(bufferedReader, Ledger.class);
@@ -395,7 +395,8 @@ public class Ledger {
      * @throws IOException when some IO exception occurs
      */
     public static void toFile(@NotNull File file, Ledger ledger) throws IOException {
-        Objects.requireNonNull(file, "Parameter file cannot be null");
+        Objects.requireNonNull(file);
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(Ledger.toJson(ledger));
         }
@@ -409,7 +410,7 @@ public class Ledger {
      * @throws IOException when some IO exception occurs
      */
     public static Ledger fromFile(@NotNull File file) throws IOException {
-        Objects.requireNonNull(file, "Parameter file cannot be null");
+        Objects.requireNonNull(file);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             return CustomizedGson.gson.fromJson(reader, Ledger.class);
@@ -549,8 +550,8 @@ public class Ledger {
             int entityId,
             @NotNull LocalDate from,
             @NotNull LocalDate to) {
-        Objects.requireNonNull(from, "Parameter from cannot be null");
-        Objects.requireNonNull(to, "Parameter to cannot be null");
+        Objects.requireNonNull(from);
+        Objects.requireNonNull(to);
 
         // traverse all transactions
         Set<Transaction> result = new HashSet<>();
