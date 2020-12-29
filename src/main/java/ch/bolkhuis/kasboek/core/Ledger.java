@@ -71,8 +71,11 @@ public class Ledger {
         Objects.requireNonNull(accountingEntities);
 
         for (Map.Entry<Integer, AccountingEntity> entityEntry : accountingEntities.entrySet()) {
-            if (entityEntry.getKey() != Objects.requireNonNull(entityEntry.getValue(), "Map must not contain" +
-                    " null valued AccountingEntities").getId()) {
+            if (entityEntry.getValue() == null) {
+                throw new AssertionError("Class Ledger must unsure that there are no null valued" +
+                        "AccountingEntities");
+            }
+            if (entityEntry.getKey() != entityEntry.getValue().getId()) {
                 throw new IllegalArgumentException("id has to match the key");
             }
         }
@@ -481,8 +484,10 @@ public class Ledger {
         Objects.requireNonNull(name);
 
         for (Map.Entry<Integer, AccountingEntity> entry : accountingEntities.entrySet()) {
-            if (name.equals(Objects.requireNonNull(entry.getValue(), "Class Ledger should ensure that there are " +
-                    "no null valued AccountingEntities in its backing map").getName())) {
+            if (entry.getValue() == null) {
+                throw new AssertionError("Class Ledger should ensure there are no null valued AccountingEntities");
+            }
+            if (name.equals(entry.getValue().getName())) {
                 return entry.getKey();
             }
         }
