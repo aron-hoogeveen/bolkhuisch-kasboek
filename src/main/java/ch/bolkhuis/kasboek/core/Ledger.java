@@ -31,9 +31,6 @@ import java.util.*;
  * are present in the collection of {@code AccountingEntities}.
  * The keys for the processed- and unprocessed Transactions and the AccountingEntities are equal to their getId() result.
  * This logically results in that no two AccountingEntities, processed- or unprocessed Transactions can have the same id.
- *
- *
- * Note: versions v0.2-pre-alpha and higher are not compatible with earlier versions.
  */
 public class Ledger {
     protected  @NotNull final ObservableMap<Integer, Transaction> transactions;
