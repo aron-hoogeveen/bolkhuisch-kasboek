@@ -42,7 +42,7 @@ public final class HuischLedger extends Ledger {
     private final static int placeholderEntityId = -1;
 
     private final ObservableMap<Integer, Receipt> receipts;
-    private int nextReceiptId = 0; // FIXME add initializers, update typeadapter,
+    private int nextReceiptId = 0;
 
     public HuischLedger() {
         this.receipts = FXCollections.observableHashMap();
