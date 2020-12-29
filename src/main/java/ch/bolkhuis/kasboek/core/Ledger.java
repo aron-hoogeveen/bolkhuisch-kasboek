@@ -71,7 +71,8 @@ public class Ledger {
         Objects.requireNonNull(accountingEntities);
 
         for (Map.Entry<Integer, AccountingEntity> entityEntry : accountingEntities.entrySet()) {
-            if (entityEntry.getKey() != entityEntry.getValue().getId()) {
+            if (entityEntry.getKey() != Objects.requireNonNull(entityEntry.getValue(), "Map must not contain" +
+                    " null valued AccountingEntities").getId()) {
                 throw new IllegalArgumentException("id has to match the key");
             }
         }
