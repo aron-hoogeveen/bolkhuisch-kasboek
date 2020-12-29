@@ -347,6 +347,13 @@ public final class HuischLedger extends Ledger {
     public static void generateResidentInvoice(@NotNull File out, @NotNull File template, @NotNull HuischLedger ledger,
                                                int inmateEntityId, @NotNull LocalDate from, @NotNull LocalDate to,
                                                @NotNull String introText) throws IOException {
+        Objects.requireNonNull(out);
+        Objects.requireNonNull(template);
+        Objects.requireNonNull(ledger);
+        Objects.requireNonNull(from);
+        Objects.requireNonNull(to);
+        Objects.requireNonNull(introText);
+
         ResourceBundle defaultInvoiceResourceBundle = ResourceBundle.getBundle("HuischInvoiceStrings");
         generateResidentInvoice(out, template, ledger, inmateEntityId, from, to, defaultInvoiceResourceBundle, introText);
     }
