@@ -191,7 +191,7 @@ public final class Transaction implements Comparable<Transaction> {
      * @see com.google.gson.Gson#toJson(Object, Type)
      */
     public static String toJson(Transaction transaction) {
-        return CustomizedGson.gson.toJson(transaction, Transaction.class);
+        return CustomizedGson.gson.toJson(transaction);
     }
 
     public static Transaction fromJson(@NotNull Reader reader) {

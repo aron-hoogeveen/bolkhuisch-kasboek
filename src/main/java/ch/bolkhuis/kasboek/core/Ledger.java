@@ -389,7 +389,7 @@ public class Ledger {
      * @return a JSON string representing {@code ledger}
      */
     public static String toJson(Ledger ledger) {
-        return CustomizedGson.gson.toJson(ledger, Ledger.class);
+        return CustomizedGson.gson.toJson(ledger);
     }
 
     /**

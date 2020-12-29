@@ -151,7 +151,7 @@ public class AccountingEntity {
      * @see com.google.gson.Gson#toJson(Object, Type)
      */
     public static String toJson(AccountingEntity accountingEntity) {
-        return CustomizedGson.gson.toJson(accountingEntity, AccountingEntity.class);
+        return CustomizedGson.gson.toJson(accountingEntity);
     }
 
     /**
