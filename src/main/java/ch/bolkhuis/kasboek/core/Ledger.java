@@ -558,6 +558,9 @@ public class Ledger {
         // traverse all transactions
         Set<Transaction> result = new HashSet<>();
         transactions.forEach(((integer, transaction) -> {
+            if (transaction == null) {
+                throw new AssertionError("Class Ledger should ensure there are no null valued Transactions");
+            }
             if (from.compareTo(transaction.getDate()) <= 0 && to.compareTo(transaction.getDate()) >= 0) {
                 // transaction.getDate() is between from and to inclusive
                 if (transaction.getDebtorId() == entityId || transaction.getCreditorId() == entityId) {
