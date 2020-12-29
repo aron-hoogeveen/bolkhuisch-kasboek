@@ -478,7 +478,6 @@ public class Ledger {
      * @return the id of the AccountingEntity with name {@code name} or {@code null} if it was nog found
      */
     public Integer getAccountingEntityId(@NotNull String name) {
-        Objects.requireNonNull(accountingEntities);
         Objects.requireNonNull(name);
 
         for (Map.Entry<Integer, AccountingEntity> entry : accountingEntities.entrySet()) {
