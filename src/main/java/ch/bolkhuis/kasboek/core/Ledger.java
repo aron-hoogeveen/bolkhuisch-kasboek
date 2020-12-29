@@ -168,7 +168,7 @@ public class Ledger {
     public Transaction removeTransaction(int id) {
         Transaction transaction = transactions.get(id);
         if (transaction == null) { return null; }
-        
+
         return removeTransactionInternal(transaction);
     }
 
@@ -179,6 +179,9 @@ public class Ledger {
      * @return the Transaction that got removed, or {@code null} if there was no such Transaction
      */
     public Transaction removeTransaction(Transaction transaction) {
+        if (transaction == null) {
+            return null; // this class does not accept null valued Transactions in its ObservableMap of Transactions
+        }
         if (!transactions.containsKey(transaction.getId())) { return null; }
 
         return removeTransactionInternal(transaction);
