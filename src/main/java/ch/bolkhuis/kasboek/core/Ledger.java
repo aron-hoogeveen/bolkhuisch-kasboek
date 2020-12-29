@@ -102,6 +102,8 @@ public class Ledger {
 
         int nextTransactionId = 0;
         for (Transaction transaction : transactions.values()) {
+            Objects.requireNonNull(transaction, "Map must not contain null valued Transactions");
+
             // check if debtor and creditor exist
             if (!accountingEntities.containsKey(transaction.getDebtorId()) ||
                     !accountingEntities.containsKey(transaction.getCreditorId())) {
@@ -115,7 +117,8 @@ public class Ledger {
             nextTransactionId = (transaction.getId() >= nextTransactionId) ? transaction.getId() + 1 : nextTransactionId;
         }
         for (Map.Entry<Integer, AccountingEntity> entityEntry : accountingEntities.entrySet()) {
-            if (entityEntry.getKey() != entityEntry.getValue().getId()) {
+            if (entityEntry.getKey() != Objects.requireNonNull(entityEntry.getValue(), "Map must not contain null" +
+                    " valued AccountingEntities").getId()) {
                 throw new IllegalArgumentException("id has to match the key");
             }
         }
