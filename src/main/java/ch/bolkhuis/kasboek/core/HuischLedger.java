@@ -402,6 +402,7 @@ public final class HuischLedger extends Ledger {
         return nextReceiptId++;
     }
 
+    // FIXME check the upcoming lines for NPEs and the likes
     /**
      * This method should never be used. It may make this HuischLedger unusable.
      *
