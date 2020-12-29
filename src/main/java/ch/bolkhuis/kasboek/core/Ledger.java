@@ -294,11 +294,8 @@ public class Ledger {
         if (!accountingEntities.containsKey(accountingEntity.getId())) {
             throw new IllegalArgumentException("There does not exists an AccountingEntity with that id");
         }
-
-        // update the AccountingEntity and return the previous value
-        AccountingEntity updated = accountingEntities.put(accountingEntity.getId(), accountingEntity);
-        // Return the previous value
-        return updated;
+        
+        return accountingEntities.put(accountingEntity.getId(), accountingEntity);
     }
 
     /**
