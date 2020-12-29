@@ -162,7 +162,6 @@ public final class HuischLedger extends Ledger {
                 new PlaceholderEntity(placeholderEntityId, resourceBundle.getString("various"))
         );
 
-
         // TODO change the used currency based on the provided Locale
         Currency currency = Currency.getInstance("EUR");
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.GERMAN);
