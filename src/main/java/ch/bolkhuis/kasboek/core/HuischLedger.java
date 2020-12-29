@@ -62,17 +62,35 @@ public final class HuischLedger extends Ledger {
         this.nextReceiptId = old.nextReceiptId;
     }
 
+    /**
+     * Constructs a HuischLedger with initial AccountingEntities map
+     *
+     * @param accountingEntities the initial AccountingEntities
+     */
     public HuischLedger(@NotNull ObservableMap<Integer, AccountingEntity> accountingEntities) {
         super(accountingEntities);
         this.receipts = FXCollections.observableHashMap();
     }
 
+    /**
+     * Constructs a HuischLedger with initial AccountingEntities map and Transactions map.
+     *
+     * @param accountingEntities the initial AccountingEntities
+     * @param transactions the initial Transactions
+     */
     public HuischLedger(@NotNull ObservableMap<Integer, AccountingEntity> accountingEntities,
                         @NotNull ObservableMap<Integer, Transaction> transactions) {
         super(accountingEntities, transactions);
         this.receipts = FXCollections.observableHashMap();
     }
 
+    /**
+     * Constructs a HuischLedger with initial AccountingEntities, Transactions and Receipts map.
+     *
+     * @param accountingEntities the initial AccountingEntities
+     * @param transactions the initial Transactions
+     * @param receipts the initial Receipts
+     */
     public HuischLedger(@NotNull ObservableMap<Integer, AccountingEntity> accountingEntities,
                         @NotNull ObservableMap<Integer, Transaction> transactions,
                         @NotNull ObservableMap<Integer, Receipt> receipts) {
