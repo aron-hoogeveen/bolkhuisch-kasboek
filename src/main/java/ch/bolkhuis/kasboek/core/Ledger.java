@@ -168,11 +168,8 @@ public class Ledger {
     public Transaction removeTransaction(int id) {
         Transaction transaction = transactions.get(id);
         if (transaction == null) { return null; }
-
-        // Remove the transaction
-        Transaction removed = removeTransactionInternal(transaction);
-        // return the removed Transaction
-        return removed;
+        
+        return removeTransactionInternal(transaction);
     }
 
     /**
