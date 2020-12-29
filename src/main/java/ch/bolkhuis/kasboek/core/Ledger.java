@@ -255,11 +255,11 @@ public class Ledger {
     /**
      * Returns {@code true} if this key is already contained in the Transaction collection.
      *
-     * @param id the id to check
+     * @param transactionId the id to check
      * @return {@code true} if this key is already contained in the Transaction collection, {@code false} otherwise
      */
-    public boolean containsTransactionById(int id) {
-        return transactions.containsKey(id);
+    public boolean containsTransaction(int transactionId) {
+        return transactions.containsKey(transactionId);
     }
 
     /**
