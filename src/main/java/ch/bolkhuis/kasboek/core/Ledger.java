@@ -55,7 +55,7 @@ public class Ledger {
      * @see Ledger#equals(Object)
      */
     public Ledger(@NotNull Ledger old) {
-        Objects.requireNonNull(old, "Parameter old cannot be null");
+        Objects.requireNonNull(old, "Parameter old must not be null");
 
         // Do not construct a copy if old is in an illegal state.
         for (Transaction transaction : old.transactions.values()) {
