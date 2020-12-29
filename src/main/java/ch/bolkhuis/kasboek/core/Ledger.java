@@ -481,7 +481,8 @@ public class Ledger {
         Objects.requireNonNull(name);
 
         for (Map.Entry<Integer, AccountingEntity> entry : accountingEntities.entrySet()) {
-            if (name.equals(entry.getValue().getName())) {
+            if (name.equals(Objects.requireNonNull(entry.getValue(), "Class Ledger should ensure that there are " +
+                    "no null valued AccountingEntities in its backing map").getName())) {
                 return entry.getKey();
             }
         }
