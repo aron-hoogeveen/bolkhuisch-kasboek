@@ -294,7 +294,7 @@ public class Ledger {
         if (!accountingEntities.containsKey(accountingEntity.getId())) {
             throw new IllegalArgumentException("There does not exists an AccountingEntity with that id");
         }
-        
+
         return accountingEntities.put(accountingEntity.getId(), accountingEntity);
     }
 
@@ -460,7 +460,7 @@ public class Ledger {
     /**
      * Gets the key for this {@code value}.
      */
-    public static <K, V> K getKey(Map<K, V> map, V value) {
+    public static <K, V> K getKey(@NotNull Map<K, V> map, @NotNull V value) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(value);
 
