@@ -39,7 +39,8 @@ import java.util.*;
  * doing this when still doing this.
  */
 public final class HuischLedger extends Ledger {
-    private final static int placeholderEntityId = -1;
+    private static final int placeholderEntityId = -1;
+    private static final String templateVersionString = "<!-- version:1 -->";
 
     private final ObservableMap<Integer, Receipt> receipts;
     private int nextReceiptId = 0;
@@ -166,9 +167,6 @@ public final class HuischLedger extends Ledger {
         Currency currency = Currency.getInstance("EUR");
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.GERMAN);
         numberFormat.setCurrency(currency);
-
-        // Compatible template version(s)
-        String templateVersionString = "<!-- version:1 -->";
 
         String templateString;
         // Read in the template
