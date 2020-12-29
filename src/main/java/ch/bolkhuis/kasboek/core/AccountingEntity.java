@@ -51,8 +51,8 @@ public class AccountingEntity {
      * @see AccountingEntity#isCorrectName(String)
      */
     public AccountingEntity(int id, @NotNull String name, @NotNull AccountType accountType, double balance) {
-        Objects.requireNonNull(name, "Parameter name cannot be null");
-        Objects.requireNonNull(accountType, "Parameter accountType cannot be null");
+        Objects.requireNonNull(name, "Parameter name must not be null");
+        Objects.requireNonNull(accountType, "Parameter accountType must not be null");
 
         if (!isCorrectId(id)) {
             throw new IllegalArgumentException("Illegal id");
