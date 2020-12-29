@@ -44,10 +44,18 @@ public final class HuischLedger extends Ledger {
     private final ObservableMap<Integer, Receipt> receipts;
     private int nextReceiptId = 0;
 
+    /**
+     * Default constructor
+     */
     public HuischLedger() {
         this.receipts = FXCollections.observableHashMap();
     }
 
+    /**
+     * Create a copy of the old HuischLedger.
+     *
+     * @param old the HuischLedger to make a copy of 
+     */
     public HuischLedger(@NotNull Ledger old) {
         super(old);
         this.receipts = FXCollections.observableHashMap();
