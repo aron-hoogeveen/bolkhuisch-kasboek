@@ -527,6 +527,7 @@ public class Ledger {
      * @param entityId
      * @return
      */
+    @Deprecated
     public TreeMap<Integer, Transaction> getAllTransactionsOf(int entityId) {
         TreeMap<Integer, Transaction> result = new TreeMap<>();
         for (Map.Entry<Integer, Transaction> entry : transactions.entrySet()) {
