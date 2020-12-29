@@ -54,11 +54,12 @@ public final class HuischLedger extends Ledger {
     /**
      * Create a copy of the old HuischLedger.
      *
-     * @param old the HuischLedger to make a copy of 
+     * @param old the HuischLedger to make a copy of
      */
-    public HuischLedger(@NotNull Ledger old) {
+    public HuischLedger(@NotNull HuischLedger old) {
         super(old);
-        this.receipts = FXCollections.observableHashMap();
+        this.receipts = FXCollections.observableMap(old.receipts);
+        this.nextReceiptId = old.nextReceiptId;
     }
 
     public HuischLedger(@NotNull ObservableMap<Integer, AccountingEntity> accountingEntities) {
