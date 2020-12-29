@@ -40,23 +40,18 @@ public class AccountingEntity {
     /**
      * Constructs a new AccountingEntry with {@code id} and {@code name}.
      * <br />
-     * For the constraints of {@code id} and {@code name} see {@link AccountingEntity#isCorrectId(int)} and
-     * {@link AccountingEntity#isCorrectName(String)} respectively.
+     * For the constraints of {@code name} see {@link AccountingEntity#isCorrectName(String)}.
      *
      * @param id a unique identifier
      * @param name the name of this AccountingEntry
      * @param accountType the AccountType of this AccountingEntity
      * @param balance the current balance
-     * @see AccountingEntity#isCorrectId(int)
      * @see AccountingEntity#isCorrectName(String)
      */
     public AccountingEntity(int id, @NotNull String name, @NotNull AccountType accountType, double balance) {
         Objects.requireNonNull(name, "Parameter name must not be null");
         Objects.requireNonNull(accountType, "Parameter accountType must not be null");
 
-        if (!isCorrectId(id)) {
-            throw new IllegalArgumentException("Illegal id");
-        }
         if (!isCorrectName(name)) {
             throw new IllegalArgumentException("Illegal name");
         }
@@ -69,8 +64,6 @@ public class AccountingEntity {
     }
 
     public int getId() {
-        assert isCorrectId(id);
-
         return id;
     }
 
@@ -192,17 +185,6 @@ public class AccountingEntity {
         temp = Double.doubleToLongBits(balance.get());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
-    }
-
-    /**
-     * Returns whether the provided id is a correct id for constructing a new AccountingEntity. Id constraints are:
-     * - positive number (greater than or equal to zero).
-     *
-     * @param id the id to check
-     * @return {@code true} if this is a correct id, {@code false} otherwise
-     */
-    public static boolean isCorrectId(int id) {
-        return true;
     }
 
     /**
