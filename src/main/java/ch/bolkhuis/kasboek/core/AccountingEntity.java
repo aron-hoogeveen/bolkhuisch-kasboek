@@ -34,9 +34,9 @@ import java.util.Objects;
  */
 public class AccountingEntity {
     protected final int id;
-    protected  @NotNull final ReadOnlyStringProperty name;
-    protected  @NotNull final AccountType accountType;
-    protected final ReadOnlyDoubleProperty balance;
+    @NotNull protected final ReadOnlyStringProperty name;
+    @NotNull protected final AccountType accountType;
+    @NotNull protected final ReadOnlyDoubleProperty balance;
     /**
      * Constructs a new AccountingEntry with {@code id} and {@code name}.
      * <br />
@@ -67,9 +67,12 @@ public class AccountingEntity {
         return id;
     }
 
+    @NotNull
     public final ReadOnlyStringProperty nameProperty() { return name; }
+    @NotNull
     public String getName() { return name.get(); }
 
+    @NotNull
     public final ReadOnlyDoubleProperty balanceProperty() { return balance; }
     public double getBalance() { return balance.get(); }
 
@@ -97,8 +100,10 @@ public class AccountingEntity {
      *
      * @param amount the amount to debit
      * @return duplicate of AccountingEntity
+     * @throws IllegalArgumentException when amount is negative
      */
-    public @NotNull AccountingEntity debit(double amount) {
+    @NotNull
+    public AccountingEntity debit(double amount) {
         if (amount < 0) { throw new IllegalArgumentException("You should not debit a negative amount, credit instead"); }
 
         double newEndBalance = (accountType.isDebit()) ? this.balance.get() + amount : this.balance.get() - amount;
@@ -110,8 +115,10 @@ public class AccountingEntity {
      *
      * @param amount the amount to credit
      * @return duplicate of AccountingEntity
+     * @throws IllegalArgumentException when amount is negative
      */
-    public @NotNull AccountingEntity credit(double amount) {
+    @NotNull
+    public AccountingEntity credit(double amount) {
         if (amount < 0) { throw new IllegalArgumentException("You should not credit a negative amount, debit instead"); }
 
         double newEndBalance = (accountType.isDebit()) ? this.balance.get() - amount : this.balance.get() + amount;
