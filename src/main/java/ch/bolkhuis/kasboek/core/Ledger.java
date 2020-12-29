@@ -51,27 +51,10 @@ public class Ledger {
     /**
      * Creates a new Ledger that is equal to the {@code old} Ledger.
      *
-     * @throws IllegalArgumentException whenever {@code old} is in an invalid state
      * @see Ledger#equals(Object)
      */
     public Ledger(@NotNull Ledger old) {
         Objects.requireNonNull(old, "Parameter old must not be null");
-
-        // Do not construct a copy if old is in an illegal state.
-        for (Transaction transaction : old.transactions.values()) {
-            // check if debtor and creditor exist
-            if (!old.accountingEntities.containsKey(transaction.getDebtorId()) ||
-                    !old.accountingEntities.containsKey(transaction.getCreditorId())) {
-                throw new IllegalArgumentException("old is in an illegal state. Some processed Transactions have missing AccountingEntities");
-            }
-            // check if key and value.getId() are the same
-            Integer key = getKey(old.transactions, transaction);
-            if (key == null) { throw new RuntimeException("old got modified before new was constructed"); }
-            if (!(transaction.getId() == key)) { throw new IllegalArgumentException("id has te match the key"); }
-        }
-        for (Map.Entry<Integer, AccountingEntity> entityEntry : old.accountingEntities.entrySet()) {
-            if (entityEntry.getKey() != entityEntry.getValue().getId()) { throw new IllegalArgumentException("id has to match the key"); }
-        }
 
         this.accountingEntities = old.accountingEntities;
         this.transactions = old.transactions;
