@@ -34,7 +34,7 @@ import java.util.Objects;
  */
 public class AccountingEntity {
     protected final int id;
-    protected  @NotNull final StringProperty name;
+    protected  @NotNull final ReadOnlyStringProperty name;
     protected  @NotNull final AccountType accountType;
     protected final ReadOnlyDoubleProperty balance;
     /**
@@ -67,7 +67,7 @@ public class AccountingEntity {
         return id;
     }
 
-    public final StringProperty nameProperty() { return name; }
+    public final ReadOnlyStringProperty nameProperty() { return name; }
     public String getName() { return name.get(); }
 
     public final ReadOnlyDoubleProperty balanceProperty() { return balance; }
