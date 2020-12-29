@@ -106,7 +106,7 @@ public class AccountingEntity {
     public AccountingEntity debit(double amount) {
         if (amount < 0) { throw new IllegalArgumentException("You should not debit a negative amount, credit instead"); }
 
-        double newEndBalance = (accountType.isDebit()) ? this.balance.get() + amount : this.balance.get() - amount;
+        double newEndBalance = this.balance.get() + debitBalanceChange(amount);
         return new AccountingEntity(id, name.get(), accountType, newEndBalance);
     }
 
@@ -121,7 +121,7 @@ public class AccountingEntity {
     public AccountingEntity credit(double amount) {
         if (amount < 0) { throw new IllegalArgumentException("You should not credit a negative amount, debit instead"); }
 
-        double newEndBalance = (accountType.isDebit()) ? this.balance.get() - amount : this.balance.get() + amount;
+        double newEndBalance = this.balance.get() + creditBalanceChange(amount);
         return new AccountingEntity(id, name.get(), accountType, newEndBalance);
     }
 
