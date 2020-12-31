@@ -429,7 +429,7 @@ public final class HuischLedger extends Ledger {
         }
 
         // Validate all transactions
-        Set<Integer> transactionIdSet = new HashSet<>();
+        Set<Integer> transactionIdSet = new HashSet<>(); // set of transactions that do not have a reference to this receipt
         for (int i : receipt.getTransactionIdSet()) {
             if (transactions.containsKey(i)) {
                 if (transactions.get(i).getReceiptId() != null) {
