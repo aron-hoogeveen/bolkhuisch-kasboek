@@ -425,7 +425,7 @@ public final class HuischLedger extends Ledger {
         Objects.requireNonNull(receipt, "Parameter receipt cannot be null");
 
         if (receipts.containsKey(receipt.getId())) {
-            throw new IllegalArgumentException("Duplicate key for new receipt");
+            throw new IllegalArgumentException("There exists already a receipt with that ID");
         }
 
         // Validate all transactions
