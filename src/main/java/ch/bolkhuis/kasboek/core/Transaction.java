@@ -61,7 +61,7 @@ public final class Transaction implements Comparable<Transaction> {
      * @param id unique id
      * @param debtorId id of the involved debtor
      * @param creditorId id of the involved creditor
-     * @param amount amount involved in this Transaction
+     * @param amount finite double
      * @param date the date this Transaction was constructed
      * @param description a concise description of this Transaction
      * @throws IllegalArgumentException when id or description is of illegal format
@@ -78,6 +78,7 @@ public final class Transaction implements Comparable<Transaction> {
         if (!isCorrectDebtorId(debtorId)) { throw new IllegalArgumentException(); }
         if (!isCorrectCreditorId(creditorId)) { throw new IllegalArgumentException(); }
         if (amount < 0) { throw new IllegalArgumentException("amount should not be negative"); }
+        if (!Double.isFinite(amount)) { throw new IllegalArgumentException("amount must be finite"); }
         if (!isCorrectDescription(description)) { throw new IllegalArgumentException(); }
 
         this.id = id;
@@ -105,6 +106,7 @@ public final class Transaction implements Comparable<Transaction> {
         if (!isCorrectDebtorId(debtorId)) { throw new IllegalArgumentException(); }
         if (!isCorrectCreditorId(creditorId)) { throw new IllegalArgumentException(); }
         if (amount < 0) { throw new IllegalArgumentException("amount should not be negative"); }
+        if (!Double.isFinite(amount)) { throw new IllegalArgumentException("amount must be finite"); }
         if (!isCorrectDescription(description)) { throw new IllegalArgumentException(); }
 
         this.id = id;

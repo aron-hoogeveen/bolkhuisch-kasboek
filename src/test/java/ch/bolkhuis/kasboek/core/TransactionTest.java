@@ -131,4 +131,64 @@ class TransactionTest {
 
         assertTrue(t1.compareTo(t2) > 0 && t2.compareTo(t1) < 0);
     }
+
+    @Test
+    public void throwOnNonFiniteDoubleNumberInConstructors() {
+        // positive infinity
+        assertThrows(IllegalArgumentException.class, () -> new Transaction(
+                0,
+                0,
+                1,
+                Double.POSITIVE_INFINITY,
+                null,
+                LocalDate.now(),
+                "Some description"
+        ));
+        assertThrows(IllegalArgumentException.class, () -> new Transaction(
+                0,
+                0,
+                1,
+                Double.POSITIVE_INFINITY,
+                LocalDate.now(),
+                "Some description"
+        ));
+
+        // negative infinity
+        assertThrows(IllegalArgumentException.class, () -> new Transaction(
+                0,
+                0,
+                1,
+                Double.NEGATIVE_INFINITY,
+                null,
+                LocalDate.now(),
+                "Some description"
+        ));
+        assertThrows(IllegalArgumentException.class, () -> new Transaction(
+                0,
+                0,
+                1,
+                Double.NEGATIVE_INFINITY,
+                LocalDate.now(),
+                "Some description"
+        ));
+
+        // NaN
+        assertThrows(IllegalArgumentException.class, () -> new Transaction(
+                0,
+                0,
+                1,
+                Double.NaN,
+                null,
+                LocalDate.now(),
+                "Some description"
+        ));
+        assertThrows(IllegalArgumentException.class, () -> new Transaction(
+                0,
+                0,
+                1,
+                Double.NaN,
+                LocalDate.now(),
+                "Some description"
+        ));
+    }
 }
