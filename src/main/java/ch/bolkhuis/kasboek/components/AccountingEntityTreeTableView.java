@@ -135,7 +135,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
 
         // populate the vectors with leaves
         for (AccountingEntity item : m_items.values()) {
-            Objects.requireNonNull(item, "There must not be a null valued AccountingEntity");
+            Objects.requireNonNull(item);
 
             if (item instanceof ResidentEntity) {
                 inmateLeaves.add(new TreeItem<>(item));
