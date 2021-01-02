@@ -200,7 +200,7 @@ public final class Transaction implements Comparable<Transaction> {
     }
 
     public static Transaction fromJson(@NotNull Reader reader) {
-        Objects.requireNonNull(reader, "Parameter reader cannot be null");
+        Objects.requireNonNull(reader);
 
         BufferedReader bufferedReader = new BufferedReader(reader);
         return CustomizedGson.gson.fromJson(bufferedReader, Transaction.class);
