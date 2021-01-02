@@ -458,7 +458,6 @@ public final class HuischLedger extends Ledger {
      * @return a JSON string representing {@code ledger}
      */
     public static String toJson(HuischLedger ledger) {
-//        return CustomizedGson.gson.toJson(ledger, HuischLedger.class);
         return CustomizedGson.gson.toJson(ledger);
     }
 
