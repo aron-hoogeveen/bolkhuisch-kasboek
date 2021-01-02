@@ -96,7 +96,7 @@ public final class HuischLedger extends Ledger {
                         @NotNull ObservableMap<Integer, Transaction> transactions,
                         @NotNull ObservableMap<Integer, Receipt> receipts) {
         super(accountingEntities, transactions);
-        this.receipts = Objects.requireNonNull(receipts, "Parameter receipts cannot be null");
+        this.receipts = Objects.requireNonNull(receipts);
 
         // Check if all receipts are correct
         for (Receipt receipt : receipts.values()) {
@@ -134,12 +134,12 @@ public final class HuischLedger extends Ledger {
                                                 @NotNull LocalDate to, @NotNull ResourceBundle resourceBundle,
                                                 @NotNull String introText)
             throws IOException {
-        Objects.requireNonNull(out, "Parameter out cannot be null");
-        Objects.requireNonNull(template, "Parameter template cannot be null");
-        Objects.requireNonNull(huischLedger, "Parameter huischLedger cannot be null");
-        Objects.requireNonNull(from, "Parameter from cannot be null");
-        Objects.requireNonNull(to, "Parameter to cannot be null");
-        Objects.requireNonNull(resourceBundle, "Parameter resourceBundle cannot be null");
+        Objects.requireNonNull(out);
+        Objects.requireNonNull(template);
+        Objects.requireNonNull(huischLedger);
+        Objects.requireNonNull(from);
+        Objects.requireNonNull(to);
+        Objects.requireNonNull(resourceBundle);
 
         // Check that the provided inmateEntityId matches an AccountingEntity in the Ledger
         AccountingEntity accountingEntity = huischLedger.getAccountingEntityById(residentEntityId);
@@ -402,7 +402,6 @@ public final class HuischLedger extends Ledger {
         return nextReceiptId++;
     }
 
-    // FIXME check the upcoming lines for NPEs and the likes
     /**
      * This method should never be used. It may make this HuischLedger unusable.
      *
@@ -422,7 +421,7 @@ public final class HuischLedger extends Ledger {
      * @throws IllegalArgumentException when the receipt is incorrect
      */
     public void addReceipt(@NotNull Receipt receipt) {
-        Objects.requireNonNull(receipt, "Parameter receipt cannot be null");
+        Objects.requireNonNull(receipt);
 
         if (receipts.containsKey(receipt.getId())) {
             throw new IllegalArgumentException("There exists already a receipt with that ID");
@@ -472,7 +471,7 @@ public final class HuischLedger extends Ledger {
      * @throws com.google.gson.JsonIOException see GSON docs
      */
     public static HuischLedger fromJson(@NotNull Reader reader) {
-        Objects.requireNonNull(reader, "Parameter reader cannot be null");
+        Objects.requireNonNull(reader);
 
         BufferedReader bufferedReader = new BufferedReader(reader);
         return CustomizedGson.gson.fromJson(bufferedReader, HuischLedger.class);
@@ -507,7 +506,7 @@ public final class HuischLedger extends Ledger {
      * @throws IOException when some IO exception occurs
      */
     public static void toFile(@NotNull File file, HuischLedger ledger) throws IOException {
-        Objects.requireNonNull(file, "Parameter file cannot be null");
+        Objects.requireNonNull(file);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(HuischLedger.toJson(ledger));
         }
@@ -521,7 +520,7 @@ public final class HuischLedger extends Ledger {
      * @throws IOException when some IO exception occurs
      */
     public static HuischLedger fromFile(@NotNull File file) throws IOException {
-        Objects.requireNonNull(file, "Parameter file cannot be null");
+        Objects.requireNonNull(file);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             return CustomizedGson.gson.fromJson(reader, HuischLedger.class);
