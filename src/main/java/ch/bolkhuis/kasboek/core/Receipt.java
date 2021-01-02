@@ -59,15 +59,18 @@ public class Receipt {
         return id;
     }
 
-    public @NotNull String getName() {
+    @NotNull
+    public String getName() {
         return name;
     }
 
-    public @NotNull ObservableSet<Integer> getTransactionIdSet() {
+    @NotNull
+    public ObservableSet<Integer> getTransactionIdSet() {
         return transactionIdSet;
     }
 
-    public @NotNull LocalDate getDate() {
+    @NotNull
+    public LocalDate getDate() {
         return date;
     }
 
