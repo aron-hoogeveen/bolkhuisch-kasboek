@@ -44,9 +44,9 @@ public class Receipt {
      * @param date the date this receipt 'happened'
      */
     public Receipt(int id, @NotNull String name, @NotNull Set<Integer> transactionIdSet, @NotNull LocalDate date, int payer) {
-        Objects.requireNonNull(name, "Parameter name cannot be null");
-        Objects.requireNonNull(transactionIdSet, "Parameter transactionIdSet cannot be null");
-        Objects.requireNonNull(date, "Parameter date cannot be null");
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(transactionIdSet);
+        Objects.requireNonNull(date);
 
         this.id = id;
         this.name = name;
