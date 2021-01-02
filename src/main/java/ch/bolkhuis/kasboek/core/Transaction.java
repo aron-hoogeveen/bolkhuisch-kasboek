@@ -98,19 +98,22 @@ public final class Transaction implements Comparable<Transaction> {
      */
     public Transaction(int id, int debtorId, int creditorId, double amount, Integer receiptId, @NotNull LocalDate date,
                        @NotNull String description) {
-        if (!isCorrectId(id)) { throw new IllegalArgumentException("Illegal id."); }
-        if (!isCorrectDebtorId(debtorId)) { throw new IllegalArgumentException("Illegal debtorId."); }
-        if (!isCorrectCreditorId(creditorId)) { throw new IllegalArgumentException("Illegal creditorId."); }
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(description);
+
+        if (!isCorrectId(id)) { throw new IllegalArgumentException(); }
+        if (!isCorrectDebtorId(debtorId)) { throw new IllegalArgumentException(); }
+        if (!isCorrectCreditorId(creditorId)) { throw new IllegalArgumentException(); }
         if (amount < 0) { throw new IllegalArgumentException("amount should not be negative"); }
-        if (!isCorrectDescription(description)) { throw new IllegalArgumentException("Illegal description."); }
+        if (!isCorrectDescription(description)) { throw new IllegalArgumentException(); }
 
         this.id = id;
         this.debtorId = debtorId;
         this.creditorId = creditorId;
         this.amount = amount;
         this.receiptId = receiptId;
-        this.date = Objects.requireNonNull(date, "Parameter date cannot be null");
-        this.description = Objects.requireNonNull(description, "Parameter description cannot be null");
+        this.date = date;
+        this.description = description;
     }
 
     public int getId() {
