@@ -117,8 +117,6 @@ public final class Transaction implements Comparable<Transaction> {
     }
 
     public int getId() {
-        assert id >= 0;
-
         return id;
     }
 
