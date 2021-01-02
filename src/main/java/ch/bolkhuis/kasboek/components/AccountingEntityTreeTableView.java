@@ -162,20 +162,13 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
 
         // Clear the children of the root and then add the new leaves. This makes this method suitable for resetting
         // this TreeTableView with a different backing ObservableMap.
-        inmatesRoot.getChildren().clear();
-        inmatesRoot.getChildren().addAll(inmateLeaves);
-        assetsRoot.getChildren().clear();
-        assetsRoot.getChildren().addAll(assetLeaves);
-        expensesRoot.getChildren().clear();
-        expensesRoot.getChildren().addAll(expenseLeaves);
-        liabilitiesRoot.getChildren().clear();
-        liabilitiesRoot.getChildren().addAll(liabilityLeaves);
-        dividendsRoot.getChildren().clear();
-        dividendsRoot.getChildren().addAll(dividendLeaves);
-        revenuesRoot.getChildren().clear();
-        revenuesRoot.getChildren().addAll(revenueLeaves);
-        equitiesRoot.getChildren().clear();
-        equitiesRoot.getChildren().addAll(equityLeaves);
+        inmatesRoot.getChildren().setAll(inmateLeaves);
+        assetsRoot.getChildren().setAll(assetLeaves);
+        expensesRoot.getChildren().setAll(expenseLeaves);
+        liabilitiesRoot.getChildren().setAll(liabilityLeaves);
+        dividendsRoot.getChildren().setAll(dividendLeaves);
+        revenuesRoot.getChildren().setAll(revenueLeaves);
+        equitiesRoot.getChildren().setAll(equityLeaves);
 
         root.getChildren().addAll(
                 inmatesRoot,
