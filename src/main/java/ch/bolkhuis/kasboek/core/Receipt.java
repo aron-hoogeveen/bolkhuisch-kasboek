@@ -32,7 +32,7 @@ import java.util.Set;
 public class Receipt {
     private final int id;
     private @NotNull final String name;
-    private @NotNull ObservableSet<Integer> transactionIdSet;
+    private @NotNull final ObservableSet<Integer> transactionIdSet;
     private final @NotNull LocalDate date;
     private final int payer;
 
