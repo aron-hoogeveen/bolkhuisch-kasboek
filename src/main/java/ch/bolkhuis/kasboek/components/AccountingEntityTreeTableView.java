@@ -102,7 +102,8 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
             if (item != null) {
                 ReadOnlyDoubleProperty doubleProperty = item.balanceProperty();
                 stringProperty.bind(Bindings.createStringBinding(
-                        () -> NumberFormat.getCurrencyInstance(Locale.GERMANY).format(doubleProperty.get()), doubleProperty));
+                        () -> NumberFormat.getCurrencyInstance(Locale.GERMANY).format(doubleProperty.get()), doubleProperty
+                ));
                 return stringProperty;
             }
             return new SimpleStringProperty();
