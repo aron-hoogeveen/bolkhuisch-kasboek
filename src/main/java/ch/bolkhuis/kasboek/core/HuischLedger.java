@@ -617,6 +617,10 @@ public final class HuischLedger extends Ledger {
      * @return the removed Receipt or {@code null} if there was no such Receipt
      */
     public Receipt removeReceipt(Receipt receipt) {
+        if (receipt == null) {
+            return null;
+        }
+
         Receipt r = receipts.get(receipt.getId());
         if (r != receipt) {
             return null; // the receipt with that ID is not equal to the provided receipt
