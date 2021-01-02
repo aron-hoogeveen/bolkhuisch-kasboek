@@ -264,7 +264,7 @@ public final class Transaction implements Comparable<Transaction> {
      */
     @Override
     public int compareTo(@NotNull Transaction o) {
-        if (o == null) { throw new NullPointerException(); }
+        Objects.requireNonNull(o);
 
         // date
         if (this.date.isBefore(o.date)) {
