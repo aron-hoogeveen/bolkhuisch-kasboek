@@ -439,7 +439,7 @@ public final class HuischLedger extends Ledger {
                     transactionIdSet.add(i);
                 }
             } else {
-                throw new IllegalArgumentException("Receipt has an unknown transaction id.");
+                throw new IllegalArgumentException("Receipt contains an unknown transaction id.");
             }
         }
         if (transactionIdSet.size() > 0) {
