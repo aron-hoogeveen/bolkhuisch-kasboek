@@ -63,8 +63,9 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
      */
     public AccountingEntityTreeTableView(@NotNull ApplicationSceneRoot appSceneRoot,
                                          @NotNull ObservableMap<Integer, AccountingEntity> m_items) {
-        if (appSceneRoot == null) { throw new NullPointerException(); }
-        if (m_items == null) { throw new NullPointerException(); }
+        Objects.requireNonNull(appSceneRoot);
+        Objects.requireNonNull(m_items);
+        
         this.m_items = m_items;
         this.appSceneRoot = appSceneRoot;
 
