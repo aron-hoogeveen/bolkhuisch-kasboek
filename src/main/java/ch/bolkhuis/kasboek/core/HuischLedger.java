@@ -506,6 +506,7 @@ public final class HuischLedger extends Ledger {
      */
     public static void toFile(@NotNull File file, HuischLedger ledger) throws IOException {
         Objects.requireNonNull(file);
+        
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(HuischLedger.toJson(ledger));
         }
