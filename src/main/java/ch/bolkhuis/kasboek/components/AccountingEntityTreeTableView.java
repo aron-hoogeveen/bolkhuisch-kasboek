@@ -65,7 +65,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
                                          @NotNull ObservableMap<Integer, AccountingEntity> m_items) {
         Objects.requireNonNull(appSceneRoot);
         Objects.requireNonNull(m_items);
-        
+
         this.m_items = m_items;
         this.appSceneRoot = appSceneRoot;
 
@@ -100,7 +100,7 @@ public class AccountingEntityTreeTableView extends TreeTableView<AccountingEntit
             StringProperty stringProperty = new SimpleStringProperty();
             AccountingEntity item = param.getValue().getValue();
             if (item != null) {
-                ReadOnlyDoubleProperty doubleProperty = param.getValue().getValue().balanceProperty();
+                ReadOnlyDoubleProperty doubleProperty = item.balanceProperty();
                 stringProperty.bind(Bindings.createStringBinding(
                         () -> NumberFormat.getCurrencyInstance(Locale.GERMANY).format(doubleProperty.get()), doubleProperty));
                 return stringProperty;
