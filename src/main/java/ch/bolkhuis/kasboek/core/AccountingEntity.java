@@ -45,8 +45,9 @@ public class AccountingEntity {
      * @param id a unique identifier
      * @param name the name of this AccountingEntry
      * @param accountType the AccountType of this AccountingEntity
-     * @param balance the current balance
+     * @param balance a finite balance
      * @see AccountingEntity#isCorrectName(String)
+     * @see Double#isFinite(double)
      */
     public AccountingEntity(int id, @NotNull String name, @NotNull AccountType accountType, double balance) {
         Objects.requireNonNull(name);
@@ -54,6 +55,9 @@ public class AccountingEntity {
 
         if (!isCorrectName(name)) {
             throw new IllegalArgumentException("Illegal name");
+        }
+        if (!Double.isFinite(balance)) {
+            throw new IllegalArgumentException("balance must be finite");
         }
 
         // Strip the string of the whitespaces before setting
