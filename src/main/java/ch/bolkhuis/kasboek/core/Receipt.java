@@ -64,9 +64,14 @@ public class Receipt {
         return name;
     }
 
+    /**
+     * Returns an unmodifiable version of the observable Transaction Set.
+     *
+     * @return unmodifiable observable set
+     */
     @NotNull
     public ObservableSet<Integer> getTransactionIdSet() {
-        return transactionIdSet;
+        return FXCollections.unmodifiableObservableSet(transactionIdSet);
     }
 
     @NotNull
