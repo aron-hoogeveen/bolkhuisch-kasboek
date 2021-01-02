@@ -49,8 +49,8 @@ public class AccountingEntity {
      * @see AccountingEntity#isCorrectName(String)
      */
     public AccountingEntity(int id, @NotNull String name, @NotNull AccountType accountType, double balance) {
-        Objects.requireNonNull(name, "Parameter name must not be null");
-        Objects.requireNonNull(accountType, "Parameter accountType must not be null");
+        Objects.requireNonNull(name);
+        Objects.requireNonNull(accountType);
 
         if (!isCorrectName(name)) {
             throw new IllegalArgumentException("Illegal name");
@@ -163,7 +163,7 @@ public class AccountingEntity {
      * @throws JsonIOException see GSON docs
      */
     public static AccountingEntity fromJson(@NotNull Reader reader) {
-        Objects.requireNonNull(reader, "Parameter reader cannot be null");
+        Objects.requireNonNull(reader);
 
         BufferedReader bufferedReader = new BufferedReader(reader);
         return CustomizedGson.gson.fromJson(bufferedReader, AccountingEntity.class);
