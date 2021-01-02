@@ -120,7 +120,8 @@ public final class Transaction implements Comparable<Transaction> {
         return id;
     }
 
-    public @NotNull LocalDate getDate() {
+    @NotNull
+    public LocalDate getDate() {
         return date;
     }
 
@@ -208,21 +209,24 @@ public final class Transaction implements Comparable<Transaction> {
     /**
      * @deprecated contract on ids changed, which made this method obsolete
      */
-    public @Deprecated static boolean isCorrectId(int id) {
+    @Deprecated
+    public static boolean isCorrectId(int id) {
         return true;
     }
 
     /**
      * @deprecated contract on ids changed, which made this method obsolete
      */
-    public @Deprecated static boolean isCorrectDebtorId(int id) {
+    @Deprecated
+    public static boolean isCorrectDebtorId(int id) {
         return true;
     }
 
     /**
      * @deprecated contract on ids changed, which made this method obsolete
      */
-    public @Deprecated static boolean isCorrectCreditorId(int id) {
+    @Deprecated
+    public static boolean isCorrectCreditorId(int id) {
         return true;
     }
 
@@ -241,6 +245,7 @@ public final class Transaction implements Comparable<Transaction> {
      * @return formatted date
      * @see DateTimeFormatter#ofPattern(String)
      */
+    @NotNull
     public String getDateString() {
         return date.format(DateTimeFormatter.ofPattern("dd-MM-uuuu"));
     }
@@ -320,6 +325,7 @@ public final class Transaction implements Comparable<Transaction> {
      *
      * @return Transaction
      */
+    @NotNull
     public Transaction clearReceiptId() {
         return new Transaction(
                 id,
