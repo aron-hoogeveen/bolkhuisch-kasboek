@@ -85,8 +85,8 @@ public final class Transaction implements Comparable<Transaction> {
         this.creditorId = creditorId;
         this.amount = amount;
         this.receiptId = null;
-        this.date = Objects.requireNonNull(date, "Parameter date cannot be null");
-        this.description = Objects.requireNonNull(description, "Parameter description cannot be null");
+        this.date = date;
+        this.description = description;
     }
 
     /**
