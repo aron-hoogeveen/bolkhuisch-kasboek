@@ -71,6 +71,9 @@ public final class Transaction implements Comparable<Transaction> {
      * @see Transaction#isCorrectDescription(String)
      */
     public Transaction(int id, int debtorId, int creditorId, double amount, @NotNull LocalDate date, @NotNull String description) {
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(description);
+
         if (!isCorrectId(id)) { throw new IllegalArgumentException("Illegal id."); }
         if (!isCorrectDebtorId(debtorId)) { throw new IllegalArgumentException("Illegal debtorId."); }
         if (!isCorrectCreditorId(creditorId)) { throw new IllegalArgumentException("Illegal creditorId."); }
