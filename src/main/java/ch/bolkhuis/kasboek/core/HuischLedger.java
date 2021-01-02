@@ -506,7 +506,7 @@ public final class HuischLedger extends Ledger {
      */
     public static void toFile(@NotNull File file, HuischLedger ledger) throws IOException {
         Objects.requireNonNull(file);
-        
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(HuischLedger.toJson(ledger));
         }
@@ -583,6 +583,8 @@ public final class HuischLedger extends Ledger {
 
     @Override
     public void addTransaction(@NotNull Transaction transaction) {
+        Objects.requireNonNull(transaction);
+
         // Check that the receipt exists
         if (transaction.getReceiptId() != null) {
             if (receipts.containsKey(transaction.getReceiptId())) {
