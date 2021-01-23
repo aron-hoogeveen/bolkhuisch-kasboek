@@ -21,6 +21,7 @@ import javafx.collections.ObservableSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -37,7 +38,9 @@ public class Receipt {
     private final int payer;
 
     /**
-     * Creates a Receipt. Fail-fast.
+     * Creates a Receipt. Fail-fast. This method copies the provided transactionIdSet to a modifiable
+     * set, to ensure that the ObservableSet remains modifiable.
+     *
      * @param id the identifier
      * @param name the name
      * @param transactionIdSet a Set with integers that correspond to related Transaction ids // FIXME bug, user can use an unmodifiable set as backing set. Ensure modifiable sets are provided!
@@ -50,7 +53,7 @@ public class Receipt {
 
         this.id = id;
         this.name = name;
-        this.transactionIdSet = FXCollections.observableSet(transactionIdSet);
+        this.transactionIdSet = FXCollections.observableSet(new HashSet<>(transactionIdSet));
         this.date = date;
         this.payer = payer;
     }
@@ -101,6 +104,16 @@ public class Receipt {
      */
     public boolean unregisterTransaction(int transactionId) {
         return transactionIdSet.remove(transactionId);
+    }
+
+    /**
+     * Returns whether {@code transactionIdSet} contains the id.
+     *
+     * @param transactionId the id to check
+     * @return whether the set contains the id
+     */
+    public boolean containsTransactionId(int transactionId) {
+        return transactionIdSet.contains(transactionId);
     }
 
     @Override
