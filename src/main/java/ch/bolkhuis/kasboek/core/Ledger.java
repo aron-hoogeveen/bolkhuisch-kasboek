@@ -277,8 +277,10 @@ public class Ledger {
 
         if (accountingEntities.containsKey(accountingEntity.getId())) { throw new IllegalArgumentException("Key already exists"); }
 
+        String strippedName = accountingEntity.getName().strip();
+
         for (AccountingEntity entity : accountingEntities.values()) {
-            if (accountingEntity.getName().equalsIgnoreCase(entity.getName())) {
+            if (strippedName.equalsIgnoreCase(entity.getName())) {
                 throw new IllegalArgumentException("Duplicate names not allowed");
             }
         }
