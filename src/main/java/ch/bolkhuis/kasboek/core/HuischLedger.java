@@ -494,7 +494,6 @@ public final class HuischLedger extends Ledger {
 
                     // update the receipt
                     receipts.put(receipt.getId(), receipt);
-                    System.out.println("DEBUG: removed transactionId from receipt.");
                 }
             }
         }
