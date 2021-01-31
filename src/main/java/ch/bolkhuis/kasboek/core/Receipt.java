@@ -187,4 +187,33 @@ public class Receipt implements Comparable<Receipt> {
         // id
         return this.id - o.id;
     }
+
+    /**
+     * Returns if {@code o} is considered equal to this Receipt. Field {@code transactionIdSet} is not considered when
+     * comparing.
+     *
+     * @param o the object to compare to
+     * @return true if this and o are considered equal, else false
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Receipt receipt = (Receipt) o;
+
+        if (id != receipt.id) return false;
+        if (payer != receipt.payer) return false;
+        if (!name.equals(receipt.name)) return false;
+        return date.equals(receipt.date);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + date.hashCode();
+        result = 31 * result + payer;
+        return result;
+    }
 }
