@@ -427,6 +427,11 @@ public final class HuischLedger extends Ledger {
             throw new IllegalArgumentException("There exists already a receipt with that ID");
         }
 
+        // payer should exist
+        if (!accountingEntities.containsKey(receipt.getPayer())) {
+            throw new IllegalArgumentException("Payer must exist");
+        }
+
         // Validate all transactions
         Set<Integer> transactionIdSet = new HashSet<>(); // set of transactions that do not have a reference to this receipt
         for (int i : receipt.getTransactionIdSet()) {
