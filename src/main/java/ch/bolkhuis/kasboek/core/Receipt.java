@@ -46,14 +46,18 @@ public class Receipt {
      * @param transactionIdSet a Set with integers that correspond to related Transaction ids // FIXME bug, user can use an unmodifiable set as backing set. Ensure modifiable sets are provided!
      * @param date the date this receipt 'happened'
      */
-    public Receipt(int id, @NotNull String name, @NotNull Set<Integer> transactionIdSet, @NotNull LocalDate date, int payer) {
+    public Receipt(int id, @NotNull String name, Set<Integer> transactionIdSet, @NotNull LocalDate date, int payer) {
         Objects.requireNonNull(name);
-        Objects.requireNonNull(transactionIdSet);
         Objects.requireNonNull(date);
 
         this.id = id;
         this.name = name;
-        this.transactionIdSet = FXCollections.observableSet(new HashSet<>(transactionIdSet));
+        if (transactionIdSet == null) {
+            this.transactionIdSet = FXCollections.observableSet(new HashSet<>());
+        } else {
+            // ensure the set is modifiable
+            this.transactionIdSet = FXCollections.observableSet(new HashSet<>(transactionIdSet));
+        }
         this.date = date;
         this.payer = payer;
     }
