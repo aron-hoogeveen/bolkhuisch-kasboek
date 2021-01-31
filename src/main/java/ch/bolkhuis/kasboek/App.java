@@ -105,6 +105,8 @@ public class App extends Application {
         } catch(FileNotFoundException fileNotFoundException) {
             System.out.println("No RecentLedgerFiles file. Creating an empty one");
 
+            // TODO create the new file
+
         } catch (Exception e) {
             e.printStackTrace();
         }
