@@ -267,15 +267,21 @@ public class Ledger {
     }
 
     /**
-     * Adds an entity to the AccountingEntity collection.
+     * Adds an entity to the AccountingEntity collection. AccountingEntities with duplicate names are not allowed.
      *
      * @param accountingEntity the AccountingEntry to add
-     * @throws IllegalArgumentException when {@code accountingEntity} does not adhere to the contract of this class
+     * @throws IllegalArgumentException if {@code accountingEntity} does not adhere to the contract of this class
      */
     public void addAccountingEntity(@NotNull AccountingEntity accountingEntity) {
         Objects.requireNonNull(accountingEntity);
 
         if (accountingEntities.containsKey(accountingEntity.getId())) { throw new IllegalArgumentException("Key already exists"); }
+
+        for (AccountingEntity entity : accountingEntities.values()) {
+            if (accountingEntity.getName().equalsIgnoreCase(entity.getName())) {
+                throw new IllegalArgumentException("Duplicate names not allowed");
+            }
+        }
 
         // if the user supplied an AccountingEntity with id equal to or greater than nextAccountingEntityId, then increment it
         if (accountingEntity.getId() >= nextAccountingEntityId) {
