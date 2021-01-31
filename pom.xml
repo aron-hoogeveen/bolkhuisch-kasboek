@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ch.bolkhuis.kasboek</groupId>
     <artifactId>Kasboek</artifactId>
-    <version>0.1-alpha-linux</version>
+    <version>0.1.1-alpha-win</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
