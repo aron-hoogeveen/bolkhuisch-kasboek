@@ -25,7 +25,7 @@ import java.util.Comparator;
  * <a href="https://www.principlesofaccounting.com/account-types/" target="_top">PrinciplesOfAccounting.com</a> for the
  * different accounting types.
  */
-public enum AccountType implements Comparator<AccountType> {
+public enum AccountType {
     @SerializedName("expense")
     EXPENSE(true, "Expense"),
     @SerializedName("asset")
@@ -61,10 +61,5 @@ public enum AccountType implements Comparator<AccountType> {
     @Override
     public String toString() {
         return name;
-    }
-
-    @Override
-    public int compare(AccountType o1, AccountType o2) {
-        return o1.name.compareToIgnoreCase(o2.name);
     }
 }
