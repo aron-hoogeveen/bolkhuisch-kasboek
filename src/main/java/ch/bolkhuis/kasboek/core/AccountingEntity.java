@@ -32,7 +32,7 @@ import java.util.Objects;
  * The immutable class AccountingEntry resembles an account with value. Some fields adhere to the contracts specified
  * in the functions isCorrectXXX() where XXX is equal to the fields' name.
  */
-public class AccountingEntity implements Comparator<AccountingEntity> {
+public class AccountingEntity implements Comparable<AccountingEntity> {
     protected final int id;
     @NotNull protected final ReadOnlyStringProperty name;
     @NotNull protected final AccountType accountType;
@@ -183,7 +183,7 @@ public class AccountingEntity implements Comparator<AccountingEntity> {
      *
      *
      * @param o1 the first object to be compared.
-     * @param o2 the second object to be compared.
+     * @param o the second object to be compared.
      * @return a negative integer, zero, or a positive integer as the
      * first argument is less than, equal to, or greater than the
      * second.
@@ -193,32 +193,31 @@ public class AccountingEntity implements Comparator<AccountingEntity> {
      *                              being compared by this comparator.
      */
     @Override
-    public int compare(AccountingEntity o1, AccountingEntity o2) {
-        Objects.requireNonNull(o1);
-        Objects.requireNonNull(o2);
+    public int compareTo(@NotNull AccountingEntity o) {
+        Objects.requireNonNull(o);
 
         // compare name
-        if (o1.getName().compareToIgnoreCase(o2.getName()) > 0) {
+        if (this.getName().compareToIgnoreCase(o.getName()) > 0) {
             return 1;
-        } else if (o1.getName().compareToIgnoreCase(o2.getName()) < 0) {
+        } else if (this.getName().compareToIgnoreCase(o.getName()) < 0) {
             return -1;
         }
 
         // compare balance
-        if (o1.getBalance() > o2.getBalance()) {
+        if (this.getBalance() > o.getBalance()) {
             return 1;
-        } else if (o1.getBalance() < o2.getBalance()) {
+        } else if (this.getBalance() < o.getBalance()) {
             return -1;
         }
 
         // compare AccountType
-        if (o1.getAccountType().compareTo(o2.getAccountType()) > 0) {
+        if (this.getAccountType().compareTo(o.getAccountType()) > 0) {
             return 1;
-        } else if (o1.getAccountType().compareTo(o2.getAccountType()) < 0) {
+        } else if (this.getAccountType().compareTo(o.getAccountType()) < 0) {
             return -1;
         }
 
-        return (o1.getId() - o2.getId());
+        return (this.getId() - o.getId());
     }
 
     @Override
