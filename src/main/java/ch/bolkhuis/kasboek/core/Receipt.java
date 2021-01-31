@@ -166,6 +166,8 @@ public class Receipt implements Comparable<Receipt> {
      */
     @Override
     public int compareTo(@NotNull Receipt o) {
+        Objects.requireNonNull(o);
+
         // date
         int comp = this.date.compareTo(o.date);
         if (comp != 0) {
