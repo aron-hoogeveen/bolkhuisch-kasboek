@@ -310,7 +310,6 @@ public final class Transaction implements Comparable<Transaction> {
         }
 
         // Equal ids. Check amount
-        // TODO maybe the program should throw an exception now, because transactions with the same id 'should' be equal
         if (this.amount < o.amount) {
             return -1;
         } else if (this.amount > o.amount) {
