@@ -471,7 +471,7 @@ public class Ledger {
     /**
      * Gets the key for this {@code value}.
      */
-    public static <K, V> K getKey(@NotNull Map<K, V> map, @NotNull V value) {
+    protected static <K, V> K getKey(@NotNull Map<K, V> map, @NotNull V value) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(value);
 
