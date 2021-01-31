@@ -18,12 +18,14 @@ package ch.bolkhuis.kasboek.core;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Comparator;
+
 /**
  * AccountType is an enumeration that indicates what type a specific accounting entity is. See
  * <a href="https://www.principlesofaccounting.com/account-types/" target="_top">PrinciplesOfAccounting.com</a> for the
  * different accounting types.
  */
-public enum AccountType {
+public enum AccountType implements Comparator<AccountType> {
     @SerializedName("expense")
     EXPENSE(true, "Expense"),
     @SerializedName("asset")
@@ -59,5 +61,10 @@ public enum AccountType {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int compare(AccountType o1, AccountType o2) {
+        return o1.name.compareToIgnoreCase(o2.name);
     }
 }
