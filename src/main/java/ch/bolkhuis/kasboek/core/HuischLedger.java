@@ -96,7 +96,6 @@ public final class HuischLedger extends Ledger {
                         @NotNull ObservableMap<Integer, Transaction> transactions,
                         @NotNull ObservableMap<Integer, Receipt> receipts) {
         super(accountingEntities, transactions);
-        this.receipts = Objects.requireNonNull(receipts);
 
         // Check if all receipts are correct
         for (Receipt receipt : receipts.values()) {
@@ -111,6 +110,7 @@ public final class HuischLedger extends Ledger {
             // update the nextReceiptId
             nextReceiptId = (receipt.getId() >= nextReceiptId) ? receipt.getId() + 1 : nextReceiptId;
         }
+        this.receipts = Objects.requireNonNull(receipts);
     }
 
     /**
@@ -678,4 +678,7 @@ public final class HuischLedger extends Ledger {
         throw new Exception("Not yet implemented");
     }
 
+    public int getNextReceiptId() {
+        return nextReceiptId;
+    }
 }
