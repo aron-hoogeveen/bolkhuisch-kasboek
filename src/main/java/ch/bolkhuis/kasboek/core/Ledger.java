@@ -286,10 +286,12 @@ public class Ledger {
     }
 
     /**
-     * Updates the accountingEntity with the same id as the provided {@code accountingEntity}.
+     * Updates the accountingEntity with the same id as the provided {@code accountingEntity}. The AccountType of the
+     * entities have to be equal.
      *
      * @param accountingEntity the value to replace the old AccountingEntity with
      * @return the previous value of AccountingEntity that is replaced
+     * @throws IllegalArgumentException if there is entity with the same ID, or if the AccountType differs
      */
     public AccountingEntity updateAccountingEntity(@NotNull AccountingEntity accountingEntity) {
         Objects.requireNonNull(accountingEntity);
@@ -297,6 +299,11 @@ public class Ledger {
         // make sure that the id already exists
         if (!accountingEntities.containsKey(accountingEntity.getId())) {
             throw new IllegalArgumentException("There does not exists an AccountingEntity with that id");
+        }
+
+        // make sure the AccountType is the same
+        if (!accountingEntities.get(accountingEntity.getId()).getAccountType().equals(accountingEntity.getAccountType())) {
+            throw new IllegalArgumentException();
         }
 
         return accountingEntities.put(accountingEntity.getId(), accountingEntity);
