@@ -314,6 +314,15 @@ public class Ledger {
             throw new IllegalArgumentException();
         }
 
+        // check for duplicate names
+        for (AccountingEntity entity : accountingEntities.values()) {
+            if (entity.getId() != accountingEntity.getId()) { // skip the entity that is being updated
+                if (entity.getName().equals(accountingEntity.getName())) {
+                    throw new IllegalArgumentException("Duplicate names are not allowed");
+                }
+            }
+        }
+
         return accountingEntities.put(accountingEntity.getId(), accountingEntity);
     }
 
