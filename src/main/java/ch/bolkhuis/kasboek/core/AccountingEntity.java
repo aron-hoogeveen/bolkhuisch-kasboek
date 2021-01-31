@@ -25,13 +25,14 @@ import org.jetbrains.annotations.NotNull;
 import java.io.BufferedReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
  * The immutable class AccountingEntry resembles an account with value. Some fields adhere to the contracts specified
  * in the functions isCorrectXXX() where XXX is equal to the fields' name.
  */
-public class AccountingEntity {
+public class AccountingEntity implements Comparator<AccountingEntity> {
     protected final int id;
     @NotNull protected final ReadOnlyStringProperty name;
     @NotNull protected final AccountType accountType;
@@ -176,6 +177,48 @@ public class AccountingEntity {
 
         BufferedReader bufferedReader = new BufferedReader(reader);
         return CustomizedGson.gson.fromJson(bufferedReader, AccountingEntity.class);
+    }
+
+    /**
+     *
+     *
+     * @param o1 the first object to be compared.
+     * @param o2 the second object to be compared.
+     * @return a negative integer, zero, or a positive integer as the
+     * first argument is less than, equal to, or greater than the
+     * second.
+     * @throws NullPointerException if an argument is null and this
+     *                              comparator does not permit null arguments
+     * @throws ClassCastException   if the arguments' types prevent them from
+     *                              being compared by this comparator.
+     */
+    @Override
+    public int compare(AccountingEntity o1, AccountingEntity o2) {
+        Objects.requireNonNull(o1);
+        Objects.requireNonNull(o2);
+
+        // compare name
+        if (o1.getName().compareToIgnoreCase(o2.getName()) > 0) {
+            return 1;
+        } else if (o1.getName().compareToIgnoreCase(o2.getName()) < 0) {
+            return -1;
+        }
+
+        // compare balance
+        if (o1.getBalance() > o2.getBalance()) {
+            return 1;
+        } else if (o1.getBalance() < o2.getBalance()) {
+            return -1;
+        }
+
+        // compare AccountType
+        if (o1.getAccountType().compareTo(o2.getAccountType()) > 0) {
+            return 1;
+        } else if (o1.getAccountType().compareTo(o2.getAccountType()) < 0) {
+            return -1;
+        }
+
+        return (o1.getId() - o2.getId());
     }
 
     @Override

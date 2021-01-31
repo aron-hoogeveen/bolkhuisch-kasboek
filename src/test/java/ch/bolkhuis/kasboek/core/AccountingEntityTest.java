@@ -1,7 +1,9 @@
 package ch.bolkhuis.kasboek.core;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -203,5 +205,13 @@ class AccountingEntityTest {
     public void creditNegativeAmountThrows() {
         assertThrows(IllegalArgumentException.class, () -> globalEntity.credit(-1));
     }
+
+//    @ParameterizedTest
+//    @CsvSource({
+//        "0, Gerrit, Asset, 0",
+//    })
+//    public void testCompareTo(ArgumentsAccessor arguments) {
+//
+//    }
 
 }
