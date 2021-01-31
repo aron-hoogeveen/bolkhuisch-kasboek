@@ -130,6 +130,7 @@
                     </archive>
                 </configuration>
             </plugin>
+            <!-- https://maven.apache.org/plugins/maven-shade-plugin/examples/executable-jar.html -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
