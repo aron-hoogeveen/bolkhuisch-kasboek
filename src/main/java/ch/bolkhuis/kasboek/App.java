@@ -30,7 +30,8 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.nio.file.NoSuchFileException;
+import java.nio.file.*;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -44,17 +45,22 @@ import java.util.prefs.Preferences;
  */
 public class App extends Application {
     /*
-     * Constants for the Preferences API
+     * Constants for file saving
      */
-    private static final String PREF_RECENT_LEDGERS_FILE = "RecentLedgersFile";
-    private static final String PREF_DEF_RECENT_LEDGERS_FILE = System.getProperty("user.home") + "/.kasboek/RecentLedgers.json";
-    private static final String PREF_NODE_NAME = "/ch/bolkhuis/kasboek/App";
+    private static final Path PROGRAM_PATH = Path.of(System.getProperty("user.home"), ".kasboek/");
+    private static final Path RECENT_LEDGERS_PATH = Path.of(PROGRAM_PATH.toString(), "recent_ledgers.json");
 
+    /*
+     * Constants for widths and heights
+     */
     public static final double INITIAL_WIDTH = 1280;
     public static final double INITIAL_HEIGHT = 720;
     public static final double MIN_WIDTH = 848;
     public static final double MIN_HEIGHT = 480;
 
+    /*
+     * Constants for stylesheets
+     */
     public static final String CSS_STYLES = "ch.bolkhuis.kasboek.Styles.css";
     public static final String CSS_SPLASH = "ch.bolkhuis.kasboek.splash.css";
 
@@ -95,20 +101,30 @@ public class App extends Application {
      */
     @Override
     public void init() throws Exception {
-        preferences = Preferences.userRoot().node(PREF_NODE_NAME);
+        // Check if the program directory exists, otherwise create it
+        if (!Files.isDirectory(PROGRAM_PATH)) {
+            try {
+                Files.createDirectories(PROGRAM_PATH);
+            } catch (IOException e) {
+                System.err.println("ERROR. Program directory does not exist, however" +
+                        " an exception is thrown while trying to create it. Program " +
+                        "will exit.");
+                e.printStackTrace(); // TODO remove stackTrace
+//                System.exit(1);
+            }
+        }
 
-        // create the settings directory
-        File file = new File(System.getProperty("user.home") + "/.kasboek/");
-        if (!file.mkdir()) {
-            System.err.println("wrm wordt dit bestand niet gemaakt? " + file.getAbsolutePath());
+        // load the recent ledgers
+        try {
+            loadRecentLedgers();
+        } catch (IOException e) {
+            System.err.println("ERROR. Could not load the recent ledgers. Program will exit.");
+//            System.exit(1);
         }
 
         // Load the splash screen image already and pass it to the SplashSceneRoot constructor
         // The width is determined from the
         splashLogo = new Image("BolkhuischLogo.png", 240, 240, true, true);
-
-        // load the recent ledgers
-        loadRecentLedgers();
     }
 
     @Override
@@ -179,13 +195,17 @@ public class App extends Application {
     /**
      * Loads the recent ledgers if they exist
      */
-    private void loadRecentLedgers() {
-        File file = new File(preferences.get(PREF_RECENT_LEDGERS_FILE, PREF_DEF_RECENT_LEDGERS_FILE));
-        try {
-            BufferedReader ledgerFileReader = new BufferedReader(new FileReader(file));
-            recentLedgerFiles = FXCollections.observableList(CustomizedGson.gson.fromJson(ledgerFileReader, listType));
-        } catch (FileNotFoundException e) {
-            recentLedgerFiles = FXCollections.observableArrayList();
+    private void loadRecentLedgers() throws IOException {
+        // create the file if it does not yet exist
+        if (!Files.exists(RECENT_LEDGERS_PATH)) {
+            Files.createFile(RECENT_LEDGERS_PATH);
+            return;
+        }
+
+        try (BufferedReader br = Files.newBufferedReader(RECENT_LEDGERS_PATH)) {
+            recentLedgerFiles = FXCollections.observableList(CustomizedGson.gson.fromJson(br, listType));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -193,12 +213,9 @@ public class App extends Application {
         new Thread(() -> {
             try {
                 String jsonString = CustomizedGson.gson.toJson(recentLedgerFiles, listType);
-                // create the file if it does not exist
-                File file = new File(preferences.get(PREF_RECENT_LEDGERS_FILE, PREF_DEF_RECENT_LEDGERS_FILE));
-                file.createNewFile();
-                BufferedWriter ledgerFileWriter = new BufferedWriter(new FileWriter(file));
-                ledgerFileWriter.write(jsonString);
-                ledgerFileWriter.close();
+                try (BufferedWriter bw = Files.newBufferedWriter(RECENT_LEDGERS_PATH)) {
+                    bw.write(jsonString);
+                }
             } catch (Exception e) {
                 System.err.println("Error while saving recentLedgerFiles on different Thread");
                 e.printStackTrace();
