@@ -43,6 +43,13 @@ import java.util.prefs.Preferences;
  * TODO add an option to import entities from another HuischLedgerFile
  */
 public class App extends Application {
+    /*
+     * Constants for the Preferences API
+     */
+    private static final String PREF_RECENT_LEDGERS_FILE = "RecentLedgersFile";
+    private static final String PREF_DEF_RECENT_LEDGERS_FILE = System.getProperty("user.home") + "/.kasboek/RecentLedgers.json";
+    private static final String PREF_NODE_NAME = "/ch/bolkhuis/kasboek/App";
+
     public static final double INITIAL_WIDTH = 1280;
     public static final double INITIAL_HEIGHT = 720;
     public static final double MIN_WIDTH = 848;
@@ -51,9 +58,6 @@ public class App extends Application {
     public static final String CSS_STYLES = "ch.bolkhuis.kasboek.Styles.css";
     public static final String CSS_SPLASH = "ch.bolkhuis.kasboek.splash.css";
 
-    private static final String PREF_RECENT_LEDGERS_FILE = "RecentLedgersFile";
-    private static final String PREF_DEF_RECENT_LEDGERS_FILE = System.getProperty("user.home") + "/.kasboek/RecentLedgers.json";
-    private static final String PREF_NODE_NAME = "/ch/bolkhuis/kasboek/App";
 
     /**
      * ExtensionFilters to be used for saving and opening HuischLedger files.
@@ -93,23 +97,18 @@ public class App extends Application {
     public void init() throws Exception {
         preferences = Preferences.userRoot().node(PREF_NODE_NAME);
 
+        // create the settings directory
+        File file = new File(System.getProperty("user.home") + "/.kasboek/");
+        if (!file.mkdir()) {
+            System.err.println("wrm wordt dit bestand niet gemaakt? " + file.getAbsolutePath());
+        }
+
         // Load the splash screen image already and pass it to the SplashSceneRoot constructor
         // The width is determined from the
         splashLogo = new Image("BolkhuischLogo.png", 240, 240, true, true);
 
         // load the recent ledgers
-        try {
-
-            BufferedReader ledgerFileReader = new BufferedReader(new FileReader(preferences.get(PREF_RECENT_LEDGERS_FILE, PREF_DEF_RECENT_LEDGERS_FILE)));
-            recentLedgerFiles = FXCollections.observableList(CustomizedGson.gson.fromJson(ledgerFileReader, listType));
-        } catch(FileNotFoundException fileNotFoundException) {
-            System.out.println("No RecentLedgerFiles file. Creating an empty one");
-
-            // TODO create the new file
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        loadRecentLedgers();
     }
 
     @Override
@@ -177,11 +176,27 @@ public class App extends Application {
         saveRecentLedgersAsync();
     }
 
+    /**
+     * Loads the recent ledgers if they exist
+     */
+    private void loadRecentLedgers() {
+        File file = new File(preferences.get(PREF_RECENT_LEDGERS_FILE, PREF_DEF_RECENT_LEDGERS_FILE));
+        try {
+            BufferedReader ledgerFileReader = new BufferedReader(new FileReader(file));
+            recentLedgerFiles = FXCollections.observableList(CustomizedGson.gson.fromJson(ledgerFileReader, listType));
+        } catch (FileNotFoundException e) {
+            recentLedgerFiles = FXCollections.observableArrayList();
+        }
+    }
+
     private void saveRecentLedgersAsync() {
         new Thread(() -> {
             try {
                 String jsonString = CustomizedGson.gson.toJson(recentLedgerFiles, listType);
-                BufferedWriter ledgerFileWriter = new BufferedWriter(new FileWriter(preferences.get(PREF_RECENT_LEDGERS_FILE, PREF_DEF_RECENT_LEDGERS_FILE)));
+                // create the file if it does not exist
+                File file = new File(preferences.get(PREF_RECENT_LEDGERS_FILE, PREF_DEF_RECENT_LEDGERS_FILE));
+                file.createNewFile();
+                BufferedWriter ledgerFileWriter = new BufferedWriter(new FileWriter(file));
                 ledgerFileWriter.write(jsonString);
                 ledgerFileWriter.close();
             } catch (Exception e) {
