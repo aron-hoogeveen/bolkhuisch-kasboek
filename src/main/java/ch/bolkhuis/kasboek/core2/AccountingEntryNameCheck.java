@@ -9,7 +9,8 @@ public class AccountingEntryNameCheck {
      * @return {@code true} if the name adheres to the contract, {@code false} otherwise
      */
     public static boolean checkName(String name) {
-        return true;
+        return (name != null) && (!name.isBlank()) && (name.length() <= 256) && (!name.contains("\n"))
+                && (!name.contains("\r")) && (name.matches("[a-zA-Z ]*"));
     }
 
 }
