@@ -28,4 +28,27 @@ class AssetTest {
         assertThrows(IllegalArgumentException.class, () -> new Asset(0, "Hellow My@", 0));
     }
 
+    @Test
+    public void debitAndCreditChangesCorrect() {
+        Asset asset = new Asset(0, "Some Asset", 0);
+        Asset afterCredit = asset.credit(20);
+        Asset afterDebit = asset.debit(20);
+
+        assertEquals(0, asset.getBalance());
+        assertEquals(-20, afterCredit.getBalance());
+        assertEquals(20, afterDebit.getBalance());
+    }
+
+    @Test
+    public void testCompare() {
+        Asset a0 = new Asset(10000, "aaaaaaaaaaa", 99);
+        Asset a1 = new Asset(999, "Aron", 0);
+        Asset a2 = new Asset(0, "Connor", 0);
+
+        assertEquals(0, a1.compareTo(a1));
+        assertEquals(-1, a1.compareTo(a2));
+        assertEquals(1, a2.compareTo(a1));
+        assertEquals(-1, a0.compareTo(a1));
+    }
+
 }

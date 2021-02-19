@@ -43,12 +43,12 @@ public class Asset extends DebitEntry {
     }
 
     @Override
-    AbstractAccountingEntry debit(double amount) throws IllegalArgumentException {
+    Asset debit(double amount) throws IllegalArgumentException {
         return new Asset(id, getName(), debitChange(amount));
     }
 
     @Override
-    AbstractAccountingEntry credit(double amount) throws IllegalArgumentException {
+    Asset credit(double amount) throws IllegalArgumentException {
         return new Asset(id, getName(), creditChange(amount));
     }
 

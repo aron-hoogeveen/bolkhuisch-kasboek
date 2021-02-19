@@ -84,14 +84,14 @@ public abstract class AbstractAccountingEntry implements Comparable<AbstractAcco
     public int compareTo(@NotNull AbstractAccountingEntry o) {
         Objects.requireNonNull(o);
 
-        if (this.getId() > o.getId())
-            return 1;
-        if (this.getId() < o.getId())
-            return -1;
+//        if (this.getId() > o.getId())
+//            return 1;
+//        if (this.getId() < o.getId())
+//            return -1;
 
-        if (name.get().compareTo(o.name.get()) > 0)
+        if (name.get().compareToIgnoreCase(o.name.get()) > 0)
             return 1;
-        if (name.get().compareTo(o.name.get()) < 0)
+        if (name.get().compareToIgnoreCase(o.name.get()) < 0)
             return -1;
 
         return Double.compare(this.balance.get(), o.balance.get());
