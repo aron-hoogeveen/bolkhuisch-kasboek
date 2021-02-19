@@ -20,8 +20,9 @@ public abstract class AbstractAccountingEntry implements Comparable<AbstractAcco
      * @param name the name of this Accounting Entry
      * @param balance the balance of this Accounting Entry
      * @throws IllegalArgumentException if name does not adhere to the contract specified by this class
+     * @throws NullPointerException if {@code name} is null
      */
-    public AbstractAccountingEntry(@NotNull String name, double balance) throws IllegalArgumentException {
+    public AbstractAccountingEntry(@NotNull String name, double balance) throws IllegalArgumentException, NullPointerException {
         Objects.requireNonNull(name);
 
         // factory method, check the name
