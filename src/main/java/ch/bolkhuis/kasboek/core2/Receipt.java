@@ -17,6 +17,8 @@
 
 package ch.bolkhuis.kasboek.core2;
 
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +35,7 @@ public class Receipt {
     private final LocalDate date;
     private final int id;
     @NotNull
-    private final String description;
+    private final SimpleStringProperty description;
     @NotNull
     private ObservableSet<TransactionKey> transactionIdSet; // FIXME Transactions should be recognizable by a (LocalDate, int) tuple
     private final int payer;
@@ -64,9 +66,33 @@ public class Receipt {
 
         this.date = date;
         this.id = id;
-        this.description = description;
+        this.description = new SimpleStringProperty(description);
         this.transactionIdSet = FXCollections.observableSet(new TreeSet<>(transactionIdSet));
         this.payer = payer;
+    }
+
+    @NotNull
+    public ReadOnlyStringProperty descriptionProperty() {
+        return description;
+    }
+    public String getDescription() {
+        return description.get();
+    }
+
+    /**
+     * Sets the description of this Receipt to the new String.
+     *
+     * @param str the new description
+     * @throws IllegalArgumentException if {@code str} does not adhere to the contract specified by this class
+     * @throws NullPointerException if {@code str} is null
+     */
+    public void setDescription(@NotNull String str) {
+        Objects.requireNonNull(str);
+
+        if (!StringUtils.checkString(str))
+            throw new IllegalArgumentException();
+
+        description.set(str);
     }
 
     /**
