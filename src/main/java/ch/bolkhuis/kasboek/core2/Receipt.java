@@ -35,7 +35,7 @@ public class Receipt {
     @NotNull
     private final String description;
     @NotNull
-    private ObservableSet<Integer> transactionIdSet; // FIXME Transactions should be recognizable by a (LocalDate, int) tuple
+    private ObservableSet<TransactionKey> transactionIdSet; // FIXME Transactions should be recognizable by a (LocalDate, int) tuple
     private final int payer;
 
     /**
@@ -53,7 +53,7 @@ public class Receipt {
      * @throws IllegalArgumentException if {@code transactionIdSet} or {@code description} does not adhere to the contract
      * @see StringUtils#checkString
      */
-    public Receipt(@NotNull LocalDate date, int id, @NotNull String description, @NotNull Set<Integer> transactionIdSet,
+    public Receipt(@NotNull LocalDate date, int id, @NotNull String description, @NotNull Set<TransactionKey> transactionIdSet,
                    int payer) throws NullPointerException, IllegalArgumentException {
         Objects.requireNonNull(date);
         Objects.requireNonNull(description);
@@ -77,7 +77,7 @@ public class Receipt {
      * @param set the Set to check
      * @return {@code true} if the set adheres to the contract, {@code false} otherwise
      */
-    public static boolean checkTransactionIdSet(@Nullable Set<Integer> set) {
+    public static boolean checkTransactionIdSet(@Nullable Set<TransactionKey> set) {
         if (set == null) return false;
 
         return !set.contains(null);
