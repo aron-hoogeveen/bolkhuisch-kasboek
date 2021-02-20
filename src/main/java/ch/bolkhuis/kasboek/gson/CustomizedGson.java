@@ -31,7 +31,7 @@ public class CustomizedGson {
     private final static GsonBuilder builder = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTypeAdapter())
-            .registerTypeAdapter(Transaction.class, new TransactionTypeAdapter())
+//            .registerTypeAdapter(Transaction.class, new TransactionTypeAdapter())
             .registerTypeAdapter(AccountingEntity.class, new AccountingEntityTypeAdapter())
             .registerTypeAdapter(ResidentEntity.class, new InmateEntityTypeAdapter())
             .registerTypeAdapter(HuischLedger.class, new HuischLedgerTypeAdapter())

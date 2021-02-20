@@ -170,13 +170,14 @@
                 <version>3.0.0</version>
                 <executions>
                     <execution>
+                        <phase>compile</phase>
                         <goals>
                             <goal>java</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>ch.bolkhuis.kasboek.core2.AccountingEntryTest</mainClass>
+                    <mainClass>ch.bolkhuis.kasboek.core2.Core2Tests</mainClass>
                     <arguments>
 <!--                        <argument>foo</argument>-->
 <!--                        <argument>bar</argument>-->
