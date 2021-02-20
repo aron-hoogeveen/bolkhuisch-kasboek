@@ -41,8 +41,6 @@ public class CustomizedGson {
             .registerTypeAdapter(Liability.class, new LiabilityTypeAdapter())
             .registerTypeAdapter(Resident.class, new ResidentTypeAdapter())
             .registerTypeAdapter(Revenue.class, new RevenueTypeAdapter())
-//            .registerTypeAdapter(AccountingEntity.class, new AccountingEntityTypeAdapter())
-//            .registerTypeAdapter(ResidentEntity.class, new InmateEntityTypeAdapter())
 //            .registerTypeAdapter(HuischLedger.class, new HuischLedgerTypeAdapter())
 //            .registerTypeAdapter(Ledger.class, new LedgerTypeAdapter())
 //            .registerTypeAdapter(Receipt.class, new ReceiptTypeAdapter())
