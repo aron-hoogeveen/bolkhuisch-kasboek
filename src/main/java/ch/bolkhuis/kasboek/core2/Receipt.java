@@ -86,6 +86,7 @@ public class Receipt implements ReceiptKey {
     public ReadOnlyStringProperty descriptionProperty() {
         return description;
     }
+    @NotNull
     public String getDescription() {
         return description.get();
     }
@@ -111,6 +112,7 @@ public class Receipt implements ReceiptKey {
      *
      * @return the {@code transactionIdSet}
      */
+    @NotNull
     public ObservableSet<TransactionKey> getTransactionKeySet() {
         return FXCollections.unmodifiableObservableSet(transactionKeySet);
     }
