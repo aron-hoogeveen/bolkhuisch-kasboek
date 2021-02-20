@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.time.LocalDate;
 
-public class Transaction implements Comparable<Transaction> {
+public class Transaction implements TransactionKey {
 
     @NotNull
     private final LocalDate date;
@@ -226,63 +226,5 @@ public class Transaction implements Comparable<Transaction> {
         result = 31 * result + (receiptId != null ? receiptId.hashCode() : 0);
         return result;
     }
-
-    @Override
-    public int compareTo(@NotNull Transaction o) {
-        Objects.requireNonNull(o);
-
-        // date
-        if (this.date.isBefore(o.date)) {
-            return -1;
-        } else if (this.date.isAfter(o.date)) {
-            return 1;
-        }
-
-        // id
-        if (this.id < o.id) {
-            return -1;
-        } else if (this.id > o.id) {
-            return 1;
-        }
-
-        //
-        if (this.receiptId == null) {
-            if (o.receiptId != null) {
-                return -1;
-            }
-        } else if (o.receiptId == null) {
-            return 1;
-        } else if (this.receiptId < o.receiptId) {
-            return -1;
-        } else if (this.receiptId > o.receiptId) {
-            return 1;
-        }
-
-        // debtorId
-        if (this.debtorId < o.debtorId) {
-            return -1;
-        } else if (this.debtorId > o.debtorId) {
-            return 1;
-        }
-
-        // creditorId
-        if (this.creditorId < o.creditorId) {
-            return -1;
-        } else if (this.creditorId > o.creditorId) {
-            return 1;
-        }
-
-        // amount
-        if (this.amount < o.amount) {
-            return -1;
-        } else if (this.amount > o.amount) {
-            return 1;
-        }
-
-        // Equal amounts. Check description
-        return this.getDescription().compareTo(o.getDescription());
-    }
-
-    // TODO add toJson and fromJson methods
 
 }
