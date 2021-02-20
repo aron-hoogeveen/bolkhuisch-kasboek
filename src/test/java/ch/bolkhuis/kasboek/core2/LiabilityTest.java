@@ -51,4 +51,20 @@ class LiabilityTest {
         assertEquals(-1, a0.compareTo(a1));
     }
 
+    @Test
+    public void testEquality() {
+        Liability liability = new Liability(0, "liability", 0);
+        Liability other1 = new Liability(0, "liability", 0);
+        Liability other2 = new Liability(0, "liability", 15);
+        Liability other3 = new Liability(0, "different", 0);
+        Liability other4 = new Liability(14, "liability", 0);
+
+        assertEquals(liability, liability);
+        assertEquals(liability, other1);
+        assertEquals(liability, other2);
+        assertNotEquals(liability, other3);
+        assertNotEquals(liability, other4);
+        assertNotEquals(liability, null);
+    }
+
 }

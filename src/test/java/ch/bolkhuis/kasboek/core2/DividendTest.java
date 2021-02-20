@@ -50,5 +50,21 @@ class DividendTest {
         assertEquals(1, a2.compareTo(a1));
         assertEquals(-1, a0.compareTo(a1));
     }
+
+    @Test
+    public void testEquality() {
+        Dividend dividend = new Dividend(0, "dividend", 0);
+        Dividend other1 = new Dividend(0, "dividend", 0);
+        Dividend other2 = new Dividend(0, "dividend", 15);
+        Dividend other3 = new Dividend(0, "different", 0);
+        Dividend other4 = new Dividend(14, "dividend", 0);
+
+        assertEquals(dividend, dividend);
+        assertEquals(dividend, other1);
+        assertEquals(dividend, other2);
+        assertNotEquals(dividend, other3);
+        assertNotEquals(dividend, other4);
+        assertNotEquals(dividend, null);
+    }
     
 }

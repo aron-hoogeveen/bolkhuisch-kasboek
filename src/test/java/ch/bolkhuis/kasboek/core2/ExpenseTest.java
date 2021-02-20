@@ -51,4 +51,20 @@ class ExpenseTest {
         assertEquals(-1, a0.compareTo(a1));
     }
 
+    @Test
+    public void testEquality() {
+        Expense expense = new Expense(0, "expense", 0);
+        Expense other1 = new Expense(0, "expense", 0);
+        Expense other2 = new Expense(0, "expense", 15);
+        Expense other3 = new Expense(0, "different", 0);
+        Expense other4 = new Expense(14, "expense", 0);
+
+        assertEquals(expense, expense);
+        assertEquals(expense, other1);
+        assertEquals(expense, other2);
+        assertNotEquals(expense, other3);
+        assertNotEquals(expense, other4);
+        assertNotEquals(expense, null);
+    }
+
 }

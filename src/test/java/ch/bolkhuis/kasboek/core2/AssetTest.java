@@ -51,4 +51,20 @@ class AssetTest {
         assertEquals(-1, a0.compareTo(a1));
     }
 
+    @Test
+    public void testEquality() {
+        Asset Asset = new Asset(0, "Asset", 0);
+        Asset other1 = new Asset(0, "Asset", 0);
+        Asset other2 = new Asset(0, "Asset", 15);
+        Asset other3 = new Asset(0, "different", 0);
+        Asset other4 = new Asset(14, "Asset", 0);
+
+        assertEquals(Asset, Asset);
+        assertEquals(Asset, other1);
+        assertEquals(Asset, other2);
+        assertNotEquals(Asset, other3);
+        assertNotEquals(Asset, other4);
+        assertNotEquals(Asset, null);
+    }
+
 }
