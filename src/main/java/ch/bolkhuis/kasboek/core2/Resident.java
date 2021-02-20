@@ -50,4 +50,11 @@ public class Resident extends Equity {
     Resident credit(double amount) throws IllegalArgumentException {
         return new Resident(id, getName(), creditChange(amount), getPreviousBalance());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || o.getClass() != getClass()) return false;
+        return super.equals(o);
+    }
+
 }

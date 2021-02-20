@@ -51,4 +51,20 @@ class EquityTest {
         assertEquals(-1, a0.compareTo(a1));
     }
 
+    @Test
+    public void testEquality() {
+        Equity equity = new Equity(0, "equity", 0);
+        Equity other1 = new Equity(0, "equity", 0);
+        Equity other2 = new Equity(0, "equity", 15);
+        Equity other3 = new Equity(0, "different", 0);
+        Equity other4 = new Equity(14, "equity", 0);
+
+        assertEquals(equity, equity);
+        assertEquals(equity, other1);
+        assertEquals(equity, other2);
+        assertNotEquals(equity, other3);
+        assertNotEquals(equity, other4);
+        assertNotEquals(equity, null);
+    }
+
 }

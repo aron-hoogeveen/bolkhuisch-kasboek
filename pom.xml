@@ -12,6 +12,12 @@
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version>
+        </dependency>
         <!-- javafx-controls -->
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -88,6 +94,13 @@
             <artifactId>maven-shade-plugin</artifactId>
             <version>3.2.4</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
 
     </dependencies>
 
@@ -96,7 +109,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <release>11</release>
                 </configuration>
@@ -112,7 +125,7 @@
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.4</version>
+                <version>0.0.5</version>
                 <configuration>
                     <mainClass>ch.bolkhuis.kasboek.Main</mainClass>
                 </configuration>
@@ -130,7 +143,7 @@
 <!--                    </archive>-->
 <!--                </configuration>-->
 <!--            </plugin>-->
-            <!-- https://maven.apache.org/plugins/maven-shade-plugin/examples/executable-jar.html -->
+<!--             https://maven.apache.org/plugins/maven-shade-plugin/examples/executable-jar.html -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -151,6 +164,26 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>ch.bolkhuis.kasboek.core2.AccountingEntryTest</mainClass>
+                    <arguments>
+<!--                        <argument>foo</argument>-->
+<!--                        <argument>bar</argument>-->
+                    </arguments>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>
