@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Equity extends CreditEntry {
 
-    private final int id;
+    protected final int id;
 
     /**
      * Default constructor.
