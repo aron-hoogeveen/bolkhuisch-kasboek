@@ -37,7 +37,7 @@ public class Receipt implements ReceiptKey {
     @NotNull
     private final SimpleStringProperty description;
     @NotNull
-    private ObservableSet<TransactionKey> transactionKeySet; // FIXME Transactions should be recognizable by a (LocalDate, int) tuple
+    private final ObservableSet<TransactionKey> transactionKeySet; // FIXME Transactions should be recognizable by a (LocalDate, int) tuple
     private final int payer;
 
     /**
