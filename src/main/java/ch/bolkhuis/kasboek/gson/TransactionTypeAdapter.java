@@ -16,8 +16,7 @@
  */
 package ch.bolkhuis.kasboek.gson;
 
-import ch.bolkhuis.kasboek.core.Transaction;
-import ch.bolkhuis.kasboek.gson.CustomizedGson;
+import ch.bolkhuis.kasboek.core2.Transaction;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
@@ -32,13 +31,13 @@ import java.time.LocalDate;
  */
 public class TransactionTypeAdapter extends TypeAdapter<Transaction> {
     private enum FieldNames {
-        ID("id"),
         DATE("date"),
+        ID("id"),
         DEBTOR_ID("debtor_id"),
         CREDITOR_ID("creditor_id"),
-        RECEIPT_ID("receipt_id"),
         AMOUNT("amount"),
-        DESCRIPTION("description");
+        DESCRIPTION("description"),
+        RECEIPT_ID("receipt_id");
 
         private final String name;
 
@@ -54,10 +53,6 @@ public class TransactionTypeAdapter extends TypeAdapter<Transaction> {
         private int getValue() {
             return ordinal() + 1;
         }
-
-//        public String getName() {
-//            return name;
-//        }
     }
 
     @Override
@@ -67,23 +62,24 @@ public class TransactionTypeAdapter extends TypeAdapter<Transaction> {
             return;
         }
         jsonWriter.beginObject();
-        jsonWriter.name(FieldNames.ID.name);
-        jsonWriter.value(transaction.getId());
         jsonWriter.name(FieldNames.DATE.name);
         CustomizedGson.gson.getAdapter(LocalDate.class).write(jsonWriter, transaction.getDate());
+        jsonWriter.name(FieldNames.ID.name);
+        jsonWriter.value(transaction.getId());
         jsonWriter.name(FieldNames.DEBTOR_ID.name);
         jsonWriter.value(transaction.getDebtorId());
         jsonWriter.name(FieldNames.CREDITOR_ID.name);
         jsonWriter.value(transaction.getCreditorId());
         jsonWriter.name(FieldNames.AMOUNT.name);
         jsonWriter.value(transaction.getAmount());
+        jsonWriter.name(FieldNames.DESCRIPTION.name);
+        jsonWriter.value(transaction.getDescription());
         jsonWriter.name(FieldNames.RECEIPT_ID.name);
         if (transaction.getReceiptId() == null)
             jsonWriter.nullValue();
         else
             jsonWriter.value(transaction.getReceiptId());
-        jsonWriter.name(FieldNames.DESCRIPTION.name);
-        jsonWriter.value(transaction.getDescription());
+
         jsonWriter.endObject();
     }
 
@@ -94,13 +90,13 @@ public class TransactionTypeAdapter extends TypeAdapter<Transaction> {
             return null;
         }
         Transaction transaction;
-        int id = 0;
         LocalDate date = null;
+        int id = 0;
         int debtorId = 0;
         int creditorId = 0;
-        Integer receiptId = null; // could be absent, so defaults to null
         double amount = 0;
         String description = null;
+        Integer receiptId = null; // could be absent, so defaults to null
 
         jsonReader.beginObject();
         int fields = 0;
@@ -164,8 +160,7 @@ public class TransactionTypeAdapter extends TypeAdapter<Transaction> {
         }
         if (fields == fieldCheck) {
             // construct Transaction
-            return (receiptId == null) ? new Transaction(id, debtorId, creditorId, amount, date, description) :
-                    new Transaction(id, debtorId, creditorId, amount, receiptId, date, description);
+            return new Transaction(date, id, debtorId, creditorId, amount, description, receiptId);
         }
         throw new IOException("Not all required fields are available");
     }
