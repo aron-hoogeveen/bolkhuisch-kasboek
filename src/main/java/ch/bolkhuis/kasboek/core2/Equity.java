@@ -68,10 +68,5 @@ public class Equity extends CreditEntry {
     Equity credit(double amount) throws IllegalArgumentException {
         return new Equity(id, getName(), creditChange(amount));
     }
-
-    @Override
-    protected boolean checkName(String name) {
-        return AccountingEntryNameCheck.checkName(name);
-    }
     
 }

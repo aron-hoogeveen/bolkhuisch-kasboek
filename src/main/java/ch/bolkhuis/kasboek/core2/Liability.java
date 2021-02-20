@@ -69,9 +69,4 @@ public class Liability extends CreditEntry {
         return new Liability(id, getName(), creditChange(amount));
     }
 
-    @Override
-    protected boolean checkName(String name) {
-        return AccountingEntryNameCheck.checkName(name);
-    }
-
 }

@@ -65,4 +65,9 @@ public abstract class CreditEntry extends AbstractAccountingEntry {
         return getBalance() - amount;
     }
 
+    @Override
+    protected boolean checkName(String name) {
+        return StringUtils.checkName(name);
+    }
+
 }

@@ -68,10 +68,5 @@ public class Expense extends DebitEntry {
     Expense credit(double amount) throws IllegalArgumentException {
         return new Expense(id, getName(), creditChange(amount));
     }
-
-    @Override
-    protected boolean checkName(String name) {
-        return AccountingEntryNameCheck.checkName(name);
-    }
     
 }

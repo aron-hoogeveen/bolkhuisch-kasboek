@@ -68,10 +68,5 @@ public class Dividend extends DebitEntry {
     Dividend credit(double amount) throws IllegalArgumentException {
         return new Dividend(id, getName(), creditChange(amount));
     }
-
-    @Override
-    protected boolean checkName(String name) {
-        return AccountingEntryNameCheck.checkName(name);
-    }
     
 }

@@ -69,9 +69,4 @@ public class Asset extends DebitEntry {
         return new Asset(id, getName(), creditChange(amount));
     }
 
-    @Override
-    protected boolean checkName(String name) {
-        return AccountingEntryNameCheck.checkName(name);
-    }
-
 }
