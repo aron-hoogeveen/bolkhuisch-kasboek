@@ -118,4 +118,10 @@ public abstract class AbstractAccountingEntry implements Comparable<AbstractAcco
     public int hashCode() {
         return name.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
+
 }
