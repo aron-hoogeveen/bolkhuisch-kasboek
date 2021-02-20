@@ -177,7 +177,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>ch.bolkhuis.kasboek.core2.Core2Tests</mainClass>
+<!--                    <mainClass>ch.bolkhuis.kasboek.core2.Core2Tests</mainClass>-->
                     <arguments>
 <!--                        <argument>foo</argument>-->
 <!--                        <argument>bar</argument>-->
