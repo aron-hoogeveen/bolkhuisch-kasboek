@@ -61,11 +61,10 @@ public class Receipt implements ReceiptKey {
      * @throws IllegalArgumentException if {@code transactionIdSet} or {@code description} does not adhere to the contract
      * @see StringUtils#checkString
      */
-    public Receipt(@NotNull LocalDate date, int id, @NotNull String description, @NotNull Set<TransactionKey> transactionKeySet,
+    public Receipt(@NotNull LocalDate date, int id, @NotNull String description, Set<TransactionKey> transactionKeySet,
                    int payer) throws NullPointerException, IllegalArgumentException {
         Objects.requireNonNull(date);
         Objects.requireNonNull(description);
-        Objects.requireNonNull(transactionKeySet);
 
         if (!(checkTransactionIdSet(transactionKeySet) && StringUtils.checkString(description)))
             throw new IllegalArgumentException();
@@ -74,7 +73,7 @@ public class Receipt implements ReceiptKey {
         this.id = id;
         this.description = new SimpleStringProperty(description);
         // do not parse the transactionKeySet directly into the constructor, because we want the natural ordering of the elements and not the ordering specified by transactionKeySet (see constructors documentation of TreeSet)
-        this.transactionKeySet.addAll(transactionKeySet);
+        if (transactionKeySet != null) this.transactionKeySet.addAll(transactionKeySet);
         this.payer = payer;
     }
 
@@ -185,13 +184,13 @@ public class Receipt implements ReceiptKey {
     /**
      * Checks whether or not the provided {@code set} adheres to the contract specified by this class.
      *
-     * More specifically, the set must not be null or contain any null values.
+     * More specifically, the set must not contain any null values, but can itself be null.
      *
      * @param set the Set to check
      * @return {@code true} if the set adheres to the contract, {@code false} otherwise
      */
     public static boolean checkTransactionIdSet(@Nullable Set<TransactionKey> set) {
-        if (set == null) return false;
+        if (set == null) return true;
 
         return !set.contains(null);
     }
