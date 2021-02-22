@@ -34,7 +34,23 @@ class ReceiptTest {
 
     @Test
     public void addKeySetFunctionality() {
-        Receipt receipt = new Receipt(LocalDate.now(), 0, "Very good", new HashSet<>(), 0);
+        Receipt receipt = new Receipt(LocalDate.now(), 0, "Very good", null, 0);
+        SimpleTransactionKey stk1 = new SimpleTransactionKey(LocalDate.of(2020, 2, 1), 0);
+        SimpleTransactionKey stk2 = new SimpleTransactionKey(LocalDate.of(2020, 2, 2), 0);
+
+        assertFalse(receipt.containsTransactionKey(stk1) || receipt.containsTransactionKey(stk2));
+
+        receipt.addTransactionKey(stk1);
+        assertTrue(receipt.containsTransactionKey(stk1));
+        assertFalse(receipt.containsTransactionKey(stk2));
+
+        assertDoesNotThrow(() -> receipt.addTransactionKey(stk1));
+        receipt.addTransactionKey(stk2);
+        assertTrue(receipt.containsTransactionKey(stk2));
+
+        receipt.removeTransactionKey(stk1);
+        assertFalse(receipt.containsTransactionKey(stk1));
+        assertTrue(receipt.containsTransactionKey(stk2));
     }
 
 }
