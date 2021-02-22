@@ -89,4 +89,18 @@ class TransactionTest {
         assertEquals(str, t1.getDescription());
     }
 
+    @Test
+    public void compareKeys() {
+        Transaction t1 = new Transaction(LocalDate.of(2021, 2, 22), 0, 0, 0, 42.99,
+                "Very Good description", null);
+        Transaction t2 = new Transaction(LocalDate.of(2021, 2, 22), 1, 0, 0, 42.99,
+                "Some other description", null);
+        Transaction t3 = new Transaction(LocalDate.of(2021, 2, 22), 2, 0, 0, 42.99,
+                "Yet another...", null);
+
+        assertTrue((t1.compareTo(t2) < 0) && t2.compareTo(t1) > 0);
+        assertTrue( (t2.compareTo(t3) < 0) && (t3.compareTo(t2) > 0));
+        assertTrue(t1.compareTo(t3) < 0 && t3.compareTo(t1) > 0);
+    }
+
 }
