@@ -5,6 +5,7 @@ import java.util.Objects;
 
 /**
  * Comparator that compares two transactions using all fields.
+ * FIXME add test class for TransactionComparator
  */
 public class TransactionComparator implements Comparator<Transaction> {
 
