@@ -29,6 +29,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Objects;
 
+/**
+ * This class makes no guarantees as to that all transactionKeys in the {@code transactionKeySet} point to Transactions
+ * that exist, or that it points to Transactions for which holds that either the debtorId or the creditorId points to
+ * the same id as the field {@code payer}. Classes that encapsulate this class should ensure that those properties hold
+ * (or at least that either the debtorId or the creditorId is the same as field {@code payer}).
+ */
 public class Receipt implements ReceiptKey {
 
     @NotNull
@@ -37,7 +43,7 @@ public class Receipt implements ReceiptKey {
     @NotNull
     private final SimpleStringProperty description;
     @NotNull
-    private final ObservableSet<TransactionKey> transactionKeySet; // FIXME Transactions should be recognizable by a (LocalDate, int) tuple
+    private final ObservableSet< @NotNull TransactionKey> transactionKeySet = FXCollections.observableSet(new TreeSet<>());
     private final int payer;
 
     /**
@@ -67,7 +73,8 @@ public class Receipt implements ReceiptKey {
         this.date = date;
         this.id = id;
         this.description = new SimpleStringProperty(description);
-        this.transactionKeySet = FXCollections.observableSet(new TreeSet<>(transactionKeySet));
+        // do not parse the transactionKeySet directly into the constructor, because we want the natural ordering of the elements and not the ordering specified by transactionKeySet (see constructors documentation of TreeSet)
+        this.transactionKeySet.addAll(transactionKeySet);
         this.payer = payer;
     }
 
