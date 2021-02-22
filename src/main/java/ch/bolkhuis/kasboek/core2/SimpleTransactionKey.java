@@ -18,6 +18,7 @@ public class SimpleTransactionKey implements TransactionKey {
         this.id = id;
     }
 
+    @NotNull
     @Override
     public LocalDate getDate() {
         return date;
