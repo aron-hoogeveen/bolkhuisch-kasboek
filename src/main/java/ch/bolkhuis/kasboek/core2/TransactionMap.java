@@ -11,7 +11,7 @@ import java.util.*;
  * consists of TreeMap buckets containing the actual transactions. The parent TreeMap sorts on LocalDates
  * and the other TreeMap sorts on Integers (id's of the Transactions).
  */
-public class TransactionTreeMap extends TreeMap<LocalDate, TreeMap<Integer, Transaction>> {
+public class TransactionMap extends TreeMap<LocalDate, TreeMap<Integer, Transaction>> {
 
     /**
      * Adds the Transaction {@code t} to this TransactionTreeMap.
@@ -83,6 +83,38 @@ public class TransactionTreeMap extends TreeMap<LocalDate, TreeMap<Integer, Tran
     }
 
     /**
+     * Returns if this map contains a mapping for the {@code transaction}.
+     *
+     * @param transaction the transaction to search for
+     * @return {@code true} if this map contains a mapping for the {@code transaction}, {@code false} otherwise
+     * @throws NullPointerException if {@code transaction} is null
+     */
+    public boolean containsTransaction(@NotNull Transaction transaction) {
+        Objects.requireNonNull(transaction);
+
+        /*
+         * Find the correct bucket.
+         * Return if it contains the transaction
+         */
+        TreeMap<Integer, Transaction> bucket = get(transaction.getDate());
+        return bucket != null && bucket.containsValue(transaction);
+    }
+
+    /**
+     * Returns the mapping of the key {@code key}.
+     *
+     * @param key the key
+     * @return the mapping, or {@code null} if there is not mapping for this key
+     * @throws NullPointerException if key is {@code null}
+     */
+    public Transaction getTransaction(@NotNull TransactionKey key) {
+        Objects.requireNonNull(key);
+
+        TreeMap<Integer, Transaction> bucket = get(key.getDate());
+        return bucket.get(key.getId());
+    }
+
+    /**
      * Returns an ordered List with all the transactions that have a data between {@code from} inclusive and {@code from}
      * exclusive.
      *
@@ -126,6 +158,11 @@ public class TransactionTreeMap extends TreeMap<LocalDate, TreeMap<Integer, Tran
          */
         TreeMap<Integer, Transaction> bucket = get(date);
         return (bucket == null) ? -1 : bucket.lastKey();
+    }
+
+    @Override
+    public int size() {
+        return 0;
     }
 
 }

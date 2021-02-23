@@ -7,11 +7,11 @@ import org.junit.jupiter.api.*;
 import java.time.LocalDate;
 import java.util.List;
 
-class TransactionTreeMapTest {
+class TransactionMapTest {
 
     @Test
     public void putAndRemoveTransactions() {
-        TransactionTreeMap map = new TransactionTreeMap();
+        TransactionMap map = new TransactionMap();
 
         Transaction t1 = new Transaction(LocalDate.of(2020, 1, 24), 0, 0, 1, 42, "My Birthday", null);
         Transaction t2 = new Transaction(LocalDate.of(2020, 1, 24), 1, 1, 0, 42, "Geld terug, boef!", null);
@@ -38,7 +38,7 @@ class TransactionTreeMapTest {
         Transaction t4 = new Transaction(LocalDate.of(2021, 2, 1), 1, 0, 1, 24, "Also good", null);
         Transaction t5 = new Transaction(LocalDate.of(2021, 2, 28), 0, 0, 1, 24, "YesYesYes", null);
 
-        TransactionTreeMap map = new TransactionTreeMap();
+        TransactionMap map = new TransactionMap();
         map.putTransaction(t1);
         map.putTransaction(t2);
         map.putTransaction(t3);
@@ -64,7 +64,7 @@ class TransactionTreeMapTest {
     public void testGetHighestId() {
         LocalDate date = LocalDate.of(2021, 1, 1);
         Transaction t1 = new Transaction(date, 41, 0, 1, 12, "Yesyess", null);
-        TransactionTreeMap map = new TransactionTreeMap();
+        TransactionMap map = new TransactionMap();
 
         map.putTransaction(t1);
         assertEquals(t1.getId(), map.highestTransactionId(date));
