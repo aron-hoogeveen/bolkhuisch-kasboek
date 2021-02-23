@@ -29,7 +29,7 @@ public class TransactionTreeMap extends TreeMap<LocalDate, TreeMap<Integer, Tran
          * If there is not, create the bucket.
          * Add the transaction at the correct place in the bucket.
          */
-        if (!containsValue(t.getDate())) {
+        if (!containsKey(t.getDate())) {
             put(t.getDate(), new TreeMap<>());
         }
         TreeMap<Integer, Transaction> bucket = get(t.getDate());
@@ -69,6 +69,20 @@ public class TransactionTreeMap extends TreeMap<LocalDate, TreeMap<Integer, Tran
     }
 
     /**
+     * Returns whether or not this TransactionTreeMap contains a Transaction with the TransactionKey {@code key}.
+     *
+     * @param key the key of the Transaction
+     * @return {@code true} if this map contains a mapping, {@code false} otherwise
+     * @throws NullPointerException if {@code key} is null
+     */
+    public boolean containsTransactionKey(@NotNull TransactionKey key) {
+        Objects.requireNonNull(key);
+
+        TreeMap<Integer, Transaction> bucket = get(key.getDate());
+        return bucket != null && bucket.containsKey(key.getId());
+    }
+
+    /**
      * Returns an ordered List with all the transactions that have a data between {@code from} inclusive and {@code from}
      * exclusive.
      *
@@ -103,10 +117,15 @@ public class TransactionTreeMap extends TreeMap<LocalDate, TreeMap<Integer, Tran
      * Returns the id of the Transaction with the highest id in the bucket with key {@code date}.
      *
      * @param date the key of the bucket
-     * @return the highest id, or {@code null} if there is no bucket with that key
+     * @return the highest id, or {@code -1} if there is no bucket with that key
      */
-    public Integer highestTransactionId(@NotNull LocalDate date) {
-        return null;
+    public int highestTransactionId(@NotNull LocalDate date) {
+        /*
+         * Check if there is a bucket for that date.
+         * If there is, get the max key and return it
+         */
+        TreeMap<Integer, Transaction> bucket = get(date);
+        return (bucket == null) ? -1 : bucket.lastKey();
     }
 
 }
