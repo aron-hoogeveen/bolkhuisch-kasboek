@@ -54,7 +54,7 @@ public class Resident extends Equity {
     public ReadOnlyDoubleProperty previousBalanceProperty() {
         return previousBalance;
     }
-    public double getPreviousBalance() {
+    public final double getPreviousBalance() {
         return previousBalance.get();
     }
 

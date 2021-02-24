@@ -93,7 +93,7 @@ public class Receipt implements ReceiptKey {
         return description;
     }
     @NotNull
-    public String getDescription() {
+    public final String getDescription() {
         return description.get();
     }
 
@@ -104,7 +104,7 @@ public class Receipt implements ReceiptKey {
      * @throws IllegalArgumentException if {@code str} does not adhere to the contract specified by this class
      * @throws NullPointerException if {@code str} is null
      */
-    public void setDescription(@NotNull String str) {
+    public final void setDescription(@NotNull String str) {
         Objects.requireNonNull(str);
 
         if (!StringUtils.checkString(str))

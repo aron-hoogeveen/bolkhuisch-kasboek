@@ -57,7 +57,7 @@ public abstract class AbstractAccountingEntry implements Comparable<AbstractAcco
         return name;
     }
     @NotNull
-    public String getName() {
+    public final String getName() {
         return name.get();
     }
 
@@ -65,7 +65,7 @@ public abstract class AbstractAccountingEntry implements Comparable<AbstractAcco
     public ReadOnlyDoubleProperty balanceProperty() {
         return balance;
     }
-    public double getBalance() {
+    public final double getBalance() {
         return balance.get();
     }
 
