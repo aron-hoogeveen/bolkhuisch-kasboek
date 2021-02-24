@@ -75,14 +75,24 @@ public class ObservableTransactionMap implements ObservableMap<TransactionKey, T
      *
      * @param key ignored
      * @param value the Transaction
-     * @return the old mapping
+     * @return the old mapping, or {@code null} if the was no mapping
      */
     @Nullable
     @Override
     public Transaction put(TransactionKey key, Transaction value) {
         Transaction old = map.putTransaction(value);
-//        informChange();
+        informAdded(key, value);
         return old;
+    }
+
+    /**
+     * Creates a mapping for the {@code transaction} and returns any old mappings.
+     *
+     * @param transaction the transaction to put in the map
+     * @return the old mapping, or {@code null} if the was no mapping
+     */
+    public Transaction put(Transaction transaction) {
+        return put(transaction, transaction);
     }
 
     @Override
