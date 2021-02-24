@@ -172,7 +172,7 @@ public class TransactionMap extends TreeMap<LocalDate, TreeMap<Integer, Transact
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     /**

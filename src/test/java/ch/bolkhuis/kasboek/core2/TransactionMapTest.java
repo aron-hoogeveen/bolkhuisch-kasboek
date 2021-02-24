@@ -5,7 +5,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 class TransactionMapTest {
 
@@ -103,6 +106,25 @@ class TransactionMapTest {
         assertFalse(map.containsTransaction(t1));
         assertTrue(map.containsTransactionKey(t2));
         assertTrue(map.containsTransaction(t2));
+    }
+
+    @Test
+    public void testPutAllAndAllValues() {
+        TransactionMap map = new TransactionMap();
+        Map<TransactionKey, Transaction> treeMap = new TreeMap<>();
+
+        Transaction t1 = new Transaction(LocalDate.of(2021, 2, 24), 0, 0, 1, 23, "Descri", null);
+        Transaction t2 = new Transaction(LocalDate.of(2033, 2, 24), 0, 5, 2, 33, "A different", null);
+
+        treeMap.put(t1, t1);
+        treeMap.put(t2, t2);
+
+        assertEquals(0, map.size());
+        map.putAllTransactions(treeMap);
+        assertEquals(2, map.size());
+
+        Collection<Transaction> transactionValues = map.transactionValues();
+        transactionValues.forEach((t) -> assertTrue(map.containsTransaction(t)));
     }
 
 }
