@@ -80,7 +80,9 @@ public class ObservableTransactionMap implements ObservableMap<TransactionKey, T
     @Nullable
     @Override
     public Transaction put(TransactionKey key, Transaction value) {
-        return map.putTransaction(value);
+        Transaction old = map.putTransaction(value);
+        informChange();
+        return old;
     }
 
     @Override
@@ -124,5 +126,114 @@ public class ObservableTransactionMap implements ObservableMap<TransactionKey, T
     @Override
     public void removeListener(InvalidationListener invalidationListener) {
         invalidationListeners.remove(invalidationListener);
+    }
+
+    /**
+     * Inform all ChangeListeners of a removed mapping.
+     *
+     * @param key the key
+     * @param valueRemoved the old value
+     */
+    private void informRemoved(@NotNull TransactionKey key, @NotNull Transaction valueRemoved) {
+        Objects.requireNonNull(key);
+        Objects.requireNonNull(valueRemoved);
+
+        changeListeners.forEach((o) -> o.onChanged(new MapChange(
+                this,
+                false,
+                true,
+                key,
+                null,
+                valueRemoved
+        )));
+    }
+
+    /**
+     * Inform all ChangeListeners of a new mapping that was added.
+     *
+     * @param key the key
+     * @param valueAdded the new value
+     */
+    private void informAdded(@NotNull TransactionKey key, @NotNull Transaction valueAdded) {
+        Objects.requireNonNull(key);
+        Objects.requireNonNull(valueAdded);
+
+        changeListeners.forEach((o) -> o.onChanged(new MapChange(
+                this,
+                true,
+                false,
+                key,
+                valueAdded,
+                null
+        )));
+    }
+
+    /**
+     * Inform all ChangeListeners of a mapping that changed of value.
+     *
+     * @param key the key
+     * @param valueAdded the new value
+     * @param valueRemoved the old value
+     */
+    private void informChanged(@NotNull TransactionKey key, @NotNull Transaction valueAdded,
+                               @NotNull Transaction valueRemoved) {
+        Objects.requireNonNull(key);
+        Objects.requireNonNull(valueAdded);
+        Objects.requireNonNull(valueRemoved);
+
+        changeListeners.forEach((o) -> o.onChanged(new MapChange(
+                this,
+                true,
+                true,
+                key,
+                valueAdded,
+                valueRemoved
+        )));
+    }
+
+    private class MapChange extends MapChangeListener.Change<TransactionKey, Transaction> {
+
+        private final boolean wasAdded;
+        private final boolean wasRemoved;
+        private final TransactionKey key;
+        private final Transaction valueAdded;
+        private final Transaction valueRemoved;
+
+        public MapChange(@NotNull ObservableMap<TransactionKey, Transaction> observableMap, boolean wasAdded, boolean wasRemoved,
+                         @NotNull TransactionKey key, @Nullable Transaction valueAdded, @Nullable Transaction valueRemoved) {
+            super(observableMap);
+            Objects.requireNonNull(key);
+
+            this.wasAdded = wasAdded;
+            this.wasRemoved = wasRemoved;
+            this.key = key;
+            this.valueAdded = valueAdded;
+            this.valueRemoved = valueRemoved;
+        }
+
+        @Override
+        public boolean wasAdded() {
+            return wasAdded;
+        }
+
+        @Override
+        public boolean wasRemoved() {
+            return wasRemoved;
+        }
+
+        @Override
+        public TransactionKey getKey() {
+            return key;
+        }
+
+        @Override
+        public Transaction getValueAdded() {
+            return valueAdded;
+        }
+
+        @Override
+        public Transaction getValueRemoved() {
+            return valueRemoved;
+        }
     }
 }
