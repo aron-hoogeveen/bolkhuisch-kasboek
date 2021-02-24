@@ -177,4 +177,23 @@ public class TransactionMap extends TreeMap<LocalDate, TreeMap<Integer, Transact
         map.values().forEach(this::putTransaction);
     }
 
+    /**
+     * Returns an ordered Collection of all Transactions in this TransactionMap.
+     *
+     * @return ordered Collection of Transactions
+     */
+    @NotNull
+    public Collection<Transaction> transactionValues() {
+        /*
+         * Iterate through all buckets, and add all the Transactions to a Collection
+         */
+        Collection<Transaction> values = new ArrayList<>();
+
+        for (TreeMap<Integer, Transaction> bucket : values()) {
+            values.addAll(bucket.values());
+        }
+
+        return values;
+    }
+
 }

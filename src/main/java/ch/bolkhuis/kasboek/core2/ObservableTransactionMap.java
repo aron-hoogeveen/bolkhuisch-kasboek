@@ -107,7 +107,7 @@ public class ObservableTransactionMap implements ObservableMap<TransactionKey, T
     @NotNull
     @Override
     public Collection<Transaction> values() {
-        throw new UnsupportedOperationException(); // FIXME implement values()
+        return map.transactionValues();
     }
 
     @NotNull
