@@ -97,17 +97,22 @@ public class ObservableTransactionMap implements ObservableMap<TransactionKey, T
 
     @Override
     public Transaction remove(Object key) {
-        return map.removeTransaction((TransactionKey)key);
+        Transaction old = map.removeTransaction((TransactionKey)key);
+        informRemoved((TransactionKey)key, old);
+        return old;
     }
 
     @Override
     public void putAll(@NotNull Map<? extends TransactionKey, ? extends Transaction> m) {
-        map.putAllTransactions(m);
+        m.values().forEach(this::put);
     }
 
+    // FIXME I do not yet have a good implementation for clear() this is very dirty and time inefficient
     @Override
     public void clear() {
-        map.clear();
+        // do not use map.clear() since that will not inform the changeListeners
+        Collection<Transaction> values = values();
+        values.forEach(this::remove);
     }
 
     @NotNull
@@ -201,7 +206,7 @@ public class ObservableTransactionMap implements ObservableMap<TransactionKey, T
         )));
     }
 
-    private class MapChange extends MapChangeListener.Change<TransactionKey, Transaction> {
+    private static class MapChange extends MapChangeListener.Change<TransactionKey, Transaction> {
 
         private final boolean wasAdded;
         private final boolean wasRemoved;
