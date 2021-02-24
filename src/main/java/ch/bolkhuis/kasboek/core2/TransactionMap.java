@@ -14,6 +14,11 @@ import java.util.*;
 public class TransactionMap extends TreeMap<LocalDate, TreeMap<Integer, Transaction>> {
 
     /**
+     * The number of Transactions currently in this TransactionMap
+     */
+    private int size = 0;
+
+    /**
      * Adds the Transaction {@code t} to this TransactionTreeMap.
      *
      * @param t the Transaction to add
@@ -35,7 +40,11 @@ public class TransactionMap extends TreeMap<LocalDate, TreeMap<Integer, Transact
         TreeMap<Integer, Transaction> bucket = get(t.getDate());
 
         // put the new Transaction in the bucket and return the old associated value
-        return bucket.put(t.getId(), t);
+        Transaction old = bucket.put(t.getId(), t);
+        if (old == null) {
+            size++;
+        }
+        return old;
     }
 
     /**
@@ -65,6 +74,7 @@ public class TransactionMap extends TreeMap<LocalDate, TreeMap<Integer, Transact
             remove(key.getDate());
         }
 
+        size--;
         return old;
     }
 
