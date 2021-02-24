@@ -165,4 +165,16 @@ public class TransactionMap extends TreeMap<LocalDate, TreeMap<Integer, Transact
         return 0;
     }
 
+    /**
+     * Puts all the transactions that are in {@code map} in this TransactionMap.
+     *
+     * @param map the map with values to put in this map
+     * @throws NullPointerException if {@code map} is {@code null} or any of the mappings contains a null-value
+     */
+    public void putAllTransactions(@NotNull Map<? extends TransactionKey, ? extends Transaction> map) {
+        Objects.requireNonNull(map);
+
+        map.values().forEach(this::putTransaction);
+    }
+
 }

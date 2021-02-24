@@ -90,7 +90,7 @@ public class ObservableTransactionMap implements ObservableMap<TransactionKey, T
 
     @Override
     public void putAll(@NotNull Map<? extends TransactionKey, ? extends Transaction> m) {
-        throw new UnsupportedOperationException(); // FIXME implement putAll()
+        map.putAllTransactions(m);
     }
 
     @Override
