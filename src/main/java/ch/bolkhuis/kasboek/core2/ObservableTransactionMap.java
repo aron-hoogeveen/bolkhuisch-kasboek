@@ -81,7 +81,7 @@ public class ObservableTransactionMap implements ObservableMap<TransactionKey, T
     @Override
     public Transaction put(TransactionKey key, Transaction value) {
         Transaction old = map.putTransaction(value);
-        informChange();
+//        informChange();
         return old;
     }
 
